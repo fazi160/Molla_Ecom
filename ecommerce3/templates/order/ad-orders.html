@@ -1,0 +1,344 @@
+{% extends 'adminapp/dashboardbase.html' %}
+{% block title %}Orders{% endblock  %}
+
+{% load order_tags %}
+
+
+{% load custom_filters %}
+{% block content %} 
+
+
+  {% if messages %}
+  
+  {% for message in messages %}
+  
+  <div class="text-center text-danger">
+  <strong>{{message}}</strong>
+  </div>
+  {% endfor %}
+  {% endif %}
+
+ 
+<div class="col-lg-12 grid-margin stretch-card ">
+    
+  <div class="card cartdata">
+    <div class="card-body">
+    
+
+        <div class="search-field d-none d-xl-block" style="float: right;">
+            <form action="{%url 'search_orders'%}">
+                <input type="text" placeholder="Search..." name="keyword" style="border-radius: 20px; height: 40px; text-align: center; font-size: 16px;">
+                <button type="submit" style="display: none;"></button>
+            </form>
+          </div>
+          <br>
+          <br>
+
+    
+      <h4 class="card-title">Orders</h4>
+     
+      <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">user</th>
+                <th scope="col">Order Date</th>
+                <th scope="col">Total Amount</th>
+                <th scope="col">payment mode</th>
+                <th scope="col">View Order</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>{{ order.user }}</td>
+                <td>{{ order.created_at }}</td>
+                <td>{{ order.total_price }}</td>
+                <td>{{ order.payment_mode }}</td>
+                <td>
+
+                    <button class="btn btn-outline-dark toggle-details productadmindetails"
+                        data-order_id="{{ order.id }}" data-toggle="collapse"
+                        data-target="#productadmindetails{{ forloop.counter }}">
+                        View order details
+                    </button>
+                </td>
+            </tr>
+            <tr class="collapse" id="productadmindetails{{ forloop.counter }}">
+                <td colspan="6">
+                    <div class="row"> <!-- Use a row to wrap the two card sections -->
+                        <div class="col-lg-6 col-lx-4">
+                            <div class="card border rounded mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-title" style="font-weight: bold;">{{ order.address.first_name }} {{ order.address.last_name }}</h5>
+                                    <p class="card-text">{{ order.address.address }},{{ order.address.city }},{{ order.address.state }} </p>
+                                    <div>
+                                        <!-- Button trigger modal -->
+                                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#address{{forloop.counter}}">
+                                            View
+                                        </button>
+      
+                        <!-- Modal -->
+                        <div class="modal fade" id="address{{forloop.counter}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                                
+                              <div class="modal-header">
+                                <h4 class="modal-title fs-6" id="staticBackdropLabel">View address</h4>
+                                <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                  <i class="fa fa-times"></i>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+      
+                                <div class="row">
+                                  <div class="col-sm-5">
+                                    <p class="mb-0">Full Name</p>
+                                  </div>
+                                  <div class="col-sm-7">
+                                      {{ order.address.first_name}} {{ order.address.last_name}}
+                                  </div>
+                                </div>
+                                <hr>
+      
+                                <div class="row">
+                                  <div class="col-sm-5">
+                                    <p class="mb-0">Address</p>
+                                  </div>
+                                  <div class="col-sm-7">
+                                      {{ order.address.address}}
+                                  </div>
+                                </div>
+                                <hr>
+      
+                                <div class="row">
+                                  <div class="col-sm-5">
+                                    <p class="mb-0">Contact Number</p>
+                                  </div>
+                                  <div class="col-sm-7">
+                                      {{ order.address.phone}}
+                                  </div>
+                                </div>
+                                <hr>
+      
+                                <div class="row">
+                                  <div class="col-sm-5">
+                                    <p class="mb-0">Email</p>
+                                  </div>
+                                  <div class="col-sm-7">
+                                      {{ order.address.email}}
+                                  </div>
+                                </div>
+                                <hr>
+      
+                                <div class="row">
+                                  <div class="col-sm-5">
+                                    <p class="mb-0">City</p>
+                                  </div>
+                                  <div class="col-sm-7">
+                                      {{ order.address.city}}
+                                  </div>
+                                </div>
+                                <hr>
+      
+                                <div class="row">
+                                  <div class="col-sm-5">
+                                    <p class="mb-0">Pincode</p>
+                                  </div>
+                                  <div class="col-sm-7">
+                                      {{ order.address.pincode}}
+                                  </div>
+                                </div>
+                                <hr>
+      
+                                <div class="row">
+                                  <div class="col-sm-5">
+                                    <p class="mb-0">State</p>
+                                  </div>
+                                  <div class="col-sm-7">
+                                      {{ order.address.state}}
+                                  </div>
+                                </div>
+                                <hr>
+      
+                                
+      
+      
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      
+                    </div>
+                </div>
+
+                  </div>
+              </div>
+              <div class="col-lg-6 col-lx-4">
+                <div class="card border rounded mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title" style="font-weight: bold;">ORDER INFO</h5>
+                        <h5 class="card-text">User Name: {{ order.user.username }}</h5>
+                        <h5 class="card-text">Tracking Id: {{ order.tracking_no }}</h5>
+                        <h5 class="card-text">Order Date: {{ order.created_at }}</h5>
+                        <h5 class="card-text">Payment Method: {{ order.payment_mode }}</h5>
+                        <span class="badge p-2 my-2 text-{{ order.od_status_color }}" style="font-size: medium;">{{ order.od_status }}</span>
+                    </div>
+                </div>
+            </div>
+              
+              <div class="col-lg-12 container-fluid">
+                <div class="card cards border rounded  mb-3">
+                  
+              <table class="product_data m-4">
+                <thead>
+                  <tr>
+                    <th>Product Image</th>
+                    <th>Name </th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                    
+                    <th>Status</th>
+                    <th>Status edit</th>
+                  </tr>
+                </thead>
+                
+                <!-- ... (previous content) ... -->
+        <tbody>
+            {% for order_item in order.orderitem_set.all %}
+    <tr>
+        <td class="product_cart_item">
+            <div class="product_cart_item_pic">
+              <img src="{{ order_item.product.product_image.url }}" height="70px" alt="IMG">
+            </div>
+          </td>
+      <td class="product_cart_item_text">
+        <h5 style="font-weight: bold;">{{ order_item.product.product_name }}</h5>
+      </td>
+      <td><h5 style="font-weight: bold;"> ₹ {{ order_item.price }}</h5></td>
+      <td>{{ order_item.quantity }}</td>
+      <td class="cart__price total">
+        ₹ {{ order_item|calculate_total_price|floatformat:2 }}
+      </td>
+      <td class="status-td">
+        {% if order_item.status == 'Pending' %}
+            <span class="badge p-2 my-2 text-secondary" style="font-size: medium;">{{ order_item.status }}</span>
+        {% elif order_item.status == 'Processing' %}
+            <span class="badge p-2 my-2 text-warning" style="font-size: medium;">{{ order_item.status }}</span>
+        {% elif order_item.status == 'Shipped' %}
+            <span class="badge p-2 my-2 text-primary" style="font-size: medium;">{{ order_item.status }}</span>
+        {% elif order_item.status == 'Delivered' %}
+            <span class="badge p-2 my-2 text-success" style="font-size: medium;">{{ order_item.status }}</span>
+        {% elif order_item.status == 'Cancelled' or order_item.status == 'refunded' %}
+            <span class="badge p-2 my-2 text-danger" style="font-size: medium;">{{ order_item.status }}</span>
+        {% endif %}
+    </td>    
+      <input type="hidden" class="orderitem_id" value="{{order_item.id}}">
+      <td>
+        <div class="form-outline mb-4">
+          
+          <select class="form-select form-select-sm mt-3 changestatus status" aria-label=".form-select-sm example" name="status" data-orderitem_id="{{ order_item.id }}">
+            {% for choice in order_item.orderstatuses %}
+              {% if order_item.status == choice.0 %}
+                <option selected value="{{ choice.0 }}">{{ choice.1 }}</option>
+              {% else %}
+                <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+              {% endif %}
+            {% endfor %}
+          </select>
+        </div>
+      </td>
+      
+    </tr>
+    {% endfor %}
+  </tbody>
+  <!-- ... (remaining content) ... -->
+  
+              </table>
+            </div>
+          </div>
+        </div>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+  </div>
+</div>
+{% if message %}
+<div class="message"><a href="{%url 'admin_orders'%}">
+    <h4 class="font-weight-bold text-center pt-5" style="color: #403c3c52;font-weight: bold;">{{ message }}</h4> </a></div>
+{% endif %}
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/alertifyjs/build/alertify.min.js"></script>
+<script>
+  $(document).ready(function() {
+      $(document).on('change', '.changestatus', function(e) {
+          e.preventDefault();
+  
+          var orderitem_id = $(this).data('orderitem_id');
+          var status = $(this).val();
+          var initial_status = $(this).data('initial_status');
+          var status_td = $(this).closest('tr').find('.status-td');
+  
+          if (status !== initial_status) {
+              // Update the status on the frontend immediately
+              $(this).data('initial_status', status);
+              updateStatusText(status_td, status);
+  
+              // Send a separate AJAX request to update the status in the backend
+              $.ajax({
+                  method: "POST",
+                  url: "/order/changestatus/",
+                  data: {
+                      'orderitem_id': orderitem_id,
+                      'order_status': status,
+                      csrfmiddlewaretoken: '{{ csrf_token }}'
+                  },
+                  success: function(response) {
+                      console.log(response);
+                      // You can update any relevant parts of the page here (e.g., update the badge color)
+                  },
+                  error: function(xhr, status, error) {
+                      console.log(xhr.responseText);
+                      // Handle error case
+                  }
+              });
+          }
+      });
+  
+      function updateStatusText(element, status) {
+          var statusText = getStatusText(status);
+          element.html('<span class="badge p-2 my-2 text-' + statusText.color + '" style="font-size: medium;">' + statusText.text + '</span>');
+      }
+  
+      function getStatusText(status) {
+          switch (status) {
+              case 'Pending':
+                  return { text: 'Pending', color: 'secondary' };
+              case 'Processing':
+                  return { text: 'Processing', color: 'warning' };
+              case 'Shipped':
+                  return { text: 'Shipped', color: 'primary' };
+              case 'Delivered':
+                  return { text: 'Delivered', color: 'success' };
+              default:
+                  return { text: status, color: 'danger' };
+          }
+      }
+  });
+  </script>
+  
+  
+
+  
+  
+
+
+{% endblock %}

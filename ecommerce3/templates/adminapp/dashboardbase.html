@@ -1,0 +1,257 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title> {% block title %} {% endblock%}</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="{% static 'dashboard/libs/apexcharts/dist/apexcharts.min.css' %}">
+    <script src="{% static 'dashboard/libs/apexcharts/dist/apexcharts.min.js' %}"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.27.1/dist/apexcharts.min.css">
+    <link rel="stylesheet" href="{% static 'assets/vendors/mdi/css/materialdesignicons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendors/flag-icon-css/css/flag-icon.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendors/css/vendor.bundle.base.css' %}">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <link rel="stylesheet" href="{% static 'assets/vendors/font-awesome/css/font-awesome.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-Blm68zti81+uR+4Cn2Z7GsHptJNS4GrDqOC2jRmKiaMZn0/nHxz1pJj/xp3GDTAUL6LSxI6Hfw+X5rmfPwJLLw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+    <!-- End layout styles -->
+    <link rel="shortcut icon" href="{% static 'assets/images/favicon' %}" />
+  </head>
+  <body>
+    <div class="container-scroller">
+      <!-- partial:partials/_navbar.html -->
+      <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row bg-dark ">
+        <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center bg-dark">
+          <a class="navbar-brand brand-logo" href="#"><img src="{% static 'assets/images/logo.svg' %}" alt="logo" /></a>
+          <a class="navbar-brand brand-logo-mini" href="#"><img src="{% static 'assets/images/logo-mini.svg' %}" alt="logo" /></a>
+        </div>
+        <div class="navbar-menu-wrapper d-flex align-items-stretch">
+          <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+            <span class="mdi mdi-menu"></span>
+          </button>
+          
+          <ul class="navbar-nav navbar-nav-right">
+            <li class="nav-item  dropdown d-none d-md-block">
+              <a class="nav-link dropdown-toggle text-light" id="reportDropdown" href="#" data-toggle="dropdown" aria-expanded="false"> Reports </a>
+              <div class="dropdown-menu navbar-dropdown" aria-labelledby="reportDropdown">
+               
+              </div>
+            </li>
+            
+            <li class="nav-item nav-language dropdown d-none d-md-block">
+              <a class="nav-link dropdown-toggle" id="languageDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
+                <div class="nav-language-icon">
+                  <i class="flag-icon flag-icon-us" title="us" id="us"></i>
+                </div>
+                <div class="nav-language-text">
+                  <p class="mb-1 text-light">English</p>
+                </div>
+              </a>
+              <div class="dropdown-menu navbar-dropdown" aria-labelledby="languageDropdown">
+                <a class="dropdown-item" href="#">
+                  <div class="nav-language-icon mr-2">
+                    <i class="flag-icon flag-icon-ae" title="ae" id="ae"></i>
+                  </div>
+                  <div class="nav-language-text">
+                    <p class="mb-1 text-black">Arabic</p>
+                  </div>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#">
+                  <div class="nav-language-icon mr-2">
+                    <i class="flag-icon flag-icon-gb" title="GB" id="gb"></i>
+                  </div>
+                  <div class="nav-language-text">
+                    <p class="mb-1 text-black">English</p>
+                  </div>
+                </a>
+              </div>
+            </li>
+            <li class="nav-item nav-profile dropdown">
+              <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
+                <div class="nav-profile-img">
+                  <i class="mdi mdi-account menu-icon text-light" style="font-size: x-large; "></i>
+                </div>
+                <div class="nav-profile-text">
+                  <p class="mb-1 text-light">Owner</p>
+                </div>
+              </a>
+              <div class="dropdown-menu navbar-dropdown dropdown-menu-right p-0 border-0 font-size-sm" aria-labelledby="profileDropdown" data-x-placement="bottom-end">
+                <div class="p-3 text-center bg-primary">
+                  <i class="mdi mdi-account menu-icon" style="font-size: x-large;"></i>
+                </div>
+                <div class="p-2">
+                  <h5 class="dropdown-header text-uppercase pl-2 text-light">User Options</h5>
+                  
+                  <a class="dropdown-item py-1 d-flex align-items-center justify-content-between" href="#">
+                    <span>Profile</span>
+                    <span class="p-0">
+                      <span class="badge badge-success">1</span>
+                      <i class="mdi mdi-account-outline ml-1 text-light"></i>
+                    </span>
+                  </a>
+                
+                  <div role="separator" class="dropdown-divider"></div>
+                  <h5 class="dropdown-header text-uppercase  pl-2 text-light mt-2">Actions</h5>
+               
+                  <a class="dropdown-item py-1 d-flex align-items-center justify-content-between" href="#">
+                    <span>Log Out</span>
+                    <i class="mdi mdi-logout ml-1"></i>
+                  </a>
+                </div>
+              </div>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link count-indicator dropdown-toggle" id="messageDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
+                <i class="mdi mdi-email-outline text-light"></i>
+                <span class="count-symbol bg-success"></span>
+              </a>
+             
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-toggle="dropdown">
+                <i class="mdi mdi-bell-outline text-light"></i>
+                <span class="count-symbol bg-danger"></span>
+              </a>
+              <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
+               
+            </li>
+          </ul>
+          <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+            <span class="mdi mdi-menu"></span>
+          </button>
+        </div>
+      </nav>
+      <!-- partial -->
+      <div class="container-fluid page-body-wrapper">
+        <!-- partial:partials/_sidebar.html -->
+        <nav class="sidebar sidebar-offcanvas bg-dark"  id="sidebar" >
+          <ul class="nav">
+            
+            <li class="nav-item nav-category">Main</li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'dashboard' %}">
+                <span class="icon-bg"><i class="mdi mdi-cube menu-icon"></i></span>
+                <span class="menu-title">Dashboard</span>
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'user' %}"  >
+                <span class="icon-bg"><i class="mdi mdi-account-multiple menu-icon" ></i></span>
+                <span class="menu-title">Users</span>
+              
+              </a>
+             
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'product' %}">
+                <span class="icon-bg"><i class="mdi mdi-store menu-icon"></i></span>
+                <span class="menu-title">Products</span>
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'categories' %}">
+                <span class="icon-bg"><i class="mdi mdi-format-list-bulleted menu-icon"></i></span>
+                <span class="menu-title">Categories</span>
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'authors' %}">
+                <span class="icon-bg"><i class="mdi mdi-chart-bar menu-icon"></i></span>
+                <span class="menu-title">Authors</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'admin_orders' %}">
+                <span class="icon-bg"><i class="mdi mdi-table-large menu-icon"></i></span>
+                <span class="menu-title">Orders</span>
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'salesreport' %}">
+                <span class="icon-bg"><i class="mdi mdi-table-large menu-icon"></i></span>
+                <span class="menu-title">Sales Reports</span>
+              </a>
+            </li>
+            
+            <li class="nav-item sidebar-user-actions">
+              <div class="sidebar-user-menu">
+                <a href="#" class="nav-link"><i class="mdi mdi-settings menu-icon"></i>
+                  <span class="menu-title">Settings</span>
+                </a>
+              </div>
+            </li>
+            
+            <li class="nav-item sidebar-user-actions">
+              <div class="sidebar-user-menu">
+                <a href="{% url 'admin_logout' %}" class="nav-link"><i class="mdi mdi-logout menu-icon"></i>
+                  <span class="menu-title">Log Out</span></a>
+              </div>
+            </li>
+          </ul>
+        </nav>
+        
+
+
+      
+
+        <!-- partial -->
+        <div class="main-panel">
+          
+            
+              <div class="col-12">
+
+                {% block content %} {% endblock %}
+
+               
+              
+                  <!-- partial -->
+                </div>
+                <!-- main-panel ends -->
+              
+              <!-- page-body-wrapper ends -->
+         
+          </div>
+            <!-- container-scroller -->
+            <!-- plugins:js -->
+            <script src="{% static 'assets/vendors/js/vendor.bundle.base.js' %}"></script>
+            <!-- endinject -->
+            <!-- Plugin js for this page -->
+            <script src="{% static 'assets/vendors/chart.js/Chart.min.js' %}"></script>
+            <script src="{% static 'assets/vendors/jquery-circle-progress/js/circle-progress.min.js' %}"></script>
+            <!-- End plugin js for this page -->
+            <!-- inject:js -->
+            <script src="{% static 'assets/js/off-canvas.js' %}"></script>
+            <script src="{% static 'assets/js/hoverable-collapse.js' %}"></script>
+            <script src="{% static 'assets/js/misc.js' %}"></script>
+            <!-- endinject -->
+            <!-- Custom js for this page -->
+            <script src="{% static 'assets/js/dashboard.js' %}"></script>
+            <!-- End custom js for this page -->
+
+            <script src="{% static 'libs/jquery/dist/jquery.min.js'%}"></script>
+            <script src="{% static 'libs/bootstrap/dist/js/bootstrap.bundle.min.js'%}"></script> 
+            <script src="{% static 'js/sidebarmenu.js'%}"></script>
+            <script src="{% static 'js/app.min.js'%}"></script>
+            <script src="{% static 'libs/apexcharts/dist/apexcharts.min.js'%}"></script>
+            <script src="{% static 'libs/simplebar/dist/simplebar.js'%}"></script>
+            <script src="{% static 'js/dashboard.js'%}"></script> 
+            <script src="{% static 'js/custom.js'%}"></script> 
+          </body>
+        </html>
+    

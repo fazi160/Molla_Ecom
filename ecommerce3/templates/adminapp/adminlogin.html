@@ -1,0 +1,41 @@
+{% extends 'adminapp/base1.html' %}
+
+{% block title %}Admin login{% endblock %}
+{% block content %}
+
+
+<!-- ========================= SECTION CONTENT ========================= -->
+<section class="section-content padding-y" style="min-height:84vh">
+
+<!-- ============================ COMPONENT LOGIN   ================================= -->
+	<div class="card mx-auto" style="max-width: 380px; margin-top:100px;">
+        {% include 'includes/alerts.html' %}
+      <div class="card-body">
+      <h4 class="card-title mb-4">Admin Login</h4>
+      <form action="{% url 'admin_login' %}" method="POST">
+        {% csrf_token %}
+          <div class="form-group">
+			 <input type="email" class="form-control" placeholder="Enter username" name="username" Required >
+          </div> <!-- form-group// -->
+          <div class="form-group">
+			<input type="password" class="form-control" placeholder="Password" name="password" >
+          </div> <!-- form-group// -->
+          
+        <!-- form-group form-check .// -->
+          <div class="form-group">
+              <button type="submit" class="btn btn-dark btn-block"> Login  </button>
+          </div> <!-- form-group// -->    
+      </form>
+      </div> <!-- card-body.// -->
+    </div> <!-- card .// -->
+
+     <p class="text-center mt-4">Don't have account? <a href="{% url 'admin_signup' %}">Sign up</a></p>
+     <br><br>
+<!-- ============================ COMPONENT LOGIN  END.// ================================= -->
+
+
+</section>
+<!-- ========================= SECTION CONTENT END// ========================= -->
+
+
+{% endblock %}

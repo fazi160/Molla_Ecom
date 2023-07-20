@@ -1,0 +1,3 @@
+pip install reportlab
+pip install django-imagekit
+pip install imagekit

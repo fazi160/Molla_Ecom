@@ -1,0 +1,570 @@
+
+{% extends 'base.html' %}
+{% load static %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+{% block content %}
+
+
+<main class="main">
+  <!-- End .page-header -->
+    <div class="container">
+        <br>
+        <br>
+        <br>
+        <div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
+            <a href="{% url 'home' %}" class="stext-109 cl8 hov-cl1 trans-04">
+                Home
+                <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
+            </a>
+    
+            <span class="stext-109 cl4">
+                Checkout
+            </span>
+        </div>
+    </div><!-- End .breadcrumb-nav -->
+
+    <div class="page-content">
+        <div class="checkout">
+            <div class="container">
+
+
+                 <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" style="max-width: 600px; max-height: 650px; overflow-y: auto; overflow-x: hidden; ">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel" style="font-weight: bold;">Billing Details</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" style="margin-left:35px; ">
+
+                    <form action="{% url 'add_checkout_address' %}" method="post">
+                            {% csrf_token %}
+                        <div class="row">
+                        <div class="col-lg-9">
+                            <h3 class="checkout-title">Billing Details</h3><!-- End .checkout-title -->
+                            
+                                <div class="row">
+                                    <div class="col-sm-6 col-xl-6">
+                                        <label>First Name *</label>
+                                        <input type="text" class="form-control" name="firstname" required>
+                                    </div><!-- End .col-sm-6 -->
+
+                                    <div class="col-sm-6 col-xl-6">
+                                        <label>Last Name *</label>
+                                        <input type="text" class="form-control" name="lastname" required>
+                                    </div><!-- End .col-sm-6 -->
+                                </div><!-- End .row -->
+
+
+                                <label>Country *</label>
+                                <input type="text" class="form-control" name="country" required>
+
+                                <label>Street address *</label>
+                                <input type="text" class="form-control" name="address" placeholder="House number and Street name" required>
+                                <input type="text" class="form-control" name="address" placeholder="Appartments, suite, unit etc ..." required>
+
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <label>Town / City *</label>
+                                        <input type="text" class="form-control" name="city" required>
+                                    </div><!-- End .col-sm-6 -->
+
+                                    <div class="col-sm-6">
+                                        <label>State *</label>
+                                        <input type="text" class="form-control" name="state" required>
+                                    </div><!-- End .col-sm-6 -->
+                                </div><!-- End .row -->
+
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <label>Postcode / ZIP *</label>
+                                        <input type="number" class="form-control" name="pincode" required>
+                                    </div><!-- End .col-sm-6 -->
+
+                                    <div class="col-sm-6">
+                                        <label>Phone *</label>
+                                        <input type="tel" class="form-control" name="phone" required>
+                                    </div><!-- End .col-sm-6 -->
+                                </div><!-- End .row -->
+
+                                <label>Email address *</label>
+                                <input type="email" class="form-control" name="email" required>
+
+                               
+                        
+                                <button type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
+                                    <span class="btn-text">Save</span>
+                                    <span class="btn-hover-text">Save Address</span>
+                                </button>
+                        
+                            </div><!-- End .col-lg-9 -->
+
+                        </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+                <!-- saved address -->
+
+                    <form action="{% url 'placeorder' %}" method="post" id="orderform">
+                        
+                        <div class="row">
+                            <div class="col-lg-8" >
+                                
+                                <br><br>
+                                
+                                
+                                <div class="new-add col-xl-4" >
+                                    <div class="card-header" id="heading-11">
+                                        <a class="collapsed" role="button"   data-toggle="collapse" href="#collapse-11" aria-expanded="false" aria-controls="collapse-11">
+                                            Shipping to different Address ?
+                                        </a>
+                                    </div><!-- End .card-header -->
+                                    <div id="collapse-11" class="collapse" aria-labelledby="heading-11" data-parent="#accordion-payment">
+                                        <button type="button" class="site-btn mb-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                            New Address
+                                       
+                                        </button>
+                                    </div><!-- End .collapse -->
+                                </div>
+
+
+                                    <br><br>
+                                <div class="mb-4">
+                                    <h4 class="font-weight-semi-bold mb-4">Select Address</h4>
+                                    
+                                    {% for adrs in address %}
+                                            <div class="card mb-3">
+                                             
+                                              <div class="custom-control custom-radio h-100 m-2 d-flex align-items-center">
+                                                <input type="radio" class="custom-control-input " id="{{adrs.id}}" name="address" value="{{adrs.id}}" {% if index == 0 %}checked{% endif %} checked>
+                                                <label class="custom-control-label" for="{{adrs.id}}">{{adrs.first_name}} {{adrs.last_name}}</label>
+                                            </div>
+                                            
+                                                  
+                                              <div class="card-body">
+                                                <h5 class="card-title">Mob : {{adrs.phone}}</h5>
+                                                <h5 class="card-title">{{adrs.address}}, {{adrs.pincode}}</h5>
+                                                <p class="card-text">{{adrs.city}}-{{adrs.state}}-{{adrs.country}}</p>
+                                              <div>
+                
+                                              <!-- Button trigger vie address -->
+                                                <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#viewaddress{{forloop.counter}}">
+                                                  View
+                                                </button>
+                                               
+                                                <!-- Modal -->
+                                                <div class="modal fade" id="viewaddress{{forloop.counter}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                                  <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                      <div class="modal-header">
+                                                        <h4 class="modal-title fs-6" id="staticBackdropLabel">View address</h4>
+                                                        <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                                          <i class="fa fa-times"></i>
+                                                        </button>
+                                                      </div>
+                                                      <div class="modal-body" style="margin-left: 25px;">
+                
+                                                        <div class="row">
+                                                          <div class="col-sm-5">
+                                                            <p class="mb-0">Name</p>
+                                                          </div>
+                                                          <div class="col-sm-7">
+                                                              <input type="hidden" value="{{ adrs.first_name}} {{ adrs.last_name}} " name="first_name">
+                                                              {{ adrs.first_name}} {{ adrs.last_name}} 
+                                                          </div>
+                                                        </div>
+                                                        <hr>
+        
+                                                        <div class="row">
+                                                            <div class="col-sm-5">
+                                                              <p class="mb-0">Phone</p>
+                                                            </div>
+                                                            <div class="col-sm-7">
+                                                                {{ adrs.phone}}
+                                                                <input type="hidden" value="{{ adrs.phone}}" name="phone">
+                                                            </div>
+                                                          </div>
+                                                          <hr>
+        
+                                                          <div class="row">
+                                                            <div class="col-sm-5">
+                                                              <p class="mb-0">Email</p>
+                                                            </div>
+                                                            <div class="col-sm-7">
+                                                                {{ adrs.email}}
+                                                                <input type="hidden" value="{{ adrs.email}}" name="email">
+        
+                                                            </div>
+                                                          </div>
+                                                          <hr>
+        
+                                                        <div class="row">
+                                                            <div class="col-sm-5">
+                                                              <p class="mb-0">Address</p>
+                                                            </div>
+                                                            <div class="col-sm-7">
+                                                                {{ adrs.address}}
+                                                            </div>
+                                                          </div>
+                                                          <hr>
+        
+                                                          <div class="row">
+                                                            <div class="col-sm-5">
+                                                              <p class="mb-0">Town/City</p>
+                                                            </div>
+                                                            <div class="col-sm-7">
+                                                                {{ adrs.city}}
+                                                            </div>
+                                                          </div>
+                                                          <hr>
+        
+                                                          <div class="row">
+                                                            <div class="col-sm-5">
+                                                              <p class="mb-0">Postcode / ZIPy</p>
+                                                            </div>
+                                                            <div class="col-sm-7">
+                                                                {{ adrs.pincode}}
+                                                            </div>
+                                                          </div>
+                                                          <hr>
+        
+                                                          <div class="row">
+                                                            <div class="col-sm-5">
+                                                              <p class="mb-0">State</p>
+                                                            </div>
+                                                            <div class="col-sm-7">
+                                                                {{ adrs.state}}
+                                                            </div>
+                                                          </div>
+                                                          <hr>
+        
+                                                          <div class="row">
+                                                            <div class="col-sm-5">
+                                                              <p class="mb-0">Country</p>
+                                                            </div>
+                                                            <div class="col-sm-7">
+                                                                {{ adrs.country}}
+                                                            </div>
+                                                          </div>
+                                                          <hr>
+        
+                                                      </div>
+                                                      <div class="modal-footer">
+                                                        <a  class="btn btn-primary text-white" data-bs-toggle="modal" data-bs-target="#deletaddress{{forloop.counter}}">
+                                                          delete
+                                                        </a>
+                                            
+                                                          <!--Delete Modal -->
+                                                          <div class="modal fade" id="deletaddress{{forloop.counter}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                            <div class="modal-dialog">
+                                                              <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                  <h5 class="" id="exampleModalLabel">Delete</h5>
+                                                                  <button type="button" class="btn" data-bs-dismiss="modal" aria-label="Close"> <i class="fa fa-times" ></i></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                  <p>Are you sure to delete Address <span class="text-primary">" {{adrs.first_name}} {{adrs.last_name}} ..."</span></p>
+                                                                  
+                                                                    <div class="d-flex justify-content-center">
+                                                                      <a type="button" href="#"
+                                                                        class="btn btn-danger btn-lg gradient-custom-4 w-50 text-light">Confirm</a>
+                                                                    </div>
+                                                
+                                                                </div>
+                                                              </div>
+                                                            </div>
+                                                          </div>
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              
+                                             </div>
+                                             
+                                        </div>
+                                       
+                                        </div>
+                                        {% endfor %}
+                                    <div class="card-body">
+                                      {% if not address %}<h5 class="card-title">No address saved</h5>{% endif %}
+                                      <p class="card-text"> </p>
+                                      <div>
+                                      </div>
+                                    </div>
+                                </div>
+
+                                <div class="order-note">
+                                    <label>Order notes (optional)</label>
+                               
+                                    <textarea class="form-control" cols="30" rows="4" name="ordernote" placeholder="Notes about your order, e.g. special notes for delivery"></textarea>
+                                </div>
+
+
+                            </div>
+                        <aside class="col-lg-4" >
+                            <div class="checkout-discount">
+                                <form action="#">
+                                    <input type="text" class="form-control"  id="checkout-discount-input">
+                                    <label for="checkout-discount-input" class="text-truncate">Have a coupon? <span>Click here to enter your code</span></label>
+                                </form>
+                            </div>
+                            <div class="summary" style="float:right">
+                             
+                                <h3 class="summary-title">Your Order</h3><!-- End .summary-title -->
+
+                                <table class="table table-summary">
+                                    <thead>
+                                        <tr>
+                                            <th>Product</th>
+                                            <th>Quantity</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        {% for i in cartitems %}
+                                        <tr>
+                                            <td><a href="#">{{i.product}}</a></td>
+                                            <td>{{i.product_qty}}</td>
+                                            <td>{{i.total}}</td>
+                                        </tr>
+                                            {% endfor %}
+                                      
+                                        <tr class="summary-subtotal">
+                                            <td>Subtotal:</td>
+                                            <td></td>
+                                            <td>{{total_price}}</td>
+                                        </tr><!-- End .summary-subtotal -->
+                                        <tr>
+                                            <td>Shipping:</td>
+                                            <td></td>
+
+                                            <td>Free shipping</td>
+                                        </tr>
+                                        <tr class="summary-tax">
+                                            <td>Tax:</td>
+                                            <td></td>
+
+                                            <td>  ₹ {{tax | floatformat:2}}</td>
+                                        </tr>
+                                        <tr class="summary-total">
+                                            <td>Total:</td>
+                                            <td></td>
+
+                                            <td>₹ {{grand_total}}</td>
+                                        </tr><!-- End .summary-total -->
+                                    </tbody>
+                                </table><!-- End .table table-summary -->
+
+                                <div class="accordion-summary" id="accordion-payment">
+                                 
+                                
+                                <div class="card">
+                                    <div class="card-header" id="heading-4">
+                                        <h2 class="card-title">
+                                            <a class="collapsed" id="payment" data-payment-method="razorpay" role="button" data-toggle="collapse" href="#collapse-4" aria-expanded="false" aria-controls="collapse-4">
+                                                Razorpay <small class="float-right paypal-link">What is RazorPay?</small>
+                                            </a>
+                                        </h2>
+                                    </div><!-- End .card-header -->
+                                    <div id="collapse-4" class="collapse" aria-labelledby="heading-4" data-parent="#accordion-payment">
+                                        <div class="card-body">
+                                            Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede. Donec nec justo eget felis facilisis fermentum.
+                                        </div><!-- End .card-body -->
+                                    </div><!-- End .collapse -->
+                                </div><!-- End .card -->
+                                
+                                <div class="card">
+                                    <div class="card-header" id="heading-5">
+                                        <h2 class="card-title">
+                                            <a class="collapsed" data-payment-method="stripe" role="button" data-toggle="collapse" href="#collapse-5" aria-expanded="false" aria-controls="collapse-5">
+                                                Credit Card (Stripe)
+                                                <img src="assets/images/payments-summary.png" alt="payments cards">
+                                            </a>
+                                        </h2>
+                                    </div><!-- End .card-header -->
+                                    <div id="collapse-5" class="collapse" aria-labelledby="heading-5" data-parent="#accordion-payment">
+                                        <div class="card-body"> Donec nec justo eget felis facilisis fermentum.Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Lorem ipsum dolor sit ame.
+                                        </div><!-- End .card-body -->
+                                    </div><!-- End .collapse -->
+                                </div><!-- End .card -->
+                                
+                                <div class="card">
+                                    <div class="card-header" id="heading-3">
+                                        <h2 class="card-title">
+                                            <a class="collapsed" data-payment-method="cod" role="button" data-toggle="collapse" href="#collapse-3" aria-expanded="false" aria-controls="collapse-3">
+                                                Cash on delivery
+                                            </a>
+                                        </h2>
+                                    </div><!-- End .card-header -->
+                                    <div id="collapse-3" class="collapse" aria-labelledby="heading-3" data-parent="#accordion-payment">
+                                        <div class="card-body">Quisque volutpat mattis eros. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros.
+                                        </div><!-- End .card-body -->
+                                    </div><!-- End .collapse -->
+                                </div><!-- End .card -->
+                                
+                                
+                              </div><!-- End .accordion -->
+                              
+                              <button type="submit" class="btn btn-outline-primary-2 btn-order btn-block purchase placeorder" id="orderform">
+                                  <span class="btn-text">Place Order</span>
+                                  <span class="btn-hover-text">Proceed to Checkout</span>
+
+                                  
+                              </button>
+                           
+                            </div><!-- End .summary -->
+
+                            
+
+                                
+                            </div><!-- End .summary -->
+                        </aside><!-- End .col-lg-3 -->
+                    </div><!-- End .row -->
+                </form>
+                <!-- end form -->
+               
+            </div><!-- End .container -->
+        </div><!-- End .checkout -->
+    </div><!-- End .page-content -->
+</main>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/alertifyjs/build/alertify.min.js"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+
+<script>
+  $(document).ready(function() {
+      $('.purchase').click(function(e) {
+          e.preventDefault();
+
+          var fname = $("[name='first_name']").val();
+          var phone = $("[name='phone']").val();
+          var email = $("[name='email']").val();
+          var order_note = $("[name='ordernote']").val();
+          var token = $("[name='csrfmiddlewaretoken']").val();
+          var selectedAddress = $("input[name='address']:checked").val();
+          var paymentMethod = $("a[data-toggle='collapse'][aria-expanded='true']").data('payment-method');
+
+          if (!selectedAddress) {
+              swal("Alert!", "Address field is mandatory!", "error");
+              console.log('Address field is empty');
+              return false;
+          } else {
+              var data = {
+                  "payment_method": paymentMethod,
+                  "order_note": order_note,
+                  "address": selectedAddress,
+                  "csrfmiddlewaretoken": token
+              };
+
+              console.log(data, '11111111111111111111111');
+
+              // Check the selected payment method and execute the corresponding AJAX request
+              if (paymentMethod === "cod") {
+                  $.ajax({
+                      method: "POST",
+                      url: "{% url 'placeorder' %}",
+                      data: data,
+                      dataType: 'json'
+                  }).done(function(response) {
+                      console.log(response);
+
+                      if (response.status === 'cannot place order') {
+                          swal("Error!", response.status, "error");
+                          $('.placeorder').load(location.href + " .placeorder");
+                      } else if (response.status === 'Your order has been placed successfully') {
+                          swal("Congratulations!", response.status, "success");
+                          $('.placeorder').load(location.href + " .placeorder");
+                      } else {
+                          swal("Error!", response.status, "error");
+                          $('.placeorder').load(location.href + " .placeorder");
+                      }
+                      window.location.href = '/';
+                  }).fail(function(xhr, errmsg, err) {
+                      alert('Error: ' + errmsg);
+                      console.log(xhr.responseText);
+                      console.log(err);
+                  });
+              } else if (paymentMethod === "razorpay") {
+                  // The Razorpay code from the second script goes here
+                  $.ajax({
+                    method:"GET",
+                    url:"/checkout/proceedtopay/",
+                    success: function(response) {
+                     var options = {
+                       "key": "rzp_test_mYEIb1JhBAjCQk", // Enter the Key ID generated from the Dashboard
+                       "amount": 1*100,//response.total_price * 100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                       "currency": "INR",
+                       "name": "Molla Books",
+                       "description": "Thank you for buying with us",
+                       "image": "https://example.com/your_logo",
+                       //"order_id": "order_IluGWxBm9U8zJ8", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+                       "handler": function (responseb){
+                         alert(responseb.razorpay_payment_id);
+                           data = {
+                             
+                             "payment_method" : "Razorpay",
+                             "payment_id" : responseb.razorpay_payment_id,
+                             "address": selectedAddress,
+                             csrfmiddlewaretoken: token
+                             
+                           }
+                             $.ajax({
+                               method:"POST",
+                               url:"{% url 'placeorder' %}",
+                               data: data,
+                               success: function (responsec) {
+                                 console.log(responsec)
+                                 swal("Congratulations!", responsec.status,"success").then((value) => {
+                                    
+                                 });
+                                 window.location.href = '/'
+                               }
+         
+                           });
+                       },
+                       "prefill": {
+                           "name": fname,
+                           "email" : email,
+                           'contact' : phone,
+                       },
+                       
+                       "theme": {
+                           "color": "#3399cc"
+                       }
+                   };
+                   var rzp1 = new Razorpay(options);
+                   rzp1.on('payment.failed', function (response){
+                           alert(response.error.code);
+                           alert(response.error.description);
+                           alert(response.error.source);
+                           alert(response.error.step);
+                           alert(response.error.reason);
+                           alert(response.error.metadata.order_id);
+                           alert(response.error.metadata.payment_id);
+                   });
+                   rzp1.open();
+                     console.log(responsec);
+         
+                    }
+                 });
+              } 
+          }
+      });
+  });
+</script>
+
+
+
+  
+ 
+{% endblock %}

@@ -1,0 +1,137 @@
+
+<div id="productListContainer" class="products">
+    <div class="row">
+        {% for j in products %}
+        <div class="col-6 col-md-4 col-lg-4 col-xl-3">
+            <div class="product">
+                <figure class="product-media">
+                    <a href="{% url 'product_detail' j.slug %}">
+                        <img src="{{ j.product_image.url }}" alt="Product image" class="product-image" onclick="window.location.href='{% url 'product_detail' j.slug %}';">
+                    </a>
+                    <div class="product-action-vertical">
+                        <a href="#" class="btn-product-icon btn-wishlist btn-expandable addToWishlistLink" data-product_id="{{ j.id }}"><span>Add to Wishlist</span></a>
+                    </div><!-- End .product-action -->
+                    <div class="product-action-vertical">
+                    </div>
+                </figure><!-- End .product-media -->
+                <div class="product-body">
+                    <div class="product-cat">
+                        <a href="#">{{ j.author }}</a>
+                    </div><!-- End .product-cat -->
+                    <h3 class="product-title"><a href="{% url 'product_detail' j.slug %}">{{ j.product_name }}</a></h3><!-- End .product-title -->
+                    <div class="product-price">
+                        ₹ {{ j.product_price }}
+                    </div><!-- End .product-price -->
+                    {{ j.category }}<!-- End .discribtion -->
+                </div><!-- End .product-body -->
+                <div class="product-action">
+                    <button class="add-to-cart-btn btn btn-link" data-product_id="{{ j.id }}">Add to Cart</button>
+                </div><!-- End .product-action -->
+            </div><!-- End .product -->
+        </div><!-- End .col-6 col-md-4 col-lg-4 col-xl-3 -->
+        {% endfor %}
+    </div><!-- End .row -->
+</div><!-- End .products -->
+
+<!-- Filter form -->
+<form id="filterForm" method="post">
+    {% csrf_token %}
+    <!-- Include your filter options here (categories and authors) -->
+    <!-- ... -->
+    <div class="widget widget-collapsible">
+        <h3 class="widget-title">
+            <a data-toggle="collapse" href="#widget-1" role="button" aria-expanded="true" aria-controls="widget-1">
+                Category
+            </a>
+        </h3><!-- End .widget-title -->
+
+        <div class="collapse show" id="widget-1">
+            <div class="widget-body">
+                <div class="filter-items filter-items-count">
+                    {% for i in cate %}
+                    <div class="filter-item">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="cat-{{ forloop.counter }}" name="categories" value="{{ i.categories }}">
+                            
+                            <label class="custom-control-label" for="cat-{{ forloop.counter }}">{{ i.categories }}</label>
+                        </div><!-- End .custom-checkbox -->
+                        <span class="item-count">0</span> <!-- Replace '0' with the actual count of items (if available). -->
+                    </div><!-- End .filter-item -->
+                    {% endfor %}
+                </div><!-- End .filter-items -->
+            </div><!-- End .widget-body -->
+        </div><!-- End .collapse -->
+    </div><!-- End .widget -->
+
+    <div class="widget widget-collapsible">
+        <h3 class="widget-title">
+            <a data-toggle="collapse" href="#widget-2" role="button" aria-expanded="true" aria-controls="widget-2">
+                Author
+            </a>
+        </h3><!-- End .widget-title -->
+
+        <div class="collapse show" id="widget-2">
+            <div class="widget-body">
+                <div class="filter-items filter-items-count">
+                    {% for a in author %}
+                    <div class="filter-item">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="author-{{ forloop.counter }}" name="authors" value="{{ a.author_name }}">
+                            <label class="custom-control-label" for="author-{{ forloop.counter }}">{{ a.author_name }}</label>
+                        </div><!-- End .custom-checkbox -->
+                        <span class="item-count">0</span> <!-- Replace '0' with the actual count of items (if available). -->
+                    </div><!-- End .filter-item -->
+                    {% endfor %}
+                </div><!-- End .filter-items -->
+            </div><!-- End .widget-body -->
+        </div><!-- End .collapse -->
+    </div><!-- End .widget -->
+
+    <button type="submit">Apply Filters</button>
+</form>
+
+
+<script>
+    $(document).ready(function () {
+        $('#filterForm').on('submit', function(event) {
+            event.preventDefault(); // Prevent form submission
+            var formData = $(this).serialize(); // Get form data
+
+            // Get the selected categories and authors
+            const selectedCategories = [];
+            const selectedAuthors = [];
+
+            $('input[name="categories"]:checked').each(function () {
+                selectedCategories.push($(this).val());
+            });
+
+            $('input[name="authors"]:checked').each(function () {
+                selectedAuthors.push($(this).val());
+            });
+
+            // Log the selected categories and authors for debugging
+            console.log('Selected Categories:', selectedCategories);
+            console.log('Selected Authors:', selectedAuthors);
+
+            // AJAX request to filter products
+            $.ajax({
+                method: "POST", // Use POST method here
+                url: "/filter_products/",
+                data: {
+                    'categories': selectedCategories,
+                    'authors': selectedAuthors,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}' // Add CSRF token for security
+                },
+                success: function (response) {
+                    // Handle the response, e.g., update the product listing on the page
+                    console.log(response);
+                    $('#productListContainer').html(response.product_list_html);
+                },
+                error: function (error) {
+                    // Handle any error that occurs during the AJAX request
+                    console.error(error);
+                },
+            });
+        });
+    });
+</script>

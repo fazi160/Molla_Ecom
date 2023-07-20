@@ -1,0 +1,288 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>{% block title %} {% endblock %}</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->	
+	<link rel="icon" type="image/png" href="{% static 'images/icons/favicon.png ' %}"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'vendor/bootstrap/css/bootstrap.min.css ' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'fonts/font-awesome-4.7.0/css/font-awesome.min.css ' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'fonts/iconic/css/material-design-iconic-font.min.css ' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'fonts/linearicons-v1.0.0/icon-font.min.css ' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'vendor/animate/animate.css ' %}">
+<!--===============================================================================================-->	
+	<link rel="stylesheet" type="text/css" href="{% static 'vendor/css-hamburgers/hamburgers.min.css ' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'vendor/animsition/css/animsition.min.css ' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'vendor/select2/select2.min.css ' %}">
+<!--===============================================================================================-->	
+	<link rel="stylesheet" type="text/css" href="{% static 'vendor/daterangepicker/daterangepicker.css ' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'vendor/slick/slick.css ' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'vendor/MagnificPopup/magnific-popup.css ' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'vendor/perfect-scrollbar/perfect-scrollbar.css ' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'css/util.css ' %}">
+	
+	<link rel="stylesheet" href="{% static 'dashboard/css/styles.min.css'%}"/>
+
+	<link rel="stylesheet" type="text/css" href="{% static 'css/main.css ' %}">
+
+	<link rel="stylesheet" href="{% static 'css/bootstrap.userprofile.css' %}">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>Molla - Bootstrap eCommerce Template</title>
+        <meta name="keywords" content="HTML5 Template">
+        <meta name="description" content="Molla - Bootstrap eCommerce Template">
+        <meta name="author" content="p-themes">
+        <!-- Favicon -->
+        <link rel="apple-touch-icon" sizes="180x180" href="{% static 'user/images/icons/apple-touch-icon.png' %}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{% static 'user/images/icons/favicon-32x32.png' %}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{% static 'user/images/icons/favicon-16x16.png' %}">
+        <link rel="manifest" href="{% static 'user/images/icons/site.html' %}">
+        <link rel="mask-icon" href="{% static 'user/images/icons/safari-pinned-tab.svg' %}" color="#666666">
+        <link rel="shortcut icon" href="{% static 'user/images/icons/favicon.ico' %}">
+        <meta name="apple-mobile-web-app-title" content="Molla">
+        <meta name="application-name" content="Molla">
+        <meta name="msapplication-TileColor" content="#cc9966">
+        <meta name="msapplication-config" content="{% static 'user/images/icons/browserconfig.xml' %}">
+        <meta name="theme-color" content="#ffffff">
+        <link rel="stylesheet" href="{% static 'user/vendor/line-awesome/line-awesome/line-awesome/css/line-awesome.min.css' %}">
+        <!-- Plugins CSS File -->
+        <link rel="stylesheet" href="{% static 'user/css/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static 'user/css/plugins/owl-carousel/owl.carousel.css' %}">
+        <link rel="stylesheet" href="{% static 'user/css/plugins/magnific-popup/magnific-popup.css' %}">
+        <!-- Main CSS File -->
+        <link rel="stylesheet" href="{% static 'user/css/style.css' %}">
+        <link rel="stylesheet" href="{% static 'user/css/skins/skin-demo-20.css' %}">
+        <link rel="stylesheet" href="{% static 'user/css/demos/demo-20.css' %}">
+    </head>
+    <!-- Main CSS File -->
+    <link rel="stylesheet" href="{% static 'css/userprofile.css' %}"> 
+	<link rel="stylesheet" href="{% static 'https://cdn.jsdelivr.net/npm/alertifyjs/build/css/alertify.min.css' %}">
+   <link rel="stylesheet" href="{% static 'https://cdn.jsdelivr.net/npm/alertifyjs/build/css/themes/default.min.css' %}">
+<!--===============================================================================================-->
+</head>
+<body class="animsition">
+	
+	<!-- Header -->
+	<header>
+		{% include 'includes/navbar.html' %}
+
+		
+
+
+		
+	<!-- Cart -->
+	<div class="wrap-header-cart js-panel-cart">
+		<div class="s-full js-hide-cart"></div>
+
+		<div class="header-cart flex-col-l p-l-65 p-r-25">
+			<div class="header-cart-title flex-w flex-sb-m p-b-8">
+				<span class="mtext-103 cl2">
+					Your Cart
+				</span>
+
+				<div class="fs-35 lh-10 cl2 p-lr-5 pointer hov-cl1 trans-04 js-hide-cart">
+					<i class="zmdi zmdi-close"></i>
+				</div>
+			</div>
+			
+			<div class="header-cart-content flex-w js-pscroll">
+				
+				<div class="header-cart-item-txt p-t-8">
+					<a href="#" class="header-cart-item-name m-b-18 hov-cl1 trans-04">
+						Your cart is Empty!!!
+					</a>
+
+					
+				</div>
+
+					<div class="header-cart-buttons flex-w w-full">
+						<a href="{% url 'cart' %}" class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-r-8 m-b-10">
+							View Cart
+						</a>
+
+						<a href="{% url 'cart' %}" class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-b-10">
+							Check Out
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- wishlist -->
+	<div class="wrap-header-cart js-panel-wishlist">
+		<div class="s-full js-hide-wishlist"></div>
+
+		<div class="header-cart flex-col-l p-l-65 p-r-25">
+			<div class="header-cart-title flex-w flex-sb-m p-b-8">
+				<span class="mtext-103 cl2">
+					Your Cart
+				</span>
+
+				<div class="fs-35 lh-10 cl2 p-lr-5 pointer hov-cl1 trans-04 js-hide-wishlist">
+					<i class="zmdi zmdi-close"></i>
+				</div>
+			</div>
+			
+			<div class="header-cart-content flex-w js-pscroll">
+				
+				<div class="header-cart-item-txt p-t-8">
+					<a href="#" class="header-cart-item-name m-b-18 hov-cl1 trans-04">
+						Your cart is Empty!!!
+					</a>
+
+					
+				</div>
+
+					<div class="header-cart-buttons flex-w w-full">
+						<a href="{% url 'cart' %}" class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-r-8 m-b-10">
+							View Cart
+						</a>
+
+						<a href="{% url 'cart' %}" class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-b-10">
+							Check Out
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		
+	</div>
+	
+	
+
+    {% block content %} {% endblock %}
+    {% include 'includes/footer.html' %}
+
+
+	<!-- Back to top -->
+	<div class="btn-back-to-top" id="myBtn">
+		<span class="symbol-btn-back-to-top">
+			<i class="zmdi zmdi-chevron-up"></i>
+		</span>
+	</div>
+
+	
+	<script src="{% static 'jquery/jquery-3.7.0.min.js' %}" > </script>
+	<script src="{% static 'jquery/customjquery.js' %}" > </script>
+<!--===============================================================================================-->	
+	<script src="{% static 'vendor/jquery/jquery-3.2.1.min.js '%}"></script>
+	<script src=" {% static 'https://code.jquery.com/jquery-3.3.1.min.js' %} "></script> 	
+	<script src=" {% static 'https://cdn.jsdelivr.net/npm/alertifyjs/build/alertify.min.js' %} "></script>
+<!--===============================================================================================-->
+	<script src="{% static 'vendor/animsition/js/animsition.min.js '%}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'vendor/bootstrap/js/popper.js '%}"></script>
+	<script src="{% static 'vendor/bootstrap/js/bootstrap.min.js '%}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'vendor/select2/select2.min.js '%}"></script>
+	<script>
+		$(".js-select2").each(function(){
+			$(this).select2({
+				minimumResultsForSearch: 20,
+				dropdownParent: $(this).next('.dropDownSelect2')
+			});
+		})
+	</script>
+<!--===============================================================================================-->
+	<script src="{% static 'vendor/daterangepicker/moment.min.js '%}"></script>
+	<script src="{% static 'vendor/daterangepicker/daterangepicker.js '%}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'vendor/slick/slick.min.js '%}"></script>
+	<script src="{% static 'js/slick-custom.js '%}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'vendor/parallax100/parallax100.js '%}"></script>
+	<script>
+        $('.parallax100').parallax100();
+	</script>
+<!--===============================================================================================-->
+	<script src="{% static 'vendor/MagnificPopup/jquery.magnific-popup.min.js '%}"></script>
+	<script>
+		$('.gallery-lb').each(function() { // the containers for all your galleries
+			$(this).magnificPopup({
+		        delegate: 'a', // the selector for gallery item
+		        type: 'image',
+		        gallery: {
+		        	enabled:true
+		        },
+		        mainClass: 'mfp-fade'
+		    });
+		});
+	</script>
+<!--===============================================================================================-->
+	<script src="{% static 'vendor/isotope/isotope.pkgd.min.js '%}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'vendor/sweetalert/sweetalert.min.js '%}"></script>
+	<script>
+		$('.js-addwish-b2').on('click', function(e){
+			e.preventDefault();
+		});
+
+		$('.js-addwish-b2').each(function(){
+			var nameProduct = $(this).parent().parent().find('.js-name-b2').html();
+			$(this).on('click', function(){
+				swal(nameProduct, "is added to wishlist !", "success");
+
+				$(this).addClass('js-addedwish-b2');
+				$(this).off('click');
+			});
+		});
+
+		$('.js-addwish-detail').each(function(){
+			var nameProduct = $(this).parent().parent().parent().find('.js-name-detail').html();
+
+			$(this).on('click', function(){
+				swal(nameProduct, "is added to wishlist !", "success");
+
+				$(this).addClass('js-addedwish-detail');
+				$(this).off('click');
+			});
+		});
+
+		/*---------------------------------------------*/
+
+		$('.js-addcart-detail').each(function(){
+			var nameProduct = $(this).parent().parent().parent().parent().find('.js-name-detail').html();
+			$(this).on('click', function(){
+				swal(nameProduct, "is added to cart !", "success");
+			});
+		});
+	
+	</script>
+<!--===============================================================================================-->
+	<script src="{% static 'vendor/perfect-scrollbar/perfect-scrollbar.min.js '%}"></script>
+	<script>
+		$('.js-pscroll').each(function(){
+			$(this).css('position','relative');
+			$(this).css('overflow','hidden');
+			var ps = new PerfectScrollbar(this, {
+				wheelSpeed: 1,
+				scrollingThreshold: 1000,
+				wheelPropagation: false,
+			});
+
+			$(window).on('resize', function(){
+				ps.update();
+			})
+		});
+	</script>
+<!--===============================================================================================-->
+	<script src="{% static 'js/main.js '%}"></script>
+
+</body>
+</html>

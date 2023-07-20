@@ -1,0 +1,95 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+    <div class="page-wrapper">
+        <header class="header">
+            <div class="header-middle sticky-header">
+                <div class="container">
+                    
+
+                    
+                </div><!-- End .container -->
+            </div><!-- End .header-middle -->
+        </header><!-- End .header -->
+
+        <div class="login-page bg-image pt-8 pb-8 pt-md-12 pb-md-12 pt-lg-17 pb-lg-17" style="background-image: url('{% static "user/images/404.jpg" %}')" >
+            
+
+
+    
+    
+
+
+
+            	<div class="container">
+            		<div class="form-box">
+            			<div class="form-tab">
+                            <ul class="nav nav-pills nav-fill" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="signin-tab-2" data-toggle="tab" href="#signin-2" role="tab" aria-controls="signin-2">Sign In</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane fade show active" id="signin-2" role="tabpanel" aria-labelledby="signin-tab-2">
+                                    {% include 'includes/alerts.html' %}
+                                    <form action="{% url 'user_login' %}" method="POST">
+                                        {% csrf_token %}
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" placeholder="Enter username" name="username" >
+                                        </div><!-- End .form-group -->
+                        
+                                        <div class="form-group">
+                                            <input type="password" class="form-control" placeholder="Password" name="password" >
+
+                                        </div><!-- End .form-group -->
+                        
+                                        
+                                        <div class="form-group">
+                                            <a href="{% url 'forgot_password' %}" class="float-right">Forgot password?</a> 
+                                         
+                                        </div> <!-- form-group form-check .// -->
+                                        <div class="form-group">
+                                            <button type="submit" class="btn btn-primary btn-block"> Login  </button>
+                                        </div> <!-- form-group// -->  
+                                            
+                                        </div><!-- End .form-footer -->
+                                    </form>
+                                    <div class="form-choice">
+                                        <p class="text-center">or didn't have Account?</p>
+                                       
+                                        <div class="align-center text-center">
+                                            <a href="{% url 'user_signup' %}" class="btn btn-light btn-center">
+                                                Create an Account
+                                            </a>
+                                        </div>
+                                        
+                                        </div><!-- End .row -->
+                                    </div><!-- End .form-choice -->
+                                </div><!-- .End .tab-pane -->
+                            </div><!-- End .tab-content -->
+                        </div><!-- End .form-tab -->                        
+            		</div><!-- End .form-box -->
+            	</div><!-- End .container -->
+            </div><!-- End .login-page section-bg -->
+        </div>
+        </main><!-- End .main -->
+    </div><!-- End .page-wrapper -->
+    <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
+    <!-- Plugins JS File -->
+    <script src="{% static 'user/js/jquery.min.js' %}"></script>
+    <script src="{% static 'user/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'user/js/jquery.hoverIntent.min.js' %}"></script>
+    <script src="{% static 'user/js/jquery.waypoints.min.js' %}"></script>
+    <script src="{% static 'user/js/superfish.min.js' %}"></script>
+    <script src="{% static 'user/js/owl.carousel.min.js' %}"></script>
+    <!-- Main JS File -->
+    <script src="{% static 'user/js/main.js' %}"></script>
+</body>
+
+
+<!-- molla/login.html  22 Nov 2019 10:04:03 GMT -->
+</html>
+
+{% endblock %}

@@ -1,0 +1,220 @@
+{% extends 'adminapp/dashboardbase.html' %}
+
+{% block title %} Dashboard {% endblock %}
+
+{% load static %}
+<link rel="stylesheet" href="{% static 'dashboard/libs/apexcharts/dist/apexcharts.min.css' %}">
+<script src="{% static 'dashboard/libs/apexcharts/dist/apexcharts.min.js' %}"></script>
+<script src="https://kit.fontawesome.com/yourcode.js" crossorigin="anonymous"></script>
+
+{% block content %}
+<div class="col-lg-12 grid-margin stretch-card">
+  <div class="card">
+    <div class="card-body">
+      <div class="content-wrapper">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-12 text-left">
+              <div class="pagetitle">
+                <h1>Dashboard</h1>
+              </div>
+            </div>
+
+            <div class="col-md-12">
+              <section class="section dashboard pt-5">
+                <div class="row">
+  <!-- Sales Card -->
+  <div class="col-md-4">
+    <div class="card info-card sales-card  text-white" style="background-color: #87CEEB; border-radius: 20px;">
+      <div class="card-body">
+        <h5 class="card-title">Sales</h5>
+        <div class="d-flex align-items-center">
+          <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-cart-fill" viewBox="0 0 16 16">
+              <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+            </svg>
+          </div>
+          <div class="ps-3">
+            <h4>{{ sales | floatformat }} Products</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- End Sales Card -->
+
+  <!-- Revenue Card -->
+  <div class="col-md-4">
+    <div class="card info-card revenue-card bg-success text-white" style="border-radius: 20px;">
+      <div class="card-body">
+        <h5 class="card-title">Revenue</h5>
+        <div class="d-flex align-items-center">
+          <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+            <i class="fa fa-rupee" style="font-size: 30px; width: 30px; height: 30px;"></i>
+          </div>
+          <div class="ps-3">
+            <h3>{{ revenue | floatformat:2 }}</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- End Revenue Card -->
+
+  <!-- Customers Card -->
+  <div class="col-md-4">
+    <div class="card info-card customers-card bg-info text-white" style="border-radius: 20px;">
+      <div class="card-body">
+        <h5 class="card-title">Customers</h5>
+        <div class="d-flex align-items-center">
+          <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-people" viewBox="0 0 16 16">
+              <path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1h8Zm-7.978-1A.261.261 0 0 1 7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002a.274.274 0 0 1-.014.002H7.022ZM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM6.936 9.28a5.88 5.88 0 0 0-1.23-.247A7.35 7.35 0 0 0 5 9c-4 0-5 3-5 4 0 .667.333 1 1 1h4.216A2.238 2.238 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816ZM4.92 10A5.493 5.493 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275ZM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0Zm3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4Z"/>
+            </svg>
+          </div>
+          <div class="ps-3">
+            <h4>{{ total_users }}</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- End Customers Card -->
+</div>
+
+                      
+<br><br><br><br><br><br>
+                      <!-- Reports -->
+                      <div class="col-12">
+                        <div class="card">
+
+                          <div class="card-body">
+                            <h5 class="card-title">Reports</h5>
+
+                            <!-- Line Chart -->
+                            <div id="reportsChart"></div>
+                            <script>
+                              document.addEventListener("DOMContentLoaded", () => {
+                                new ApexCharts(document.querySelector("#reportsChart"), {
+                                  series: [{
+                                    name: 'Sales',
+                                    data: [{% for sale in sales_by_day %}
+                                      {{ sale.total_sales|floatformat:2 }},
+                                    {% endfor %}],
+                                  }],
+                                  chart: {
+                                    height: 350,
+                                    type: 'area',
+                                    toolbar: {
+                                      show: false
+                                    },
+                                  },
+                                  markers: {
+                                    size: 4
+                                  },
+                                  colors: ['#4154f1', '#2eca6a'],
+                                  fill: {
+                                    type: "gradient",
+                                    gradient: {
+                                      shadeIntensity: 1,
+                                      opacityFrom: 0.3,
+                                      opacityTo: 0.4,
+                                      stops: [0, 90, 100]
+                                    }
+                                  },
+                                  dataLabels: {
+                                    enabled: true
+                                  },
+                                  stroke: {
+                                    curve: 'smooth',
+                                    width: 3
+                                  },
+                                  xaxis: {
+                                    type: 'datetime',
+                                    categories: [{% for sale in sales_by_day %}
+                                      '{{ sale.day|date:"Y-m-d H:i:s" }}',
+                                    {% endfor %}]
+                                  },
+                                  tooltip: {
+                                    x: {
+                                      format: 'dd/MM/yy HH:mm'
+                                    },
+                                  }
+                                }).render();
+                              });
+                            </script>
+                            <!-- End Line Chart -->
+
+                          </div>
+
+                        </div>
+                      </div><!-- End Reports -->
+                      <br><br><br><br><br><br>
+                      <!-- Recent Sales -->
+                      <div class="col-12">
+                        <div class="card recent-sales overflow-auto">
+                          <div class="card-body">
+                            <h5 class="card-title">Recent Sales <span>| Today</span></h5>
+                            <table class="table table-borderless">
+                              <thead class="bg-white">
+                                <tr>
+                                  <th scope="col">#</th>
+                                  <th scope="col">Customer</th>
+                                  <th scope="col">Product</th>
+                                  <th scope="col">Qty</th>
+                                  <th scope="col">Price</th>
+                                  <th scope="col">Status</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {% for sale in recent_sales %}
+                                <tr>
+                                  <th scope="row">{{ sale.order.id }}</th>
+                                  <td>{{ sale.order.user }}</td>
+                                  <td>{{ sale.product }}</td>
+                                  <td>{{ sale.quantity }}</td>
+                                  <td>₹ {{ sale.product.product_price }}</td>
+                                  {% if sale.status == 'Pending' %}
+                                  <td><span style="background-color: #fff2e1 !important; color: #fdac41 !important; border-radius: 0; " class="badge">{{ sale.status }}</span></td>
+                                  {% elif sale.status == 'Processing' %}
+                                  <td><span style="background-color: #dff9ec !important; color: #39da8a !important; border-radius: 0; " class="badge">{{ sale.status }}</span></td>
+                                  {% elif sale.status == 'Cancelled' %}
+                                  <td><span style="background-color: #ffe4e4 !important; color: #e85a5a !important; border-radius: 0; " class="badge">{{ sale.status }}</span></td>
+                                  {% elif sale.status == 'Shipped' %}
+                                  <td><span style="background-color: #e5edfc !important; color: #6d99eb !important; border-radius: 0; " class="badge">{{ sale.status }}</span></td>
+                                  {% elif sale.status == 'Delivered' %}
+                                  <td><span style="background-color: #dff9ec !important; color: #39da8a !important; border-radius: 0; " class="badge">{{ sale.status }}</span></td>
+                                  {% endif %}
+                                </tr>
+                                {% endfor %}
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <!-- End Recent Sales -->
+
+                    </div>
+                  </div><!-- End Left side columns -->
+                </div>
+              </section>
+            </div>
+            <div class="col-md-6">
+              <!-- Right side content -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="{% static 'dashboard/libs/jquery/dist/jquery.min.js'%}"></script>
+<script src="{% static 'dashboard/libs/bootstrap/dist/js/bootstrap.bundle.min.js'%}"></script> 
+<script src="{% static 'dashboard/js/sidebarmenu.js'%}"></script>
+<script src="{% static 'dashboard/js/app.min.js'%}"></script>
+<script src="{% static 'dashboard/libs/simplebar/dist/simplebar.js'%}"></script>
+<script src="{% static 'dashboard/js/dashboard.js'%}"></script> 
+<script src="{% static 'dashboard/js/custom.js'%}"></script> 
+{% endblock %}

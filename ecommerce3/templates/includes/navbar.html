@@ -1,0 +1,172 @@
+{% load static %}
+<header class="header header-12">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>    
+
+    <div class="header-middle">
+        <div class="container">
+            <div class="header-left">
+                <button class="mobile-menu-toggler">
+                    <span class="sr-only">Toggle mobile menu</span>
+                    <i class="icon-bars"></i>
+                </button>
+
+                <a href="index-20.html" class="logo">
+                    <img src="{% static 'user/images/demos/demo-20/logo.png' %}" alt="Molla Logo" width="105" height="25">
+                </a>
+            </div><!-- End .header-left -->
+
+            
+            <!-- search bar -->
+            <div class="header-right">
+                <div class="header-search header-search-extended header-search-visible header-search-no-radius">
+                    <a href="#" class="search-toggle" role="button"><i class="icon-search"></i></a>
+                    <form action="{% url 'search' %}">
+                        <div class="header-search header-search-extended header-search-visible header-search-no-radius">
+                            <a href="#" class="search-toggle" role="button"><i class="icon-search"></i></a>
+                            <div class="header-search-wrapper search-wrapper-wide">
+                                <label for="q" class="sr-only">Search</label>
+                                <input type="search" class="form-control" name="q" id="q" placeholder="Search product ..." required>
+                                <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
+                
+                                <!-- Suggestions dropdown -->
+                                <div id="suggestions-dropdown" style="display: none;">
+                                    <ul id="suggestions"></ul>
+                                </div>
+                            </div><!-- End .header-search-wrapper -->
+                        </div><!-- End .header-search -->
+                    </form>
+                </div><!-- End .header-search -->
+                
+                
+
+                    <div class="wishlist">
+                        <!-- button for wishlist -->
+                        <a href={% url 'wishlist' %} title="Wishlist">
+                            <div class="icon">
+                                <i class="icon-heart-o"></i>
+                                <span class="wishlist-count badge">{{ wishlist_count }}</span>
+                            </div>
+                            <p>Wishlist</p>
+                        </a>
+                    </div><!-- End .compare-dropdown -->
+
+                    <div class="dropdown cart-dropdown">
+                        <!-- button for cart -->
+                        <a href="{% url 'cart' %}" class="dropdown-toggle" role="button" >
+                            <div class="icon">
+                                <i class="icon-shopping-cart"></i>
+                                <span class="cart-count">{{ cart_count }}</span>
+                            </div>
+                            <p>Cart</p>
+                        </a>
+
+                       
+                    </div> 
+                    
+                    
+                </div>
+            </div><!-- End .header-right -->
+        </div><!-- End .container -->
+    </div><!-- End .header-middle -->
+
+    <div class="header-bottom sticky-header">
+        <div class="container">
+            <div style="background-color: #333; display: flex; width: 100%;">   
+               <!-- End .header-left -->
+
+               <div class="header-center">
+                <nav class="main-nav">
+                    <ul class="menu sf-arrows">
+                        <li class="{% if request.path == '/' %}active{% endif %}">
+                            <a href="{% url 'home' %}" class="with-ul">Home</a>
+                        </li>
+                        <li class="{% if request.path == '/shop/' %}active{% endif %}">
+                            <a href="{% url 'shop' %}">Shop</a>
+                        </li>
+                        <li class="{% if request.path == '/product_show/' %}active{% endif %}">
+                            <a href="{% url 'product_show' %}">Product</a>
+                        </li>
+                        <li class="{% if request.path == '/blog/' %}active{% endif %}">
+                            <a href="{% url 'blog' %}">Blog</a>  
+                        </li>
+                        {% if user.id is not None %}
+                        <li class="{% if request.path == '/user_logout/' %}active{% endif %}">
+                            <a href="{% url 'user_logout' %}">Logout</a>
+                        </li>
+                        <li class="{% if request.path == '/profile/' %}active{% endif %}">
+                            <a href="{% url 'profile' %}">Dashboard</a>  
+                        </li>
+                        {% else %}
+                        <li class="{% if request.path == '/user_login/' %}active{% endif %}">
+                            <a href="{% url 'user_login' %}">Login</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav><!-- End .main-nav -->
+            </div>
+
+                
+            </div>
+        </div><!-- End .container -->
+    </div><!-- End .header-bottom -->
+</header><!-- End .header -->
+
+<div>
+    <div class="mobile-menu-overlay"></div><!-- End .mobil-menu-overlay -->
+
+    <div class="mobile-menu-container">
+    <div class="mobile-menu-wrapper">
+        <span class="mobile-menu-close"><i class="icon-close"></i></span>
+
+        <form action="#" method="get" class="mobile-search">
+            <label for="mobile-search" class="sr-only">Search</label>
+            <input type="search" class="form-control" name="mobile-search" id="mobile-search" placeholder="Search in..." required>
+            <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
+        </form>
+        
+        <div class="social-icons">
+            <a href="#" class="social-icon" target="_blank" title="Facebook"><i class="icon-facebook-f"></i></a>
+            <a href="#" class="social-icon" target="_blank" title="Twitter"><i class="icon-twitter"></i></a>
+            <a href="#" class="social-icon" target="_blank" title="Instagram"><i class="icon-instagram"></i></a>
+            <a href="#" class="social-icon" target="_blank" title="Youtube"><i class="icon-youtube"></i></a>
+        </div><!-- End .social-icons -->
+    </div><!-- End .mobile-menu-wrapper -->
+</div><!-- End .mobile-menu-container -->
+</div>
+{% comment %} <script>
+    $(document).ready(function () {
+        // Bind an event to the search input field
+        $('#q').on('keyup', function () {
+            // Get the current user input
+            const searchQuery = $(this).val().trim();
+
+            // Send an AJAX request to the Django view to get suggestions
+            $.ajax({
+                type: 'GET',
+                url: '/get_suggestions/', // Replace with your actual URL
+                data: { search_query: searchQuery },
+                success: function (data) {
+                    // Clear the previous suggestions
+                    $('#suggestions').empty();
+
+                    // Loop through the suggestions and display them in a dropdown
+                    data.suggestions.forEach(function (suggestion) {
+                        $('#suggestions').append(
+                            `<li><a href="${suggestion.url}">${suggestion.name} (${suggestion.type})</a></li>`
+                        );
+                    });
+
+                    // Show or hide the dropdown based on the number of suggestions
+                    if (data.suggestions.length > 0) {
+                        $('#suggestions-dropdown').show();
+                    } else {
+                        $('#suggestions-dropdown').hide();
+                    }
+                },
+                error: function (error) {
+                    console.log('Error fetching suggestions:', error);
+                }
+            });
+        });
+    });
+</script> {% endcomment %}

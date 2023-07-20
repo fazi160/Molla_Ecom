@@ -1,0 +1,171 @@
+
+
+{% extends 'base1.html' %}
+{% load static %}
+
+{% block content %}
+
+
+
+
+<br><br>
+<br><br>
+<!-- breadcrumb -->
+<div class="container">
+    <div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
+        <a href="{% url 'home' %}" class="stext-109 cl8 hov-cl1 trans-04">
+            Home
+            <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
+        </a>
+
+        <span class="stext-109 cl4">
+            wishlist
+        </span>
+    </div>
+</div>
+    
+{% if not wishlist %}
+<br>
+<br>
+<br>
+<h4 class="text-center font-weight-bold" style="color: #060000;" >Your wishlist is Empty</h4>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div class="col-sm-10 col-lg-7 col-xl-5 m-lr-auto m-b-50">
+
+<button  class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer">
+    <a href="{% url 'home' %}">
+ Continue Shopping</a>
+</button>
+
+</div>
+<br>
+<br>
+<br>
+{% else %}
+
+
+
+
+<!-- Shoping Cart -->
+<form class="bg0 p-t-75 p-b-85">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">
+                <div class="m-l-60 m-r--90 m-lr-0-xl">
+                    <div class="wrap-table-shopping-cart">
+                        <table class="table-shopping-cart">
+                            <tr class="table_head">
+                                <th class="column-1">Product</th>
+                                <th class="column-2"></th>
+                                <th class="column-3">Price</th>
+							
+
+                                <th class="column-5">stock status</th>
+                                
+								<th class="column-6"></th>
+								<th class="column-7"></th>
+                            </tr>
+
+                            {% for i in wishlist %}
+
+                            <tr class="table_row">
+                                <td class="column-1">
+                                    <div class="how-itemcart1">
+                                        <img src="{{i.product.product_image.url}}" alt="IMG">
+                                    </div>
+                                </td>
+                                <td class="column-2">{{i.product.product_name}}</td>
+                                <td class="column-3">{{i.product.product_price}}</td>
+                                <td class="column-5"><span class="in-stock">In stock</span></td>
+								<td class="column-6">
+									<button  class="add-to-cart-btn btn btn-block btn-outline-primary-2" data-product_id="{{ pro_detail.id }}"><i class="icon-cart-plus"></i><a href="#">Add to Cart</a></button>
+									
+								</td>
+								<td class="column-7"><a class="text-danger" href="{% url 'delete_wishlist' i.product.id %}"> remove</a></td>
+                            </tr>
+                            {% endfor %}
+                           
+                        </table>
+                    </div>
+
+                    <div class="flex-w flex-sb-m bor15 p-t-18 p-b-15 p-lr-40 p-lr-15-sm">
+                      
+
+                        <div class="flex-c-m stext-101 cl2 size-119 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-10">
+                            Update Cart
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+          
+        </div>
+    </div>
+</form>
+
+{% endif %}
+
+{% endblock %}
+
+
+<!-- <tr>
+    <td class="product-col">
+        <div class="product">
+            <figure class="product-media">
+                <a href="#">
+                    <img src="assets/images/products/table/product-3.jpg" alt="Product image">
+                </a>
+            </figure>
+
+            <h3 class="product-title">
+                <a href="#">Orange saddle lock front chain cross body bag</a>
+            </h3>
+        </div>
+    </td>
+    <td class="price-col">$52.00</td>
+    <td class="stock-col"><span class="out-of-stock">Out of stock</span></td>
+    <td class="action-col">
+        <button class="btn btn-block btn-outline-primary-2 disabled">Out of Stock</button>
+    </td>
+    <td class="remove-col"><button class="btn-remove"><i class="icon-close"></i></button></td>
+</tr> -->
+
+<script>
+    $('.add-to-cart-btn').click(function(e) {
+      e.preventDefault();
+     
+      var product_id = $(this).data('product_id');
+      var quantity = 1; // Or get quantity from a form input field
+      console.log(product_id,'111111')
+      
+      $.ajax({
+        method: "POST",
+        url: "{% url 'add_cart' %}",
+        data: {
+          'product_qty': quantity,
+          'prod_id': product_id,
+          csrfmiddlewaretoken: '{{ csrf_token }}'
+        },
+        success: function(response) {
+          console.log(response);
+          
+          if (response.status === 'Product already in Cart' || response.status === 'No such product found' || response.status === 'Only few quantity available') {
+            swal("Error!", response.status, "error");
+            $('.cartdata').load(location.href + " .cartdata");
+          } else if (response.status === 'Product added successfully') {
+            swal("Congratulations!", response.status, "success");
+            $('.cartdata').load(location.href + " .cartdata");
+          } else {
+            swal("Error!", response.status, "error");
+            $('.cartdata').load(location.href + " .cartdata");
+          }
+        }
+      });
+    });
+  </script>
+
+           

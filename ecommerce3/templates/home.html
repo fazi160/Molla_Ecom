@@ -1,0 +1,507 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+{% csrf_token %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="http://127.0.0.1:8000/static/user/js/bootstrap.bundle.min.js"></script>
+    <div class="page-wrapper">
+        
+        <main class="main">
+            <div class="intro-section pt-lg-2">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12 col-lg-6">
+                            <div class="banner banner-big banner-overlay">
+                                <a href="#">
+                                    <img src="{% static 'user/images/demos/demo-20/banners/banner-1.jpg' %}" alt="Banner">
+                                </a>
+
+                                <div class="banner-content">
+                                    <h4 class="banner-subtitle text-white"><a href="#">Your Guide To The World</a></h4><!-- End .banner-subtitle -->
+                                    <h2 class="banner-title text-white"><a href="#">Must-Read <br>Travel Books</a></h2><!-- End .banner-title -->
+                                    <a href="#" class="btn btn-outline-white-3 banner-link">Find out more<i class="icon-long-arrow-right"></i></a>
+                                </div><!-- End .banner-content -->
+                            </div><!-- End .banner -->
+                        </div><!-- End .col-lg-6 -->
+
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="banner banner-overlay">
+                                <a href="#">
+                                    <img src="{% static 'user/images/demos/demo-20/banners/banner-2.jpg' %}" alt="Banner">
+                                </a>
+
+                                <div class="banner-content banner-content-stretch">
+                                    <h4 class="banner-subtitle text-white"><a href="#">New This Week</a></h4><!-- End .banner-subtitle -->
+                                    <h3 class="banner-title text-white"><a href="#">Discover Our <br>Best Romance <br>Books</a></h3><!-- End .banner-title -->
+                                    <a href="#" class="btn btn-outline-white-3 banner-link">Discover Now<i class="icon-long-arrow-right"></i></a>
+                                </div><!-- End .banner-content -->
+                            </div><!-- End .banner -->
+                        </div><!-- End .col-lg-3 -->
+
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="banner banner-small banner-overlay">
+                                <a href="#">
+                                    <img src="{% static 'user/images/demos/demo-20/banners/banner-3.jpg' %}" alt="Banner">
+                                </a>
+
+                                <div class="banner-content">
+                                    <h4 class="banner-subtitle text-white d-lg-none d-xl-block"><a href="#">Deal Of The Day</a></h4><!-- End .banner-subtitle -->
+                                    <h3 class="banner-title text-white"><a href="#">20% Off Use <br>Code: <span>mybook</span></a></h3><!-- End .banner-title -->
+                                    <a href="#" class="btn btn-outline-white-3 banner-link">Shop Now<i class="icon-long-arrow-right"></i></a>
+                                </div><!-- End .banner-content -->
+                            </div><!-- End .banner -->
+
+                            <div class="banner banner-small banner-overlay">
+                                <a href="#">
+                                    <img src="{% static 'user/images/demos/demo-20/banners/banner-4.jpg' %}" alt="Banner">
+                                </a>
+
+                                <div class="banner-content">
+                                    <h4 class="banner-subtitle text-white d-lg-none d-xl-block"><a href="#">New Arrivals</a></h4><!-- End .banner-subtitle -->
+                                    <h3 class="banner-title text-white"><a href="#">Business <br>& Economics</a></h3><!-- End .banner-title -->
+                                    <a href="#" class="btn btn-outline-white-3 banner-link">Discover Now<i class="icon-long-arrow-right"></i></a>
+                                </div><!-- End .banner-content -->
+                            </div><!-- End .banner -->
+                        </div><!-- End .col-lg-3 -->
+                    </div><!-- End .row -->
+                </div><!-- End .container -->
+
+                <div class="icon-boxes-container bg-transparent">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm-6 col-lg-3">
+                                <div class="icon-box icon-box-side">
+                                    <span class="icon-box-icon">
+                                        <i class="icon-truck"></i>
+                                    </span>
+                                    <div class="icon-box-content">
+                                        <h3 class="icon-box-title">Payment & Delivery</h3><!-- End .icon-box-title -->
+                                        <p>Free shipping for orders over $50</p>
+                                    </div><!-- End .icon-box-content -->
+                                </div><!-- End .icon-box -->
+                            </div><!-- End .col-sm-6 col-lg-3 -->
+
+                            <div class="col-sm-6 col-lg-3">
+                                <div class="icon-box icon-box-side">
+                                    <span class="icon-box-icon">
+                                        <i class="icon-rotate-left"></i>
+                                    </span>
+
+                                    <div class="icon-box-content">
+                                        <h3 class="icon-box-title">Return & Refund</h3><!-- End .icon-box-title -->
+                                        <p>Free 100% money back guarantee</p>
+                                    </div><!-- End .icon-box-content -->
+                                </div><!-- End .icon-box -->
+                            </div><!-- End .col-sm-6 col-lg-3 -->
+
+                            <div class="col-sm-6 col-lg-3">
+                                <div class="icon-box icon-box-side">
+                                    <span class="icon-box-icon">
+                                        <i class="icon-life-ring"></i>
+                                    </span>
+
+                                    <div class="icon-box-content">
+                                        <h3 class="icon-box-title">Quality Support</h3><!-- End .icon-box-title -->
+                                        <p>Alway online feedback 24/7</p>
+                                    </div><!-- End .icon-box-content -->
+                                </div><!-- End .icon-box -->
+                            </div><!-- End .col-sm-6 col-lg-3 -->
+
+                            <div class="col-sm-6 col-lg-3">
+                                <div class="icon-box icon-box-side">
+                                    <span class="icon-box-icon">
+                                        <i class="icon-envelope"></i>
+                                    </span>
+
+                                    <div class="icon-box-content">
+                                        <h3 class="icon-box-title">Join Our Newsletter</h3><!-- End .icon-box-title -->
+                                        <p>10% off by subscribing to our newsletter</p>
+                                    </div><!-- End .icon-box-content -->
+                                </div><!-- End .icon-box -->
+                            </div><!-- End .col-sm-6 col-lg-3 -->
+                        </div><!-- End .row -->
+                    </div><!-- End .container -->
+                </div><!-- End .icon-boxes-container -->
+            </div><!-- End .intro-section -->
+
+            <div class="bestseller-products bg-light pt-5 pb-5 mb-5">
+                <div class="block">
+                    <div class="block-wrapper ">
+                        <div class="container">
+                            <div class="heading heading-flex">
+                                <div class="heading-left">
+                                    <h2 class="title">Book Genres</h2><!-- End .title -->
+                                </div><!-- End .heading-left -->
+
+                                <div class="heading-right">
+                                    <a href="category.html" class="title-link">View more<i class="icon-long-arrow-right"></i></a>
+                                </div><!-- End .heading-right -->
+                            </div><!-- End .header-flex -->
+
+                            <div class="owl-carousel carousel-equal-height owl-simple" data-toggle="owl" 
+                                data-owl-options='{
+                                    "nav": false, 
+                                    "dots": true,
+                                    "margin": 20,
+                                    "loop": false,
+                                    "responsive": {
+                                        "0": {
+                                            "items":2
+                                        },
+                                        "480": {
+                                            "items":2
+                                        },
+                                        "768": {
+                                            "items":3
+                                        },
+                                        "992": {
+                                            "items":4
+                                        },
+                                        "1440": {
+                                            "items":5
+                                        }
+                                    }
+                                }'>
+                                {% for i in categories %}
+                                <div class="product">
+                                    <figure class="product-media">
+                                        <a href="{% url 'category_detail' i.id %}">
+                                            <img src="{{i.categories_image.url}}" alt="Product image" class="product-image">
+                                        </a>
+                                    </figure><!-- End .product-media -->
+                                    
+                                    <div class="product-body">
+                                        
+                                        <h3 class="product-title"><a href="{% url 'category_detail' i.id %}">{{i.categories}}</a></h3><!-- End .product-title -->
+                                        {{i.categories_discription}}
+                                    </div><!-- End .product-body -->
+                                </div><!-- End .product -->
+                                {% endfor %}
+                            </div><!-- End .owl-carousel -->
+                        </div><!-- End .container -->
+                    </div><!-- End .block-wrapper -->
+                </div><!-- End .block -->
+            </div><!-- End .bg-light pt-4 pb-4 -->
+
+            <div class="container">
+                <div class="heading heading-flex">
+                    <div class="heading-left">
+                        <h2 class="title">New Releases</h2><!-- End .title -->
+                    </div><!-- End .heading-left -->
+
+                    <div class="heading-right">
+                        <a href="category.html" class="title-link">View more Products <i class="icon-long-arrow-right"></i></a>
+                    </div><!-- End .heading-right -->
+                </div><!-- End .header-flex -->
+
+                <div class="row">
+                    <div class="col-xl-4">
+                        <div class="owl-carousel carousel-equal-height owl-simple" data-toggle="owl" 
+                            data-owl-options='{
+                                "nav": false, 
+                                "dots": true,
+                                "margin": 10
+                            }'>
+
+                            <!-- New product field -->
+                            <div class="product-big">
+                                <img src="{% static 'user/images/demos/demo-20/products/product-big-1-bg.jpg' %}" alt="product bg img">
+
+                                <div class="product-wrap">
+                                    <figure class="product-media">
+                                        <a href="{% url 'product_detail' last_added.slug %}">
+                                            <img src="{{last_added.product_image.url}}" alt="Product image" class="product-image">
+                                        </a>
+                                    </figure><!-- End .product-media -->
+
+                                    <div class="product-body">
+                                        <div class="product-cat">
+                                            by <a href="#">{{last_added.author}}</a>
+                                        </div><!-- End .product-cat -->
+                                        <h3 class="product-title"><a href="{% url 'product_detail' last_added.slug %}">{{last_added.product_name}}</a></h3><!-- End .product-title -->
+                                        <div class="product-price">
+                                            ₹ {{last_added.product_price}}
+                                        </div><!-- End .product-price -->
+
+                                        <div class="product-details-action">
+                                            <button class="add-to-cart-btn btn btn-light " data-product_id="{{ last_added.id }}">Add to Cart</button>
+            
+                                        </div><!-- End .product-details-action -->
+            
+                                    </div><!-- End .product-body -->
+                                </div><!-- End .product-wrap -->
+                            </div><!-- End .product-big -->
+
+                            <!-- End .product-big -->
+                        </div><!-- End .owl-carousel -->
+
+                        <div class="mb-3 d-xl-none"></div><!-- End .mb-3 d-none -->
+                    </div><!-- End .col-lg-4 -->
+
+                    <div class="col-xl-8">
+                        <div class="block-wrapper ">
+                            <div class="owl-carousel carousel-equal-height owl-simple" data-toggle="owl" 
+                                data-owl-options='{
+                                    "nav": false, 
+                                    "dots": true,
+                                    "margin": 20,
+                                    "loop": false,
+                                    "responsive": {
+                                        "0": {
+                                            "items":2
+                                        },
+                                        "480": {
+                                            "items":2
+                                        },
+                                        "768": {
+                                            "items":3
+                                        },
+                                        "992": {
+                                            "items":4
+                                        },
+                                        "1200": {
+                                            "items":3
+                                        },
+                                        "1440": {
+                                            "items":4
+                                        }
+                                    }
+                                }'>
+                                {% for j in products_list %}
+                                <div class="product">
+                                    <figure class="product-media">
+                                        <a href="{% url 'product_detail' j.slug %}">
+                                            <img src="{{j.product_image.url}}" alt="Product image" class="product-image">
+                                        </a>
+                                    </figure><!-- End .product-media -->
+
+                                    <div class="product-body">
+                                        <div class="product-cat">
+                                            by <a href="#">{{j.author}}</a>
+                                        </div><!-- End .product-cat -->
+                                        <h3 class="product-title"><a href="{% url 'product_detail' j.slug %}">{{j.product_name}}</a></h3><!-- End .product-title -->
+                                        <div class="product-price">
+                                            ₹ {{j.product_price}}
+                                        </div><!-- End .product-price -->
+
+                                        <div class="product-footer">
+                                             
+                                            <div class="product-details-action">
+                                                {% comment %} <a class="add-to-cart-btn btn-product btn-cart" data-product_id="{{ pro_detail.id }}"><span>add to cart</span></a> {% endcomment %}
+                                                <button class="add-to-cart-btn btn btn-light " data-product_id="{{ j.id }}">Add to Cart</button>
+                                                <button class="addToWishlist btn btn-link " data-product_id="{{ j.id }}">Add to Wishlist</button>
+                                           </div><!-- End .product-details-action -->                
+                                        </div><!-- End .product-footer -->
+                                    </div><!-- End .product-body -->
+                                </div><!-- End .product -->
+                                {% endfor %}
+                            </div><!-- End .owl-carousel -->
+                        </div><!-- End .block-wrapper -->
+                    </div><!-- End .col-lg-8 -->
+                </div><!-- End .row -->
+            </div><!-- End .container -->
+
+            <div class="mb-5"></div><!-- End .mb-3 -->
+
+            
+            <div class="block">
+                <div class="block-wrapper ">
+                    <div class="container">
+                        <div class="heading heading-flex">
+                            <div class="heading-left">
+                                <h2 class="title">Authors</h2><!-- End .title -->
+                            </div><!-- End .heading-left -->
+
+                            <div class="heading-right">
+                                <a href="category.html" class="title-link">View more Authors <i class="icon-long-arrow-right"></i></a>
+                            </div><!-- End .heading-right -->
+                        </div><!-- End .header-flex -->
+
+                        <div class="owl-carousel carousel-equal-height owl-simple" data-toggle="owl" 
+                            data-owl-options='{
+                                "nav": false, 
+                                "dots": true,
+                                "margin": 20,
+                                "loop": false,
+                                "responsive": {
+                                    "0": {
+                                        "items":2
+                                    },
+                                    "480": {
+                                        "items":2
+                                    },
+                                    "768": {
+                                        "items":3
+                                    },
+                                    "992": {
+                                        "items":4
+                                    },
+                                    "1200": {
+                                        "items":5
+                                    },
+                                    "1440": {
+                                        "items":6
+                                    }
+                                }
+                            }'>
+
+                            {% for k in authors %}
+                            <div class="product">
+                                <span class="product-label label-sale">Sale</span>
+                                <figure class="product-media">
+                                    <a href="product.html">
+                                        <img src="{{k.author_image.url}}" alt="Product image" class="product-image">
+                                    </a>
+                                </figure><!-- End .product-media -->
+
+                                <div class="product-body">
+                                    
+                                    <h3 class="product-title"><a href="product.html">{{k.author_name}}</a></h3><!-- End .product-title -->
+                                    
+
+                                    
+                                        
+
+                                            <p> {{k.author_discription}} </p>
+                                        
+
+                                    
+                                </div><!-- End .product-body -->
+                            </div><!-- End .product -->
+                            {% endfor %}
+                            
+
+                            
+                        </div><!-- End .owl-carousel -->
+                    </div><!-- End .container -->
+                </div><!-- End .block-wrapper -->
+            </div><!-- End .block -->
+
+            <div class="mb-5"></div><!-- End .mb-5 -->
+
+            
+            <div class="cta-newsletter text-center pt-6 pb-7">
+                <div class="container">
+                    <span class="cta-icon"><i class="icon-envelope"></i></span>
+                    <h3 class="title">Subscribe for Our Newsletter</h3><!-- End .title -->
+                    <p class="title-desc">Learn about new offers and get more deals by joining our newsletter</p><!-- End .title-desc -->
+                    
+                    <form action="#">
+                        <div class="input-group">
+                            <input type="email" class="form-control" placeholder="Enter your Email Address" aria-label="Email Adress" aria-describedby="newsletter-btn" required>
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="submit" id="newsletter-btn"><span>SUBSCRIBE</span><i class="icon-long-arrow-right"></i></button>
+                            </div><!-- .End .input-group-append -->
+                        </div><!-- .End .input-group -->
+                    </form>
+                </div><!-- End .container -->
+            </div><!-- End .cta-newsletter -->
+        </main><!-- End .main -->
+        
+        <!-- footer part -->
+        
+    </div><!-- End .page-wrapper -->
+    <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
+
+    
+
+            <div class="social-icons">
+                <a href="#" class="social-icon" target="_blank" title="Facebook"><i class="icon-facebook-f"></i></a>
+                <a href="#" class="social-icon" target="_blank" title="Twitter"><i class="icon-twitter"></i></a>
+                <a href="#" class="social-icon" target="_blank" title="Instagram"><i class="icon-instagram"></i></a>
+                <a href="#" class="social-icon" target="_blank" title="Youtube"><i class="icon-youtube"></i></a>
+            </div><!-- End .social-icons -->
+       
+    
+     
+    <!-- Add this somewhere in your HTML body -->
+{% comment %} <button id="test-alert-btn">Test SweetAlert</button> {% endcomment %}
+
+   
+
+
+</body>
+
+
+<!-- molla/index-20.html  22 Nov 2019 10:01:31 GMT -->
+</html>
+
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+<script>
+    $('.add-to-cart-btn').click(function(e) {
+      e.preventDefault();
+      console.log('2222222222222222222222222222222222222222222222222222222222222222222222')
+     
+      var product_id = $(this).data('product_id');
+      var quantity = 1; // Or get quantity from a form input field
+      console.log(product_id,'111111111111111111111111111111111111111111111111111111111111')
+      
+      $.ajax({
+        method: "POST",
+        url: "{% url 'add_cart' %}",
+        data: {
+          'product_qty': 1,
+          'prod_id': product_id,
+          csrfmiddlewaretoken: '{{ csrf_token }}'
+        },
+        success: function(response) {
+          console.log(response);
+          
+          if (response.status === 'Product already in Cart' || response.status === 'No such product found' || response.status === 'Only few quantity available') {
+            swal("Error!", response.status, "error");
+            $('.cartdata').load(location.href + " .cartdata");
+          } else if (response.status === 'Product added successfully') {
+            swal("Congratulations!", response.status, "success");
+            $('.cartdata').load(location.href + " .cartdata");
+          } else {
+            swal("Error!", response.status, "error");
+            $('.cartdata').load(location.href + " .cartdata");
+          }
+        }
+      });
+    });
+  </script>
+  
+   <script>
+    $('.addToWishlist').click(function(e) {
+      e.preventDefault();
+     
+      var product_id = $(this).data('product_id');
+      
+      
+      $.ajax({
+        method: "POST",
+         url: "{% url 'add_wishlist' %}", 
+        data: {
+          'prod_id': product_id,
+          csrfmiddlewaretoken: '{{ csrf_token }}'
+        },
+        success: function(response) {
+          console.log(response);
+          
+          if (response.status === 'Product already in wishlist' || response.status === 'No such product found' || response.status === 'Only few quantity available') {
+            swal("Error!", response.status, "error");
+            $('.cartdata').load(location.href + " .cartdata");
+          } else if (response.status === 'Product added successfully') {
+            swal("Congratulations!", response.status, "success");
+            $('.cartdata').load(location.href + " .cartdata");
+          } else {
+            swal("Error!", response.status, "error");
+            $('.cartdata').load(location.href + " .cartdata");
+          }
+        }
+      });
+    });
+  </script>
+{% comment %} <script>
+  // Add this script after including the SweetAlert library
+    $(document).ready(function() {
+    $('#test-alert-btn').click(function() {
+        swal('Hello, this is a test alert!');
+    });
+    });
+</script> {% endcomment %}
+
+{% endblock %}

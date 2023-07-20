@@ -1,0 +1,192 @@
+{% extends 'adminapp/dashboardbase.html' %}
+{% block title %}Author{% endblock  %}
+
+
+
+{% block content %} 
+
+
+  {% if messages %}
+
+{% for message in messages %}
+
+<div class="text-center text-danger">
+<strong>{{message}}</strong>
+</div>
+{% endfor %}
+{% endif %}
+
+<!--Add author  Modal -->
+<div class="modal fade" id="addCategory" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Add Authors</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+    
+          <form action="{% url 'createauthors'%}"  enctype="multipart/form-data" method="POST">
+            {% csrf_token %}
+            <div style="width: 100px;" class="card-header category-img position-relative overflow-hidden bg-transparent border p-0">
+            </div> 
+            <div class="form-outline mb-4">
+              <input name="author_image" type="file" accept="image/png, image/jpeg, image/svg" class="form-control" id="image-input"/>
+              <small id="image-error" class="text-danger text-center"></small>
+            </div>
+            <div class="form-outline mb-4">
+              <input name='author_name' type="text" id="form3Example3cg" class="form-control form-control-lg" />
+              <label class="form-label" for="form3Example3cg">Author name</label>
+            </div>
+        
+          <div class="form-outline mb-4">
+            <input name='author_discription'   type="text" id="form3Example3cg" class="form-control form-control-lg" />
+            <label class="form-label" for="form3Example3cg">Author Description</label>
+          </div>
+           <div class="d-flex justify-content-center">
+              <button type="submit"
+                class="btn btn-danger btn-lg gradient-custom-4 w-50 text-light" type="submit">Save Changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    </div>
+
+
+<div class="col-lg-12 grid-margin stretch-card">
+  <div class="card">
+    <div class="card-body">
+        <a type="button" href="{% url 'createauthors' %}" class="btn btn-primary w-60" style="margin-top: 20px;margin-left: 10px;" data-bs-toggle="modal" data-bs-target="#addCategory">
+            <i  class="fa fa-plus">Add Author</i>
+          </a>
+        <div class="search-field d-none d-xl-block" style="float: right;">
+          <form action="{%url 'search_author'%}">
+            <input type="text" placeholder="Search..." name="keyword" style="border-radius: 20px; height: 40px; text-align: center; font-size: 16px;">
+            <button type="submit" style="display: none;"></button>
+        </form>
+          </div>
+          <br>
+          <br>
+      <h4 class="card-title">author</h4>
+     
+      <table class="table table-striped" style="font-size: 12px; width: 100%">
+        <thead>
+            <tr>
+              <th  style="padding: 5px;" scope="col">id</th>
+              <th  style="padding: 5px;" scope="col">image</th>
+              <th  style="padding: 5px;" scope="col">author name</th>
+              
+              <th  style="padding: 5px;" scope="col">author Description</th>
+              <th  style="padding: 5px;" scope="col">Action</th>
+            </tr>
+          </thead>
+      <tbody>
+        {% for c in authors %}
+
+        <tr>
+          <td style="padding: 5px;" >  {{c.id}}  </td>
+          <td style="padding: 5px;" >
+            <div style="width: 60px;" class="overflow-hidden">
+              <img class="w-100" src=" {{c.author_image.url}} " alt="">
+            </div>
+          </td style="padding: 5px;" >
+          <td style="padding: 5px;" >  {{c.author_name}} </td>
+       
+          <td style="padding: 5px;" >  {{c.author_discription}} </td>
+          <!-- edit -->
+          <td style="padding: 5px;" >
+            <!-- Button trigger modal -->
+            <a type="button" class="fs-7 btn btn-warning" data-bs-toggle="modal" data-bs-target="#confirmEdit{{forloop.counter}}">
+              <i title="" class="fa fa-edit text-black">edit</i>
+            </a> 
+            <!--Edit Modal -->
+             <div class="modal fade" id="confirmEdit{{forloop.counter}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Edit author</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <form  method="POST" action="{% url 'editauthors' c.slug %}"  enctype="multipart/form-data">
+                      {% csrf_token %}
+
+                      <div style="width: 100px;" class="card-header category-img position-relative overflow-hidden bg-transparent border p-0">
+                        <img class="img-fluid w-100" src="{{c.author_image.url}} " alt="">
+                      </div> 
+      
+                      <div class="form-outline mb-4">
+                        <input name="author_image" type="file" accept="image/png, image/jpeg, image/svg" class="form-control" id="image-inputs"/>
+                        <small id="image-errors" class="text-danger text-center"></small>
+                      </div>
+
+                      <div class="form-outline mb-4">
+                        <input name='author_name' value="{{c.author_name}}"  type="text" id="form3Example3cg" class="form-control form-control-lg" />
+                        <label class="form-label" for="form3Example3cg">author name</label>
+                      </div>
+                  
+                    <div class="form-outline mb-4">
+                      <input name='author_discription' value="{{c.author_discription}}"  type="text" id="form3Example3cg" class="form-control form-control-lg" />
+                      <label class="form-label" for="form3Example3cg">Description</label>
+                    </div>
+                     <div class="d-flex justify-content-center">
+                        <button type="submit"
+                          class="btn btn-danger btn-lg gradient-custom-4 w-50 text-light" type="submit" >Save Changes</button>
+                      </div>
+      
+                    </form>
+                  </div>
+                </div>
+              </div>
+             </div>
+
+            <!-- Button trigger modal -->
+           
+              <button type="button" class="btn btn-danger text-black" data-bs-toggle="modal" data-bs-target="#exampleModal{{forloop.counter}}">
+                Delete
+              </button>
+          </td>
+              <!-- Modal  for delete the product -->
+              <div class="modal fade" id="exampleModal{{forloop.counter}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="exampleModalLabel">Delete</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      delete Product {{c.author_name }}
+                    </div>
+                    <div class="modal-footer">
+                        <!-- one here -->
+                      <form action="{% url 'deleteauthors' c.id %}" >
+                          
+                        <button type="submit" class="btn btn-danger">Confirm</button>
+                      </form>
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+          </td>
+          <!--deleting ended-->
+
+       </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
+  </div>
+
+</div>
+</div><!-- End Recent Sales -->
+
+{% if message %}
+<div class="message"><a href="{%url 'authors'%}">
+    
+    <h4 class="font-weight-bold text-center pt-5" style="color: #403c3c52;font-weight: bold;">{{ message }}</h4> </a></div>
+{% endif %}
+{% endblock %}

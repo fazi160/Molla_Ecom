@@ -1,0 +1,135 @@
+
+  
+
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+    <div class="page-wrapper">
+        <header class="header">
+            <div class="header-middle sticky-header">
+                <div class="container">  
+                </div><!-- End .container -->
+            </div><!-- End .header-middle -->
+        </header><!-- End .header -->
+
+        <div class="login-page bg-image pt-8 pb-8 pt-md-12 pb-md-12 pt-lg-17 pb-lg-17" style="background-image: url('{% static "user/images/404.jpg" %}')" >
+
+
+            {% if otp %}
+            <section class="section-content padding-y" style="min-height:84vh">
+            
+                <!-- ============================ COMPONENT LOGIN   ================================= -->
+                    <div class="card mx-auto" style="max-width: 380px; margin-top:100px;">
+                        {% include 'includes/alerts.html' %}
+                      <div class="card-body">
+                      <h4 class="card-title mb-4">otp</h4>
+                      <form action="{% url 'user_signup' %}" method="POST">
+                        {% csrf_token %}
+                         
+                          <div class="form-group">
+                            <input type="text" class="form-control" placeholder="enter otp" name="otp" >
+                          </div> <!-- form-group// -->
+                          <div class="form-group">
+                            <input type="hidden" value="{{usr.email}}" name="email" >
+                          </div> 
+                         
+                          <div class="form-group">
+                              <button type="submit" class="btn btn-primary btn-block"> verify  </button>
+                          </div> <!-- form-group// -->    
+                      </form>
+                      </div> <!-- card-body.// -->
+                    </div> <!-- card .// -->
+                
+                    
+                <!-- ============================ COMPONENT LOGIN  END.// ================================= -->
+                
+                
+                </section>
+            {% else %}
+            
+            
+            <!-- ========================= SECTION CONTENT ========================= -->
+            <section class="section-content padding-y">
+            
+                <!-- ============================ COMPONENT REGISTER   ================================= -->
+                <div class="container">
+            		<div class="form-box">
+            			<div class="form-tab">
+                            
+                    <div class="card" style="max-width:520px; margin-top:40px;">
+                      <article class="card-body">
+                        {% include 'includes/alerts.html' %}
+                        <header class="mb-4"><h4 class="card-title">Sign up</h4></header>
+                        <form action="{% url 'user_signup' %}" method="POST">
+                            {% csrf_token %}
+                                <div class="form-row">
+                                    <div class="col form-group">
+                                        <label>First name</label>
+                                        <input type="text" name="fname" value="{{ pre.first_name }}">
+                                    </div> <!-- form-group end.// -->
+                                    <div class="col form-group">
+                                        <label>Last name</label>
+                                        <input type="text" name="lname" value="{{ pre.last_name }}">
+                                        
+                                    </div> <!-- form-group end.// -->
+                                </div> <!-- form-row end.// -->
+            
+                                <div class="form-row">
+                                    <div class="col form-group">
+                                        <label>Email</label>
+                                        <input type="text" name="email" value="{{pre.email}}">
+                                        
+                                    </div> <!-- form-group end.// -->
+                                    <div class="col form-group">
+                                        <label>user name</label>
+                                        <input type="text" name="username" value="{{pre.username}}">
+                                        
+                                    </div> <!-- form-group end.// -->
+                                </div> <!-- form-row end.// -->
+                                
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label>Create password</label>
+                                        <input type="text" name="password1" value="{{pre.password1}}">
+                                    
+                                    </div> <!-- form-group end.// -->
+                                    <div class="col form-group">
+                                        <label>Repeat password</label>
+                                        <input type="text" name="password2" value="{{pre.password2}}">
+                                        {{pre.password2}}
+                                    </div> <!-- form-group end.// -->
+                                </div> <!-- form-row end.// -->
+            
+                                <div class="form-group">
+                                   
+                                <a> <button type="submit"  class="btn btn-primary btn-block"> Register  </button> </a>   
+                                </div> <!-- form-group// -->   
+                            {% comment %} {{form.email.errors}}       
+                            {{form.non_field_errors }} {% endcomment %}
+                            </form>
+                        </article><!-- card-body.// -->
+                    
+                        <p class="text-center mt-4">Have an account? <a href="{% url 'user_login'%}">Log In</a></p>
+                        <br><br>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- card .// -->
+                <!-- ============================ COMPONENT REGISTER  END.// ================================= -->
+            {% endif %}
+    <script src="{% static 'user/js/jquery.min.js' %}"></script>
+    <script src="{% static 'user/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'user/js/jquery.hoverIntent.min.js' %}"></script>
+    <script src="{% static 'user/js/jquery.waypoints.min.js' %}"></script>
+    <script src="{% static 'user/js/superfish.min.js' %}"></script>
+    <script src="{% static 'user/js/owl.carousel.min.js' %}"></script>
+    <!-- Main JS File -->
+    <script src="{% static 'user/js/main.js' %}"></script>
+</body>
+
+
+<!-- molla/login.html  22 Nov 2019 10:04:03 GMT -->
+</html>
+
+{% endblock %}

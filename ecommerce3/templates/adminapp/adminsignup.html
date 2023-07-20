@@ -1,0 +1,65 @@
+{% extends 'adminapp/base1.html' %}
+
+{% block title %}Admin Signup{% endblock %}
+{% block content %}
+
+
+<!-- ========================= SECTION CONTENT ========================= -->
+<section class="section-content padding-y" style="min-height:84vh">
+
+    {% if otp %}
+
+    <div class="card mx-auto" style="max-width: 380px; margin-top:100px;">
+        {% include 'includes/alerts.html' %}
+      <div class="card-body">
+      <h4 class="card-title mb-4">OTP Verify</h4>
+      <form action="{% url 'admin_signup' %}" method="POST">
+        {% csrf_token %}
+          <div class="form-group">
+			 <input type="text" class="form-control" placeholder="Enter otp" name="otp" value="{{pre_otp}}" >
+          </div> <!-- form-group// -->
+          <div class="form-group">
+			<input type="hidden" value={{usr.email}}  name="email" >
+          </div>
+
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-block"> verify  </button>
+        </div>
+
+          {% else %}
+<!-- ============================ COMPONENT LOGIN   ================================= -->
+	<div class="card mx-auto" style="max-width: 380px; margin-top:100px;">
+        {% include 'includes/alerts.html' %}
+      <div class="card-body">
+      <h4 class="card-title mb-4">admin Sign up </h4>
+      <form action="{% url 'admin_signup' %}" method="POST">
+        {% csrf_token %}
+          <div class="form-group">
+			 <input type="email" class="form-control" placeholder="Enter email" name="email" >
+          </div> <!-- form-group// -->
+          <div class="form-group">
+			<input type="password" class="form-control" placeholder="Password" name="password1" >
+          </div> <!-- form-group// -->
+          <div class="form-group">
+			<input type="password" class="form-control" placeholder="Password" name="password2" >
+          </div>
+          
+           <!-- form-group form-check .// -->
+          <div class="form-group">
+              <button type="submit" class="btn btn-dark btn-block"> verify </button>
+          </div> <!-- form-group// -->    
+          <p class="text-center mt-4">Have an account? <a href="{% url 'admin_login'%}">Log In</a></p>
+      </form>
+      </div> <!-- card-body.// -->
+    </div> <!-- card .// -->
+
+    
+     <br><br>
+<!-- ============================ COMPONENT LOGIN  END.// ================================= -->
+
+{% endif %}
+</section>
+<!-- ========================= SECTION CONTENT END// ========================= -->
+
+
+{% endblock %}

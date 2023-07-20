@@ -1,0 +1,103 @@
+<!-- search_results.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h2>Search Results for "{{ query }}"</h2>
+
+        <!-- Display product search results -->
+        <h3 class="mt-4">Products</h3>
+        {% if products %}
+        <div class="page-content">
+            <div class="container">
+                
+            <!-- End .toolbox -->
+               
+                <div class="products">
+                    <div class="row">
+                        {% for j in products %}
+                        <div  href="{% url 'product_detail' j.slug %}" class="col-6 col-md-4 col-lg-4 col-xl-3">
+                            <div class="product">
+                                <figure class="product-media">
+                                    <a href="{% url 'product_detail' j.slug %}">
+                                        <img src="{{j.product_image.url}}" alt="Product image" class="product-image" onclick="window.location.href='{% url 'product_detail' j.slug %}';">
+                                      </a>
+                                    <div class="product-action-vertical">
+                                        
+                                        <a href="#" class="btn-product-icon btn-wishlist btn-expandable addToWishlistLink" data-product_id="{{ j.id }}"><span>Add to Wishlist</span></a>
+
+                                    
+                                    </div><!-- End .product-action -->
+                                    <div class="product-action-vertical">
+                                    
+                                
+                                </figure><!-- End .product-media -->
+
+                                <div class="product-body">
+                                    <div class="product-cat">
+                                        <a href="#">{{j.author}}</a>
+                                    </div><!-- End .product-cat -->
+                                    
+                                    <h3 class="product-title"><a href="{% url 'product_detail' j.slug %}">{{j.product_name}}</a></h3><!-- End .product-title -->
+                                    <div class="product-price">
+                                        ₹ {{j.product_price}}
+                                    </div><!-- End .product-price -->
+                                    {{j.category}}<!-- End .discribtion -->
+                                </div><!-- End .product-body -->
+                                <div class="product-action">
+                                    
+                                    <button class="add-to-cart-btn btn btn-link " data-product_id="{{ j.id }}">Add to Cart</button>
+                                </div><!-- End .product-action -->
+                                
+                            </div><!-- End .product -->
+                        </div><!-- End .col-sm-6 col-lg-4 col-xl-3 -->
+                        {% endfor %}
+                        
+                    </div><!-- End .row -->
+                </div><!-- End .products -->
+            </div>
+        </div>
+        {% else %}
+            <p>No product results found.</p>
+        {% endif %}
+
+        <!-- Display category search results -->
+        <h3 class="mt-4">Categories</h3>
+        {% if categories %}
+        <div class="page-content">
+            <div class="container">
+                <div class="products">
+                    <div class="row">
+                        {% for j in categories %}
+                        {% comment %} <a href="{% url 'category_detail' j.category.categories %}" class="col-6 col-md-4 col-lg-4 col-xl-3"> {% endcomment %}
+
+                        <div href="#"  class="col-6 col-md-4 col-lg-4 col-xl-3">
+                            <div class="product">
+                                <figure class="product-media">
+                                    <a href="product.html">
+                                        <img src="{{j.categories_image.url}}" alt="Product image" class="product-image">
+                                    </a>
+
+                                </figure><!-- End .product-media -->
+
+                                <div class="product-body">
+                                    
+                                    <h3 class="product-title"><a href="{% url 'category_detail' j.id %}">{{j.categories}}</a></h3><!-- End .product-title -->
+                                    {{j.categories_discription}}
+                                </div><!-- End .product-body -->
+                            </div><!-- End .product -->
+                        </div><!-- End .col-sm-6 col-lg-4 col-xl-3 -->
+                        {% endfor %}
+                        
+                    </div><!-- End .row -->
+                </div><!-- End .products -->
+            </div>
+        </div>
+        {% else %}
+            <p>No category results found.</p>
+        {% endif %}
+
+        <!-- Display author search results -->
+       
+    </div>
+{% endblock %}

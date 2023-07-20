@@ -1,0 +1,279 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+{% csrf_token %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="http://127.0.0.1:8000/static/user/js/bootstrap.bundle.min.js"></script>
+
+    <br><br>       
+<main class="main">
+    <div class="page-content">
+        <div class="container">
+            <div class="product-details-top">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="product-gallery">
+                            <figure class="product-main-image">
+                                <img id="product-zoom" src="{{pro_detail.product_image.url}}" alt="product image">
+
+                                {% comment %} <a href="#" id="btn-product-gallery" class="btn-product-gallery">
+                                    <i class="icon-arrows"></i>
+                                </a> {% endcomment %}
+                            </figure><!-- End .product-main-image -->
+
+                            <!-- End .product-image-gallery -->
+                        </div><!-- End .product-gallery -->
+                    </div><!-- End .col-md-6 -->
+
+                    <div class="col-md-6">
+                        <br><br><br>
+                        <div class="product-details sticky-content">
+                            <h1 class="product-title">{{pro_detail.product_name}}</h1><!-- End .product-title -->
+
+                            
+
+                            <div class="product-price">
+                                ₹ {{pro_detail.product_price}}
+                                {% comment %} <span class="new-price"></span> {% endcomment %}
+                                {% comment %} <span class="old-price">$80.00</span> {% endcomment %}
+                            </div><!-- End .product-price -->
+
+                            <div class="product-content">
+                                <p>{{pro_detail.product_description}}</p>
+                            </div><!-- End .product-content -->
+
+                            <!-- End .details-filter-row -->
+
+                            {% comment %} <div class="details-filter-row details-row-size">
+                                <label for="qty">Qty:</label>
+                                <div class="product-details-quantity">
+                                    <input type="number" id="qty" class="form-control" value="1" min="1" max="10" step="1" data-decimals="0" required>
+                                </div><!-- End .product-details-quantity -->
+                            </div><!-- End .details-filter-row --> {% endcomment %}
+
+                            <div class="product-details-action">
+                                {% comment %} <a class="add-to-cart-btn btn-product btn-cart" data-product_id="{{ pro_detail.id }}"><span>add to cart</span></a> {% endcomment %}
+                                <button class="add-to-cart-btn btn btn-light " data-product_id="{{ pro_detail.id }}">Add to Cart</button>
+
+                                
+                                {% comment %} <div class="flex-m bor9 p-r-10 m-r-11 ">
+                                    <a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 js-addwish-detail tooltip100 addToWishlist"   data-productid="product.id" data-tooltip="Add to Wishlist">
+                                        Add to Wishlist<i class="zmdi zmdi-favorite addToWishlist" data-product_id="{{ pro_detail.id }}" style="font-size: x-large;"></i>
+                                    </a>
+                                </div> {% endcomment %}
+                                <button class="addToWishlist btn btn-link " data-product_id="{{ pro_detail.id }}">Add to Wishlist</button>
+
+                            </div><!-- End .product-details-action -->
+
+                            <div class="accordion accordion-plus product-details-accordion" id="product-accordion">
+                                <div class="card card-box card-sm">
+                                    <div class="card-header" id="product-desc-heading">
+                                        <h2 class="card-title">
+                                            <a class="collapsed" role="button" data-toggle="collapse" href="#product-accordion-desc" aria-expanded="false" aria-controls="product-accordion-desc">
+                                                Description
+                                            </a>
+                                        </h2>
+                                    </div><!-- End .card-header -->
+                                    <div id="product-accordion-desc" class="collapse" aria-labelledby="product-desc-heading" data-parent="#product-accordion">
+                                        <div class="card-body">
+                                            <div class="product-desc-content">
+                                                <p>{{pro_detail.product_description_detailed}}</p>
+                                            </div><!-- End .product-desc-content -->
+                                        </div><!-- End .card-body -->
+                                    </div><!-- End .collapse -->
+                                </div><!-- End .card -->
+
+                                
+
+                                <div class="card card-box card-sm">
+                                    <div class="card-header" id="product-shipping-heading">
+                                        <h2 class="card-title">
+                                            <a role="button" data-toggle="collapse" href="#product-accordion-shipping" aria-expanded="true" aria-controls="product-accordion-shipping">
+                                                Shipping & Returns
+                                            </a>
+                                        </h2>
+                                    </div><!-- End .card-header -->
+                                    <div id="product-accordion-shipping" class="collapse show" aria-labelledby="product-shipping-heading" data-parent="#product-accordion">
+                                        <div class="card-body">
+                                            <div class="product-desc-content">
+                                                <p>We deliver to over 100 countries around the world. For full details of the delivery options we offer, please view our <a href="#">Delivery information</a><br>
+                                                We hope you’ll love every purchase, but if you ever need to return an item you can do so within a month of receipt. For full details of how to make a return, please view our <a href="#">Returns information</a></p>
+                                            </div><!-- End .product-desc-content -->
+                                        </div><!-- End .card-body -->
+                                    </div><!-- End .collapse -->
+                                </div><!-- End .card -->
+                            </div><!-- End .accordion -->
+                        </div><!-- End .product-details -->
+                    </div><!-- End .col-md-6 -->
+                </div><!-- End .row -->
+            </div><!-- End .product-details-top -->
+
+            <hr class="mt-3 mb-5">
+
+            <h2 class="title text-center mb-4">You May Also Like</h2><!-- End .title text-center -->
+            <div class="owl-carousel owl-simple carousel-equal-height carousel-with-shadow" data-toggle="owl" 
+                data-owl-options='{
+                    "nav": false, 
+                    "dots": true,
+                    "margin": 20,
+                    "loop": false,
+                    "responsive": {
+                        "0": {
+                            "items":1
+                        },
+                        "480": {
+                            "items":2
+                        },
+                        "768": {
+                            "items":3
+                        },
+                        "992": {
+                            "items":4
+                        },
+                        "1200": {
+                            "items":4,
+                            "nav": true,
+                            "dots": false
+                        }
+                    }
+                }'>
+                {% for k in allpro %}
+                <div class="product product-7">
+                    <figure class="product-media">
+                        <a href="">
+                            <img src="{{k.product_image.url}}" alt="Product image" class="product-image"> <!-- image fields -->
+                        </a>
+                        <div class="product-action-vertical">
+                            <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
+                        
+                        </div><!-- End .product-action -->
+                        <div class="product-action-vertical">
+                        
+                    
+                    </figure><!-- End .product-media -->
+                    <div class="product-body">
+                        <div class="product-cat">
+                            <a href="#">{{k.category}}</a>
+                        </div><!-- End .product-cat -->
+                        <h3 class="product-title"><a href="product.html">{{k.product_name}}</a></h3><!-- End .product-title -->
+                        <div class="product-price">
+                            ₹ {{k.product_price}}
+                        </div><!-- End .product-price -->
+                    </div><!-- End .product-body -->
+                </div><!-- End .product -->
+                {% endfor %}
+            </div><!-- End .owl-carousel -->
+        </div><!-- End .container -->
+    </div><!-- End .page-content -->
+</main><!-- End .main -->
+</div><!-- End .page-wrapper -->
+
+    
+</body>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+<script>
+    $('.add-to-cart-btn').click(function(e) {
+      e.preventDefault();
+      console.log('2222222222222222222222222222222222222222222222222222222222222222222222')
+     
+      var product_id = $(this).data('product_id');
+      var quantity = 1; // Or get quantity from a form input field
+      console.log(product_id,'111111111111111111111111111111111111111111111111111111111111')
+      
+      $.ajax({
+        method: "POST",
+        url: "{% url 'add_cart' %}",
+        data: {
+          'product_qty': 1,
+          'prod_id': product_id,
+          csrfmiddlewaretoken: '{{ csrf_token }}'
+        },
+        success: function(response) {
+          console.log(response);
+          
+          if (response.status === 'Product already in Cart' || response.status === 'No such product found' || response.status === 'Only few quantity available') {
+            swal("Error!", response.status, "error");
+            $('.cartdata').load(location.href + " .cartdata");
+          } else if (response.status === 'Product added successfully') {
+            swal("Congratulations!", response.status, "success");
+            $('.cartdata').load(location.href + " .cartdata");
+          } else {
+            swal("Error!", response.status, "error");
+            $('.cartdata').load(location.href + " .cartdata");
+          }
+        }
+      });
+    });
+  </script>
+<script>
+    $('.add-to-cart-btn').click(function(e) {
+      e.preventDefault();
+     
+      var product_id = $(this).data('product_id');
+      var quantity = 1; // Or get quantity from a form input field
+      console.log(product_id,'111111')
+      
+      $.ajax({
+        method: "POST",
+        url: "{% url 'add_cart' %}",
+        data: {
+          'product_qty': quantity,
+          'prod_id': product_id,
+          csrfmiddlewaretoken: '{{ csrf_token }}'
+        },
+        success: function(response) {
+          console.log(response);
+          
+          if (response.status === 'Product already in Cart' || response.status === 'No such product found' || response.status === 'Only few quantity available') {
+            swal("Error!", response.status, "error");
+            $('.cartdata').load(location.href + " .cartdata");
+          } else if (response.status === 'Product added successfully') {
+            swal("Congratulations!", response.status, "success");
+            $('.cartdata').load(location.href + " .cartdata");
+          } else {
+            swal("Error!", response.status, "error");
+            $('.cartdata').load(location.href + " .cartdata");
+          }
+        }
+      });
+    });
+  </script>
+  
+   <script>
+    $('.addToWishlist').click(function(e) {
+      e.preventDefault();
+     
+      var product_id = $(this).data('product_id');
+      
+      
+      $.ajax({
+        method: "POST",
+         url: "{% url 'add_wishlist' %}", 
+        data: {
+          'prod_id': product_id,
+          csrfmiddlewaretoken: '{{ csrf_token }}'
+        },
+        success: function(response) {
+          console.log(response);
+          
+          if (response.status === 'Product already in wishlist' || response.status === 'No such product found' || response.status === 'Only few quantity available') {
+            swal("Error!", response.status, "error");
+            $('.cartdata').load(location.href + " .cartdata");
+          } else if (response.status === 'Product added successfully') {
+            swal("Congratulations!", response.status, "success");
+            $('.cartdata').load(location.href + " .cartdata");
+          } else {
+            swal("Error!", response.status, "error");
+            $('.cartdata').load(location.href + " .cartdata");
+          }
+        }
+      });
+    });
+  </script> 
+
+
+
+</html>
+{% endblock %}
