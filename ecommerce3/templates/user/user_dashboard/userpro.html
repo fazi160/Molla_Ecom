@@ -1,6 +1,6 @@
 
 {% extends 'base.html' %}
-
+{% load custom_filters %}
 {% load static %}
 {%load mathfilters%}
 {% block title %}User{% endblock %}
@@ -53,11 +53,18 @@
 
                     <div class="col-md-8 col-lg-9">
                         <div class="tab-content">
-                            <div class="tab-pane fade show active" id="tab-dashboard" role="tabpanel" aria-labelledby="tab-dashboard-link">
-                                <p>Hello <span class="font-weight-normal text-dark">{{user.first_name}}</span>
-                                <br>
-                                From your account dashboard you can view your <a href="#tab-orders" class="tab-trigger-link link-underline">recent orders</a>, manage your <a href="#tab-address" class="tab-trigger-link">shipping and billing addresses</a>, and <a href="#tab-account" class="tab-trigger-link">edit your password and account details</a>.</p>
-                            </div><!-- .End .tab-pane -->
+                          <div class="tab-pane fade show active" id="tab-dashboard" role="tabpanel" aria-labelledby="tab-dashboard-link">
+                            <p>Hello <span class="font-weight-normal text-dark">{{ user.first_name }}</span></p>
+                            <p>Your Wallet:</p>
+                            {% for wallet in wallets %}
+                                <p>Balance: <span class="font-weight-normal text-dark">{{ wallet.wallet }}</span></p>
+                            {% endfor %}
+                            <br>
+                            From your account dashboard you can view your <a href="#tab-orders" class="tab-trigger-link link-underline">recent orders</a>,
+                            manage your <a href="#tab-address" class="tab-trigger-link">shipping and billing addresses</a>,
+                            and <a href="#tab-account" class="tab-trigger-link">edit your password and account details</a>.
+                        </div><!-- .End .tab-pane -->
+                        
 
                             <div class="tab-pane fade" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
                                 {% if orders %}
@@ -96,11 +103,9 @@
                                                     <div class="card border rounded mb-3">
                                                       <div class="card-body">
                                                         <h5 class="card-title" style="font-weight: bold;">{{ c.id }} {{c.address.firstname}} {{c.address.lastname}}</h5>
-                                                        <p class="card-text">{{c.address.address}} {{c.address.city}}<br>{{c.address.state}} {{c.address.pincode}}<br>{{c.address.country}} <br>{{c.address.email}} <br>{{c.address.phone}}</p>
+                                                        <p class="card-text">{{c.address.address}} {{c.address.city}}<br>{{c.address.state}} {{c.address.pincode}} <br>{{c.address.email}} <br>{{c.address.phone}}</p>
                                                         <div>
-                                                          <button type="button" class="btn btn-outline-dark">
-                                                            View
-                                                          </button>
+                                          
                                                         </div>
                                                       </div>
                                                     </div>
@@ -129,6 +134,7 @@
                                                             <th>Price</th>
                                                             <th>Quantity</th>
                                                             <th>Total</th>
+                                                            <th>Status</th>
                                                             <th></th>
                                                           </tr>
                                                         </thead>
@@ -145,7 +151,10 @@
                                                             </td>
                                                             <td><h6 >₹ {{ order_item.product.product_price }}</h6></td>
                                                             <td>{{ order_item.quantity }}</td>
-                                                            <td class="cart__price total">{{ order_item.order.total_price|floatformat:2 }}</td>
+                                                            <td class="cart__price total">
+                                                              {{ order_item|calculate_total_price|floatformat:2 }}
+
+                                                            </td>
                                                             <td>
                                                               {% if order_item.status == 'Pending' %}
                                                               <span class="badge p-2 my-2 text-warning" style="font-size: medium;">{{ order_item.status }}</span>
@@ -159,8 +168,86 @@
                                                               <span class="badge p-2 my-2 text-danger" style="font-size: medium;">{{ order_item.status }}</span>
                                                               {% endif %}
                                                             </td>
-                                                          </tr>
-                                                          {% endfor %}
+                                                            {% if order_item.status != 'Cancelled' and order_item.status != 'Delivered' and order_item.status != 'Return'%}
+                                                              <td>
+                                                                <!-- Button trigger modal -->
+                                                                <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
+                                                                  data-bs-target="#exampleModals{{ forloop.counter }}">Cancel</button>
+                                                                <!-- Modal for deleting the product -->
+                                                                <div class="modal fade cartdata" id="exampleModals{{ forloop.counter }}" tabindex="-1"
+                                                                aria-labelledby="exampleModalLabel{{ forloop.counter }}" aria-hidden="true">
+                                                                <div class="modal-dialog modal-dialog-centered modal-lg">
+                                                                  <div class="modal-content modal_content1">
+                                                                    <div class="modal-header">
+                                                                      <h1 class="modal-title fs-5" id="exampleModalLabel{{ forloop.counter }}">Confirm Cancel</h1>
+                                                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                      Cancel Product {{ order_item.product.product_name }}
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                      {% csrf_token %}
+                                                                      <input type="hidden" class="order_id" value="{{ order_item.order.id }}">
+                                                                      <input type="hidden" class="orderitem_id" value="{{ order_item.id }}">
+                                                                      <button type="submit" class="btn btn-danger ordercancel">Confirm</button>
+                                                                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                    </div>
+                                                                  </div>
+                                                                </div>
+                                                              </div>
+                                                                <!-- Deleting ended -->
+                                                              </td>
+                                                              {% endif %}
+                                                              {% if order_item.status != 'Cancelled' %}
+                                                              <td>
+                                                                {% if order_item.status == 'Delivered' %}
+                                                                <!-- Button trigger modal -->
+                                                                <a type="button" data-bs-toggle="modal" data-bs-target="#return">
+                                                                  <button class="btn btn-outline-dark">Return</button>
+                                                                </a>
+                                                                <!--Reason Modal -->
+                                                                <div class="modal fade" id="return" tabindex="-1" aria-labelledby="exampleModalLabel{{ forloop.counter }}"
+                                                                  aria-hidden="true">
+                                                                  <div class="modal-dialog modal-dialog-centered modal-lg">
+                                                                    <div class="modal-content">
+                                                                      <div class="modal-header">
+                                                                        <h4 class="modal-title fs-5" id="exampleModalLabel{{ forloop.counter }}">Return reason form</h4>
+                                                                        <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                                                          <i class="fa fa-times"></i>
+                                                                        </button>
+                                                                      </div>
+                                                                      <div class="modal-body">
+                                                                        <form action="{% url 'orderreturn' order_item.id %}" enctype="multipart/form-data" method="POST">
+                                                                          {% csrf_token %}
+                                                                          <div class="form-outline mb-4">
+                                                                            <select class="form-select mb-1" aria-label="Default select example" name="options">
+                                                                              <option value="damaged_roduct">Damaged Product</option>
+                                                                              <option value="itemwrong">Item Wrong</option>
+                                                                              <option value="nothing">Nothing</option>
+                                                                            </select>
+                                                                            <label class="form-label" style="margin-left: 10px;" for="form3Example3cg">Choose issue</label>
+                                                                          </div>
+                                                                          <div  class="form-outline mb-4">
+                                                                            <textarea style="padding-left: 5px; padding-right: 5px;"  class="form-control"  id="exampleFormControlTextarea1" rows="3" name="reason"></textarea>
+                                                                            <label class="form-label" for="form3Example3cg">Reason</label>
+                                                                          </div>
+                                                                          <div class="d-flex justify-content-center">
+                                                                            <button type="submit"
+                                                                              class="btn btn-danger btn-lg gradient-custom-4 w-50 text-light">Return</button>
+                                                                          </div>
+                                                                        </form>
+                                                                      </div>
+                                                                    </div>
+                                                                  </div>
+                                                                </div>
+                                                                </div>
+                                                              
+                                                                {% endif %}
+                                                              </td>
+                                                              {% endif %}
+
+                                                              </tr>
+                                                              {% endfor %}
                                                         </tbody>
                                                       </table>
                                                     </div>
@@ -281,246 +368,555 @@
                             </div><!-- .End .tab-pane -->
                             
                             <div class="tab-pane fade" id="tab-address" role="tabpanel" aria-labelledby="tab-address-link">
-                                <p>The following addresses will be used on the checkout page by default.</p>
+                              <p>The following addresses will be used on the checkout page by default.</p>
+                              <!--add address modal -->
+                              <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                  <div class="modal-dialog" style="max-width: 600px; max-height: 650px; overflow-y: auto; overflow-x: hidden; ">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel" style="font-weight: bold;">Add Address</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                      </div>
+                                      <div class="modal-body" style="margin-left:35px; ">
+                  
+                                      <form action="{% url 'add_address' %}" method="post">
+                                              {% csrf_token %}
+                                          <div class="row">
+                                          <div class="col-lg-9">
+                                              <h3 class="checkout-title">Add Address</h3><!-- End .checkout-title -->
+                                              
+                                                  <div class="row">
+                                                      <div class="col-sm-6 col-xl-6">
+                                                          <label>First Name *</label>
+                                                          <input type="text" class="form-control" name="firstname" required>
+                                                      </div><!-- End .col-sm-6 -->
+                  
+                                                      <div class="col-sm-6 col-xl-6">
+                                                          <label>Last Name *</label>
+                                                          <input type="text" class="form-control" name="lastname" required>
+                                                      </div><!-- End .col-sm-6 -->
+                                                  </div><!-- End .row -->
+                  
+                  
+                                                  
+                  
+                                                  <label>Street address *</label>
+                                                  <input type="text" class="form-control" name="address" placeholder="House number and Street name" required>
+                                                  <input type="text" class="form-control" name="address" placeholder="Appartments, suite, unit etc ..." required>
+                  
+                                                  <div class="row">
+                                                      <div class="col-sm-6">
+                                                          <label>Town / City *</label>
+                                                          <input type="text" class="form-control" name="city" required>
+                                                      </div><!-- End .col-sm-6 -->
+                  
+                                                      <div class="col-sm-6">
+                                                          <label>State *</label>
+                                                          <input type="text" class="form-control" name="state" required>
+                                                      </div><!-- End .col-sm-6 -->
+                                                  </div><!-- End .row -->
+                  
+                                                  <div class="row">
+                                                      <div class="col-sm-6">
+                                                          <label>Postcode / ZIP *</label>
+                                                          <input type="number" class="form-control" name="pincode" required>
+                                                      </div><!-- End .col-sm-6 -->
+                  
+                                                      <div class="col-sm-6">
+                                                          <label>Phone *</label>
+                                                          <input type="tel" class="form-control" name="phone" required>
+                                                      </div><!-- End .col-sm-6 -->
+                                                  </div><!-- End .row -->
+                  
+                                                  <label>Email address *</label>
+                                                  <input type="email" class="form-control" name="email" required>
+                  
+                                                 
+                                          
+                                                  <button type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
+                                                      <span class="btn-text">Save</span>
+                                                      <span class="btn-hover-text">Save Address</span>
+                                                  </button>
+                                          
+                                              </div><!-- End .col-lg-9 -->
+                  
+                                          </div>
+                                          </form>
+                  
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                          <!-- modal end -->
 
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <div class="card card-dashboard">
-                                            <div class="card-body">
-                                                <h3 class="card-title">Your Address</h3><!-- End .card-title -->
+                           <!--edit address modal -->
+                           <div class="modal fade" id="editModal" tabindex="-1"  aria-labelledby="editModalLabel" aria-hidden="true">
+                              <div class="modal-dialog" style="max-width: 600px; max-height: 650px; overflow-y: auto; overflow-x: hidden; ">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel" style="font-weight: bold;">Billing Details</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+                                  <div class="modal-body" style="margin-left:35px; ">
+              
+                                  <form action="{% url 'edit_address' address.id %}" method="post">
+                                          {% csrf_token %}
+                                      <div class="row">
+                                      <div class="col-lg-9">
+                                          <h3 class="checkout-title"> edit Address </h3><!-- End .checkout-title -->
+                                          
+                                              <div class="row">
+                                                  <div class="col-sm-6 col-xl-6">
+                                                      <label>First Name *</label>
+                                                      <input type="text" class="form-control" name="firstname" value="{{address.first_name}}" required>
+                                                  </div><!-- End .col-sm-6 -->
+              
+                                                  <div class="col-sm-6 col-xl-6">
+                                                      <label>Last Name *</label>
+                                                      <input type="text" class="form-control" name="lastname" value="{{address.last_name}}" required>
+                                                  </div><!-- End .col-sm-6 -->
+                                              </div><!-- End .row -->
+              
+              
+                                             
+              
+                                              <label>Street address *</label>
+                                              <input type="text" class="form-control" name="address" value="{{address.address}}" placeholder="House number and Street name" required>
+                                              <input type="text" class="form-control" name="address" value="" placeholder="Appartments, suite, unit etc ..." required>
+              
+                                              <div class="row">
+                                                  <div class="col-sm-6">
+                                                      <label>Town / City *</label>
+                                                      <input type="text" class="form-control" name="city" value="{{address.city}}" required>
+                                                  </div><!-- End .col-sm-6 -->
+              
+                                                  <div class="col-sm-6">
+                                                      <label>State *</label>
+                                                      <input type="text" class="form-control" name="state" value="{{address.state}}" required>
+                                                  </div><!-- End .col-sm-6 -->
+                                              </div><!-- End .row -->
+              
+                                              <div class="row">
+                                                  <div class="col-sm-6">
+                                                      <label>Postcode / ZIP *</label>
+                                                      <input type="number" class="form-control" name="pincode" value="{{address.pincode}}" required>
+                                                  </div><!-- End .col-sm-6 -->
+              
+                                                  <div class="col-sm-6">
+                                                      <label>Phone *</label>
+                                                      <input type="tel" class="form-control" name="phone" value="{{address.phone}}" required>
+                                                  </div><!-- End .col-sm-6 -->
+                                              </div><!-- End .row -->
+              
+                                              <label>Email address *</label>
+                                              <input type="email" class="form-control" name="email" value="{{address.email}}" required>
+              
+                                             
+                                      
+                                              <button type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
+                                                  <span class="btn-text">Save</span>
+                                                  <span class="btn-hover-text">Save Address</span>
+                                              </button>
+                                      
+                                          </div><!-- End .col-lg-9 -->
+              
+                                      </div>
+                                      </form>
+              
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <!-- modal end -->
 
-                                                
+                              <div class="row">
+                                  <div class="col-lg-6">
+                                      <div class="card card-dashboard">
+                                          <div class="card-body">
+                                              <h3 class="card-title">Your Address</h3><!-- End .card-title -->
 
-                                                <p>{{address.user.username}}<br>
-                                                {{address.first_name}}<br>
-                                                {{address.last_name}}<br>
-                                                {{address.phone}}<br>
-                                                {{address.email}}<br>
-                                                {{address.city}} {{address.state}}<br>
-                                                <a href="#">Edit <i class="icon-edit"></i></a></p>
-                                            </div><!-- End .card-body -->
-                                        </div><!-- End .card-dashboard -->
-                                    </div><!-- End .col-lg-6 -->
+                                              
 
-                                    <div class="col-lg-6">
-                                        <div class="card card-dashboard">
-                                            <div class="card-body">
-                                                <h3 class="card-title">Saved Addresses</h3><!-- End .card-title -->
-                                                <div class="mb-4">
-            
-                                                    
-                                                    {% for adrs in addresses %}
-                                                            <div class="card mb-3">
+                                              <p>{{address.user.username}}<br>
+                                              {{address.first_name}}<br>
+                                              {{address.last_name}}<br>
+                                              {{address.phone}}<br>
+                                              {{address.email}}<br>
+                                              {{address.city}} {{address.state}}<br>
+                                              <a href="#" type="button" class="site-btn mb-3" data-bs-toggle="modal" data-bs-target="#editModal">Edit <i class="icon-edit"></i></a></p>
+                                          </div><!-- End .card-body -->
+                                      </div><!-- End .card-dashboard -->
+                                     
+                                      <button type="button" class="site-btn mb-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                          New Address
+                                     
+                                      </button>
+                                  </div><!-- End .col-lg-6 -->
+                                  
+                                     
+                                 
+
+                                  <div class="col-lg-6">
+                                      <div class="card card-dashboard">
+                                          <div class="card-body">
+                                              <h3 class="card-title">Saved Addresses</h3><!-- End .card-title -->
+                                              <div class="mb-4">
+          
+                                                  
+                                                  {% for adrs in addresses %}
+                                                          <div class="card mb-3">
+                                                           
+                                                            <div class="custom-control custom-radio h-100 m-2 d-flex align-items-center">
+                                                              <input type="radio" class="custom-control-input " id="{{adrs.id}}" name="address" value="{{adrs.id}}" {% if index == 0 %}checked{% endif %} checked>
+                                                              <label class="custom-control-label" for="{{adrs.id}}">{{adrs.first_name}} {{adrs.last_name}}</label>
+                                                          </div>
+                                                          
+                                                                
+                                                            <div class="card-body">
+                                                              <h5 class="card-title">Mob : {{adrs.phone}}</h5>
+                                                              <h5 class="card-title">{{adrs.address}}, {{adrs.pincode}}</h5>
+                                                              <p class="card-text">{{adrs.city}}-{{adrs.state}}</p>
+                                                            <div>
+                              
+                                                            <!-- Button trigger vie address -->
+                                                              <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#viewaddress{{forloop.counter}}">
+                                                                View
+                                                              </button>
+                                                          <a href="#" type="button" class="site-btn mb-3" data-bs-toggle="modal" data-bs-target="#editModal2{{forloop.counter}}">Edit <i class="icon-edit"></i></a></p>
                                                              
-                                                              <div class="custom-control custom-radio h-100 m-2 d-flex align-items-center">
-                                                                <input type="radio" class="custom-control-input " id="{{adrs.id}}" name="address" value="{{adrs.id}}" {% if index == 0 %}checked{% endif %} checked>
-                                                                <label class="custom-control-label" for="{{adrs.id}}">{{adrs.first_name}} {{adrs.last_name}}</label>
-                                                            </div>
-                                                            
-                                                                  
-                                                              <div class="card-body">
-                                                                <h5 class="card-title">Mob : {{adrs.phone}}</h5>
-                                                                <h5 class="card-title">{{adrs.address}}, {{adrs.pincode}}</h5>
-                                                                <p class="card-text">{{adrs.city}}-{{adrs.state}}-{{adrs.country}}</p>
-                                                              <div>
-                                
-                                                              <!-- Button trigger vie address -->
-                                                                <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#viewaddress{{forloop.counter}}">
-                                                                  View
-                                                                </button>
-                                                               
-                                                                <!-- Modal -->
-                                                                <div class="modal fade" id="viewaddress{{forloop.counter}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                                                                  <div class="modal-dialog">
-                                                                    <div class="modal-content">
-                                                                      <div class="modal-header">
-                                                                        <h4 class="modal-title fs-6" id="staticBackdropLabel">View address</h4>
-                                                                        <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Close">
-                                                                          <i class="fa fa-times"></i>
-                                                                        </button>
+                                                              <!-- Modal -->
+                                                              <div class="modal fade" id="viewaddress{{forloop.counter}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                                                <div class="modal-dialog modal-dialog-centered modal-lg">
+                                                                  <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                      <h4 class="modal-title fs-6" id="staticBackdropLabel">View address</h4>
+                                                                      <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                                                        <i class="fa fa-times"></i>
+                                                                      </button>
+                                                                    </div>
+                                                                    <div class="modal-body" style="margin-left: 25px;">
+                              
+                                                                      <div class="row">
+                                                                        <div class="col-sm-5">
+                                                                          <p class="mb-0">Name</p>
+                                                                        </div>
+                                                                        <div class="col-sm-7">
+                                                                            <input type="hidden" value="{{ adrs.first_name}} {{ adrs.last_name}} " name="first_name">
+                                                                            {{ adrs.first_name}} {{ adrs.last_name}} 
+                                                                        </div>
                                                                       </div>
-                                                                      <div class="modal-body" style="margin-left: 25px;">
-                                
-                                                                        <div class="row">
+                                                                      <hr>
+                      
+                                                                      <div class="row">
                                                                           <div class="col-sm-5">
-                                                                            <p class="mb-0">Name</p>
+                                                                            <p class="mb-0">Phone</p>
                                                                           </div>
                                                                           <div class="col-sm-7">
-                                                                              <input type="hidden" value="{{ adrs.first_name}} {{ adrs.last_name}} " name="first_name">
-                                                                              {{ adrs.first_name}} {{ adrs.last_name}} 
+                                                                              {{ adrs.phone}}
+                                                                              <input type="hidden" value="{{ adrs.phone}}" name="phone">
                                                                           </div>
                                                                         </div>
                                                                         <hr>
-                        
+                      
                                                                         <div class="row">
-                                                                            <div class="col-sm-5">
-                                                                              <p class="mb-0">Phone</p>
-                                                                            </div>
-                                                                            <div class="col-sm-7">
-                                                                                {{ adrs.phone}}
-                                                                                <input type="hidden" value="{{ adrs.phone}}" name="phone">
-                                                                            </div>
+                                                                          <div class="col-sm-5">
+                                                                            <p class="mb-0">Email</p>
                                                                           </div>
-                                                                          <hr>
-                        
-                                                                          <div class="row">
-                                                                            <div class="col-sm-5">
-                                                                              <p class="mb-0">Email</p>
-                                                                            </div>
-                                                                            <div class="col-sm-7">
-                                                                                {{ adrs.email}}
-                                                                                <input type="hidden" value="{{ adrs.email}}" name="email">
-                        
-                                                                            </div>
+                                                                          <div class="col-sm-7">
+                                                                              {{ adrs.email}}
+                                                                              <input type="hidden" value="{{ adrs.email}}" name="email">
+                      
                                                                           </div>
-                                                                          <hr>
-                        
+                                                                        </div>
+                                                                        <hr>
+                      
+                                                                      <div class="row">
+                                                                          <div class="col-sm-5">
+                                                                            <p class="mb-0">Address</p>
+                                                                          </div>
+                                                                          <div class="col-sm-7">
+                                                                              {{ adrs.address}}
+                                                                          </div>
+                                                                        </div>
+                                                                        <hr>
+                      
                                                                         <div class="row">
-                                                                            <div class="col-sm-5">
-                                                                              <p class="mb-0">Address</p>
-                                                                            </div>
-                                                                            <div class="col-sm-7">
-                                                                                {{ adrs.address}}
-                                                                            </div>
+                                                                          <div class="col-sm-5">
+                                                                            <p class="mb-0">Town/City</p>
                                                                           </div>
-                                                                          <hr>
-                        
-                                                                          <div class="row">
-                                                                            <div class="col-sm-5">
-                                                                              <p class="mb-0">Town/City</p>
-                                                                            </div>
-                                                                            <div class="col-sm-7">
-                                                                                {{ adrs.city}}
-                                                                            </div>
+                                                                          <div class="col-sm-7">
+                                                                              {{ adrs.city}}
                                                                           </div>
-                                                                          <hr>
-                        
-                                                                          <div class="row">
-                                                                            <div class="col-sm-5">
-                                                                              <p class="mb-0">Postcode / ZIPy</p>
-                                                                            </div>
-                                                                            <div class="col-sm-7">
-                                                                                {{ adrs.pincode}}
-                                                                            </div>
+                                                                        </div>
+                                                                        <hr>
+                      
+                                                                        <div class="row">
+                                                                          <div class="col-sm-5">
+                                                                            <p class="mb-0">Postcode / ZIPy</p>
                                                                           </div>
-                                                                          <hr>
-                        
-                                                                          <div class="row">
-                                                                            <div class="col-sm-5">
-                                                                              <p class="mb-0">State</p>
-                                                                            </div>
-                                                                            <div class="col-sm-7">
-                                                                                {{ adrs.state}}
-                                                                            </div>
+                                                                          <div class="col-sm-7">
+                                                                              {{ adrs.pincode}}
                                                                           </div>
-                                                                          <hr>
-                        
-                                                                          <div class="row">
-                                                                            <div class="col-sm-5">
-                                                                              <p class="mb-0">Country</p>
-                                                                            </div>
-                                                                            <div class="col-sm-7">
-                                                                                {{ adrs.country}}
-                                                                            </div>
+                                                                        </div>
+                                                                        <hr>
+                      
+                                                                        <div class="row">
+                                                                          <div class="col-sm-5">
+                                                                            <p class="mb-0">State</p>
                                                                           </div>
-                                                                          <hr>
-                        
-                                                                      </div>
-                                                                      <div class="modal-footer">
-                                                                        <a  class="btn btn-primary text-white" data-bs-toggle="modal" data-bs-target="#deletaddress{{forloop.counter}}">
-                                                                          delete
-                                                                        </a>
-                                                            
-                                                                          <!--Delete Modal -->
-                                                                          <div class="modal fade" id="deletaddress{{forloop.counter}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                                            <div class="modal-dialog">
-                                                                              <div class="modal-content">
-                                                                                <div class="modal-header">
-                                                                                  <h5 class="" id="exampleModalLabel">Delete</h5>
-                                                                                  <button type="button" class="btn" data-bs-dismiss="modal" aria-label="Close"> <i class="fa fa-times" ></i></button>
-                                                                                </div>
-                                                                                <div class="modal-body">
-                                                                                  <p>Are you sure to delete Address <span class="text-primary">" {{adrs.first_name}} {{adrs.last_name}} ..."</span></p>
-                                                                                  
-                                                                                    <div class="d-flex justify-content-center">
-                                                                                      <a type="button" href="#"
-                                                                                        class="btn btn-danger btn-lg gradient-custom-4 w-50 text-light">Confirm</a>
-                                                                                    </div>
-                                                                
-                                                                                </div>
+                                                                          <div class="col-sm-7">
+                                                                              {{ adrs.state}}
+                                                                          </div>
+                                                                        </div>
+                                                                        <hr>
+                      
+                                                                        
+                      
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                      <a  class="btn btn-primary text-white" data-bs-toggle="modal" data-bs-target="#deletaddress{{forloop.counter}}">
+                                                                        delete
+                                                                      </a>
+                                                          
+                                                                        <!--Delete Modal -->
+                                                                        <div class="modal fade" id="deletaddress{{forloop.counter}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                                          <div class="modal-dialog modal-dialog-centered modal-lg">
+                                                                            <div class="modal-content">
+                                                                              <div class="modal-header">
+                                                                                <h5 class="" id="exampleModalLabel">Delete</h5>
+                                                                                <button type="button" class="btn" data-bs-dismiss="modal" aria-label="Close"> <i class="fa fa-times" ></i></button>
+                                                                              </div>
+                                                                              <div class="modal-body">
+                                                                                <p>Are you sure to delete Address <span class="text-primary">" {{adrs.first_name}} {{adrs.last_name}} ..."</span></p>
+                                                                                
+                                                                                  <div class="d-flex justify-content-center">
+                                                                                    <a type="button" href="#"
+                                                                                      class="btn btn-danger btn-lg gradient-custom-4 w-50 text-light">Confirm</a>
+                                                                                  </div>
+                                                              
                                                                               </div>
                                                                             </div>
                                                                           </div>
-                                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                                      </div>
+                                                                        </div>
+                                                                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                                                     </div>
                                                                   </div>
                                                                 </div>
-                                                              
-                                                             </div>
-                                                             
-                                                        </div>
-                                                       
-                                                        </div>
-                                                        {% endfor %}
-                                                    <div class="card-body">
-                                                      {% if not address %}<h5 class="card-title">No address saved</h5>{% endif %}
-                                                      <p class="card-text"> </p>
-                                                      <div>
+                                                              </div>
+                                                            
+                                                           </div>
+                                                           
                                                       </div>
+                                                      <!--edit address modal2 -->
+                           <div class="modal fade" id="editModal2{{forloop.counter}}" tabindex="-1"  aria-labelledby="editModal2Label" aria-hidden="true">
+                              <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: 600px; max-height: 650px; overflow-y: auto; overflow-x: hidden; ">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel" style="font-weight: bold;">Billing Details</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+                                  <div class="modal-body" style="margin-left:35px; ">
+              
+                                  <form action="{% url 'edit_address' adrs.id %}" method="post">
+                                          {% csrf_token %}
+                                      <div class="row">
+                                      <div class="col-lg-9">
+                                          <h3 class="checkout-title">Billing Details</h3><!-- End .checkout-title -->
+                                          
+                                              <div class="row">
+                                                  <div class="col-sm-6 col-xl-6">
+                                                      <label>First Name *</label>
+                                                      <input type="text" class="form-control" name="firstname" value="{{adrs.first_name}}" required>
+                                                  </div><!-- End .col-sm-6 -->
+              
+                                                  <div class="col-sm-6 col-xl-6">
+                                                      <label>Last Name *</label>
+                                                      <input type="text" class="form-control" name="lastname" value="{{adrs.last_name}}" required>
+                                                  </div><!-- End .col-sm-6 -->
+                                              </div><!-- End .row -->
+              
+              
+                                    
+              
+                                              <label>Street address *</label>
+                                              <input type="text" class="form-control" name="address" value="{{adrs.address}}" placeholder="House number and Street name" required>
+                                              <input type="text" class="form-control" name="address" value="" placeholder="Appartments, suite, unit etc ..." required>
+              
+                                              <div class="row">
+                                                  <div class="col-sm-6">
+                                                      <label>Town / City *</label>
+                                                      <input type="text" class="form-control" name="city" value="{{adrs.city}}" required>
+                                                  </div><!-- End .col-sm-6 -->
+              
+                                                  <div class="col-sm-6">
+                                                      <label>State *</label>
+                                                      <input type="text" class="form-control" name="state" value="{{adrs.state}}" required>
+                                                  </div><!-- End .col-sm-6 -->
+                                              </div><!-- End .row -->
+              
+                                              <div class="row">
+                                                  <div class="col-sm-6">
+                                                      <label>Postcode / ZIP *</label>
+                                                      <input type="number" class="form-control" name="pincode" value="{{adrs.pincode}}" required>
+                                                  </div><!-- End .col-sm-6 -->
+              
+                                                  <div class="col-sm-6">
+                                                      <label>Phone *</label>
+                                                      <input type="tel" class="form-control" name="phone" value="{{adrs.phone}}" required>
+                                                  </div><!-- End .col-sm-6 -->
+                                              </div><!-- End .row -->
+              
+                                              <label>Email address *</label>
+                                              <input type="email" class="form-control" name="email" value="{{adrs.email}}" required>
+              
+                                             
+                                      
+                                              <button type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
+                                                  <span class="btn-text">Save</span>
+                                                  <span class="btn-hover-text">Save Address</span>
+                                              </button>
+                                      
+                                          </div><!-- End .col-lg-9 -->
+              
+                                      </div>
+                                      </form>
+              
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <!-- modal end -->
+                                                     
+                                                      </div>
+                                                      {% endfor %}
+                                                  <div class="card-body">
+                                                    {% if not address %}<h5 class="card-title">No address saved</h5>{% endif %}
+                                                    <p class="card-text"> </p>
+                                                    <div>
                                                     </div>
-                                                </div>
+                                                  </div>
+                                              </div>
 
-                                               
-                                                <a href="#">Edit <i class="icon-edit"></i></a>
-                                            </div><!-- End .card-body -->
-                                        </div><!-- End .card-dashboard -->
-                                    </div><!-- End .col-lg-6 -->
-                                </div><!-- End .row -->
-                            </div><!-- .End .tab-pane -->
+                                             
+                                          </div><!-- End .card-body -->
+                                      </div><!-- End .card-dashboard -->
+                                  </div><!-- End .col-lg-6 -->
+                              </div><!-- End .row -->
+                          </div><!-- .End .tab-pane -->
 
-                            <div class="tab-pane fade" id="tab-account" role="tabpanel" aria-labelledby="tab-account-link">
-                                <form action="#">
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <label>First Name *</label>
-                                            <input type="text" class="form-control" required>
-                                        </div><!-- End .col-sm-6 -->
+                          <div class="tab-pane fade" id="tab-account" role="tabpanel" aria-labelledby="tab-account-link">
+                              <div class="col-lg-6">
+                                  <div class="card card-dashboard">
+                                      <div class="card-body">
+                                          <h3 class="card-title">Your Profile</h3><!-- End .card-title -->
 
-                                        <div class="col-sm-6">
-                                            <label>Last Name *</label>
-                                            <input type="text" class="form-control" required>
-                                        </div><!-- End .col-sm-6 -->
-                                    </div><!-- End .row -->
+                                          
 
-                                    <label>Display Name *</label>
-                                    <input type="text" class="form-control" required>
-                                    <small class="form-text">This will be how your name will be displayed in the account section and in reviews</small>
+                                          <p>{{user.username}}<br>
+                                          {{user.first_name}}<br>
+                                          {{user.last_name}}<br>
+                                          {{user.phone}}<br>
+                                          {{user.email}}<br>
+                                          <br>
+                                          <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#editproModal">Edit </button>
+                                          <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editpassModal">Change Password </button>
+                                      </div><!-- End .card-body -->
+                                  </div><!-- End .card-dashboard -->
+                                  
+                                  
+                              </div>
 
-                                    <label>Email address *</label>
-                                    <input type="email" class="form-control" required>
-
-                                    <label>Current password (leave blank to leave unchanged)</label>
-                                    <input type="password" class="form-control">
-
-                                    <label>New password (leave blank to leave unchanged)</label>
-                                    <input type="password" class="form-control">
-
-                                    <label>Confirm new password</label>
-                                    <input type="password" class="form-control mb-2">
-
-                                    <button type="submit" class="btn btn-outline-primary-2">
-                                        <span>SAVE CHANGES</span>
-                                        <i class="icon-long-arrow-right"></i>
+                              <!--edit profile modal -->
+                           <div class="modal fade" id="editproModal" tabindex="-1"  aria-labelledby="editproModalLabel" aria-hidden="true">
+                              <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: 600px; max-height: 650px; overflow-y: auto; overflow-x: hidden; ">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="editproModalLabel" style="font-weight: bold;">Your profile</h5>
+                                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                      <span aria-hidden="true">&times;</span>
                                     </button>
-                                </form>
-                            </div><!-- .End .tab-pane -->
-                        </div>
-                    </div><!-- End .col-lg-9 -->
-                </div><!-- End .row -->
-            </div><!-- End .container -->
-        </div><!-- End .dashboard -->
-    </div><!-- End .page-content -->
+                                  </div>
+                                  <div class="modal-body" style="margin-left:35px; ">
+
+                              <form action="{% url 'edit_profile' %}">
+                                  <div class="row">
+                                      <div class="col-sm-6">
+                                          <label>First Name *</label>
+                                          <input type="text" class="form-control" name="first_name" value="{{user.first_name}}"  required>
+                                      </div><!-- End .col-sm-6 -->
+
+                                      <div class="col-sm-6">
+                                          <label>Last Name *</label>
+                                          <input type="text" class="form-control" name="last_name" value="{{user.last_name}}" required>
+                                      </div><!-- End .col-sm-6 -->
+                                  </div><!-- End .row -->
+
+                                  <label>Username *</label>
+                                  <input type="text" class="form-control" name="username" value="{{user.username}}" required>
+                                  <small class="form-text">This will be how your name will be displayed in the account section and in reviews</small>
+
+                                  <label>Email address *</label>
+                                  <input type="email" class="form-control" name="email" value="{{user.email}}" required>
+
+                              
+
+                                  <button type="submit" class="btn btn-outline-primary-2">
+                                      <span>SAVE CHANGES</span>
+                                      <i class="icon-long-arrow-right"></i>
+                                  </button>
+                              </form>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <!-- modal end -->
+
+              
+                              <!--edit password modal -->
+                              <div class="modal fade" id="editpassModal" tabindex="-1"  aria-labelledby="editpassModalLabel" aria-hidden="true">
+                                  <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: 800px; max-height: 950px; overflow-y: auto; overflow-x: hidden; ">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <h5 class="modal-title" id="editpassModalLabel" style="font-weight: bold;">Change Password</h5>
+                                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                          <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        
+                                      </div>
+                                      <div class="modal-body" style="margin-left:35px; ">
+  
+                                  <form action="{% url 'change_password' %}">
+                                   
+  
+                                     
+  
+                                      <label>Current password </label>
+                                      <input type="password" name="old_password" class="form-control">
+  
+                                      <label>New password </label>
+                                      <input type="password" name="new_password" class="form-control">
+  
+                                      <label>Confirm new password</label>
+                                      <input type="password" name="confirm_new_password" class="form-control mb-2">
+  
+                                      <button type="submit" class="btn btn-outline-primary-2">
+                                          <span>SAVE CHANGES</span>
+                                          <i class="icon-long-arrow-right"></i>
+                                      </button>
+                                  </form>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <!-- modal end -->
+                         
+                          </div><!-- .End .tab-pane -->
+                      </div>
+                  </div><!-- End .col-lg-9 -->
+              </div><!-- End .row -->
+          </div><!-- End .container -->
+      </div><!-- End .dashboard -->
+  </div><!-- End .page-content -->
 </main>
 
 <!-- jQuery CDN -->
@@ -534,11 +930,7 @@
 
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
-
-
-
-
-      <script src="{% static ' js/main.js' %}"></script>
+<script src="{% static ' js/main.js' %}"></script>
 
       <script>
         $(document).ready(function() {
@@ -616,5 +1008,43 @@
                 }
             });
         });
+        </script>
+
+        <script src="{% static ' js/main.js' %}"></script>
+	
+        <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/alertifyjs/build/alertify.min.js"></script>
+        
+        <script>
+          $(document).ready(function() {
+              $('.ordercancel').click(function(e) {
+                e.preventDefault();
+                var order_ids = $(this).closest('.modal-content').find('.order_id').val();
+                var orderitem_ids = $(this).closest('.modal-content').find('.orderitem_id').val();
+                console.log(order_ids,orderitem_ids,'ooooooooooooooooooooooooooooooooo')
+                var token = $("[name='csrfmiddlewaretoken']").val();
+                
+                $.ajax({
+                  method: "POST",
+                  url: "/order/ordercancel/",
+                  data: {
+                    'order_id': order_ids,
+                    'orderitem_id': orderitem_ids,
+                    csrfmiddlewaretoken: token
+                  },
+                  success: function(response) {
+                    console.log(response);
+                    alertify.success(response.status);
+            
+                    location.reload();
+                  },
+                  error: function(xhr, status, error) {
+                    console.log(xhr.responseText);
+                    // Handle error case
+                  }
+                });
+              });
+            });
+            
         </script>
 {% endblock %}

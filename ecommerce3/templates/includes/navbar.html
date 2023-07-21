@@ -86,6 +86,7 @@
                         <li class="{% if request.path == '/product_show/' %}active{% endif %}">
                             <a href="{% url 'product_show' %}">Product</a>
                         </li>
+       
                         <li class="{% if request.path == '/blog/' %}active{% endif %}">
                             <a href="{% url 'blog' %}">Blog</a>  
                         </li>
@@ -94,7 +95,7 @@
                             <a href="{% url 'user_logout' %}">Logout</a>
                         </li>
                         <li class="{% if request.path == '/profile/' %}active{% endif %}">
-                            <a href="{% url 'profile' %}">Dashboard</a>  
+                            <a href="{% url 'user_profile' %}">Dashboard</a>  
                         </li>
                         {% else %}
                         <li class="{% if request.path == '/user_login/' %}active{% endif %}">
