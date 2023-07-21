@@ -3,7 +3,7 @@ from django.urls import reverse
 from authors.models import author
 from categories.models import category
 from django.utils.text import slugify
-
+from offer.models import Offer
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
 
@@ -36,6 +36,7 @@ class Product(models.Model):
     is_available = models.BooleanField(default=False)
     slug = models.SlugField(max_length=250,unique=True)
     quantity = models.IntegerField(default=10)
+    offer = models.ForeignKey(Offer, on_delete=models.SET_NULL, null=True )
 
     def save(self, *args, **kwargs):
         # generate slug field from name field if slug is empty

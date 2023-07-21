@@ -1,5 +1,15 @@
 {% extends 'adminapp/dashboardbase.html' %}
-{% block title %}Product{% endblock  %}
+{% block title %}Product
+{% endblock  %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+
+<!-- jquery -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+<!-- cropper -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropper/4.1.0/cropper.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropper/4.1.0/cropper.min.css">
 
 
 {% block content %} 
@@ -13,75 +23,92 @@
 </div>
 {% endfor %}
 {% endif %}
+
+
+
+<p>helloo</p>
   
   <!--Add Product  Modal -->
   <div class="modal fade" id="addCategory" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Add Product</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Add Product</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
+          <form action="{% url 'createproduct' %}" enctype="multipart/form-data" method="POST">
+            {% csrf_token %}
+            <div style="width: 100px;" class="card-header category-img position-relative overflow-hidden bg-transparent border p-0">
+            </div> 
+            <div class="form-outline mb-4">
+              <input name='product_name' value="{{c.product_name}}"  type="text" id="form3Example3cg" class="form-control form-control-lg" required />
+              <label class="form-label" for="form3Example3cg">Product name</label>
+            </div>
+            <div class="form-outline mb-4">
+              <input name='product_price' value="{{c.product_price}}"  type="number" id="form3Example3cg" class="form-control form-control-lg" required />
+              <label class="form-label" for="form3Example3cg">Price</label>
+            </div>
+            
+            <div class="form-outline mb-4">
+              <input name="product_image" type="file" accept="image/png, image/jpeg, image/svg, image/avif" class="form-control" id="image-input"/>
+              <small id="image-error" class="text-danger text-center"></small>
+            </div>
   
-        <form action="{% url 'createproduct'%}"  enctype="multipart/form-data" method="POST">
-          {% csrf_token %}
-          <div style="width: 100px;" class="card-header category-img position-relative overflow-hidden bg-transparent border p-0">
-          </div> 
-          <div class="form-outline mb-4">
-            <input name='product_name' value="{{c.product_name}}"  type="text" id="form3Example3cg" class="form-control form-control-lg" />
-            <label class="form-label" for="form3Example3cg">Product name</label>
-          </div>
-          <div class="form-outline mb-4">
-            <input name='product_price' value="{{c.product_price}}"  type="text" id="form3Example3cg" class="form-control form-control-lg" />
-            <label class="form-label" for="form3Example3cg">Price</label>
-          </div>
-          <div class="form-outline mb-4">
-            <input name='quantity' value="{{c.quantity}}"  type="text" id="form3Example3cg" class="form-control form-control-lg" />
-            <label class="form-label" for="form3Example3cg">Quantity</label>
-          </div>
-          <div class="form-outline mb-4">
-            <input name="product_image" type="file" accept="image/png, image/jpeg, image/svg, image/avif" class="form-control" id="image-input"/>
-            <small id="image-error" class="text-danger text-center"></small>
-          </div>
-          <div class="form-outline mb-4">
-            <select class="form-select form-select-sm mt-3" aria-label=".form-select-sm example" name="author">
-              {% for b in author %}
+            
+  
+            
+            <div class="form-outline mb-4">
+              <select class="form-select form-select-sm mt-3" aria-label=".form-select-sm example" name="author" required>
+                {% for b in author %}
               <option value="{{b.author_name}}" >{{b.author_name}}</option>
               {% endfor %}
+              </select>
+              <label class="form-label" for="form3Example3cg">Author</label>
+            </div>
+            <div class="form-outline mb-4">
+              <select class="form-select form-select-sm mt-3" aria-label=".form-select-sm example" name="category" required>
+                {% for c in category %}
+                <option value="{{ c.id }}">{{ c.categories }}</option>
+                {% endfor %}
+              </select>
+              <label class="form-label" for="form3Example3cg">Gener</label>
+            </div>
+            <div class="form-outline mb-4">
+              <select class="form-select form-select-sm mt-3" aria-label=".form-select-sm example" name="offer">
+                <option >No offer</option>
+                {% for c in offer %}
+                <option value="{{ c.id }}">{{ c.offer_name }}</option>
+                {% endfor %}
             </select>
-            <label class="form-label" for="form3Example3cg">author</label>
-          </div>
-          <div class="form-outline mb-4">
-            <select class="form-select form-select-sm mt-3" aria-label=".form-select-sm example" name="category">
-              {% for c in category %}
-              <option value="{{ c.id }}">{{ c.categories }}</option>
-              {% endfor %}
-          </select>
-            <label class="form-label" for="form3Example3cg">Category</label>
-          </div>
-        <div class="form-outline mb-4">
-          <input name='product_description' value="{{c.product_description}}"  type="text" id="form3Example3cg" class="form-control form-control-lg" />
-          <label class="form-label" for="form3Example3cg">Description</label>
+            <label class="form-label" for="form3Example3cg">Offer</label>
+              </div>
+            <div class="form-outline mb-4">
+                <input name='product_description' value="{{c.product_description}}"  type="text" id="form3Example3cg" class="form-control form-control-lg" required/>
+                <label class="form-label" for="form3Example3cg">Description</label>
+            </div>
+            <div class="form-outline mb-4">
+                <input name='product_description_detailed' value="{{c.product_description_detailed}}"  type="text" id="form3Example3cg" class="form-control form-control-lg" required/>
+                <label class="form-label" for="form3Example3cg">Detailed Description</label>
+            </div>
+            
+            <div class="form-outline mb-4">
+              <input name='quantity' value="{{c.quantity}}"  type="number" id="form3Example3cg" class="form-control form-control-lg" required/>
+              <label class="form-label" for="form3Example3cg">Quantity</label>
+            </div>
+            <div class="form-outline mb-4">
+              <label class="form-label">Is Available</label>
+              <input type="checkbox" name='checkbox' >
+            </div>
+            <div class="d-flex justify-content-center">
+              <button type="submit" class="btn btn-danger btn-lg gradient-custom-4 w-50 text-light" type="submit">Save Changes</button>
+            </div>
+          </form>
         </div>
-        <div class="form-outline mb-4">
-          <input name='product_description_detailed' value="{{c.product_description_detailed}}"  type="text" id="form3Example3cg" class="form-control form-control-lg" />
-          <label class="form-label" for="form3Example3cg">Detailed Description</label>
-        </div>
-       
-        <div class="form-outline mb-4">
-          <label class="form-label">Is Available</label>
-          <input type="checkbox" name='checkbox'>
-        </div>
-         <div class="d-flex justify-content-center">
-            <button type="submit"
-              class="btn btn-danger btn-lg gradient-custom-4 w-50 text-light" type="submit">Save Changes</button>
-          </div>
-        </form>
       </div>
     </div>
   </div>
-  </div>
+  
   <!--end of add product modal-->
 
 
@@ -92,30 +119,28 @@
         <a type="button" href="{% url 'createproduct' %}" class="btn btn-primary w-60" style="margin-top: 20px;margin-left: 10px;" data-bs-toggle="modal" data-bs-target="#addCategory">
             <i  class="fa fa-plus">Add Product</i>
           </a>
-        <div class="search-field d-none d-xl-block" style="float: right;">
-          <form action="{%url 'search_product'%}">
-            <input type="text" placeholder="Search..." name="keyword" style="border-radius: 20px; height: 40px; text-align: center; font-size: 16px;">
-            <button type="submit" style="display: none;"></button>
-        </form>
-          </div>
+          <div class="search-field d-none d-xl-block" style="float: right;">
+            <form action="{%url 'search_product'%}">
+              <input type="text" placeholder="Search..." name="keyword" style="border-radius: 20px; height: 40px; text-align: center; font-size: 16px;">
+              <button type="submit" style="display: none;"></button>
+          </form>
+            </div>
           <br>
           <br>
       <h4 class="card-title">Products</h4>
      
-      <table class="table table-striped" style="font-size: 12px; width: 100%">
+      <table class="table table-striped">
         <thead>
             <tr>
-              <th style="padding: 5px;" scope="col">id</th>
-              <th style="padding: 5px;" scope="col">Product name</th>
-             
-              <th  style="padding: 5px;" scope="col">product price</th>
-              <th  style="padding: 5px;" scope="col">product image</th>
-              <th  style="padding: 5px;" scope="col">Quantity</th>
-              <th  style="padding: 5px;" scope="col">category</th>
-              <th  style="padding: 5px;" scope="col">author</th>
-              <th  style="padding: 5px;" scope="col">product description</th>
-              {% comment %} <th  style="padding: 5px;" scope="col">is_available</th> {% endcomment %}
-              <th  style="padding: 5px;" scope="col">Action</th>
+              <th scope="col">id</th>
+              <th scope="col">Product name</th>
+              <th scope="col">product price</th>
+              <th scope="col">product image</th>
+              <th scope="col">Gener</th>
+              <th scope="col">Author</th>
+              <th scope="col">offer</th>
+              <th scope="col">Quantity</th>
+              <th scope="col">Action</th>
             </tr>
           </thead>
       <tbody>
@@ -130,26 +155,22 @@
             <div style="width: 60px;" class="overflow-hidden">
               <img class="w-100" src=" {{c.product_image.url}}" alt="">
             </div></td>
-          
+            <td style="padding: 5px;" >  {{c.category}} </td>
+            <td style="padding: 5px;" >  {{c.author}} </td>
+            <td style="padding: 5px;" >  {{c.offer.offer_name}} </td>
           <td style="padding: 5px;" >  {{c.quantity}} </td>
-          <td style="padding: 5px;" >  {{c.category}} </td>
-          <td style="padding: 5px;" >  {{c.author}} </td>
-          <td style="padding: 5px;" >  {{c.product_description}} </td>
-          {% comment %} {% if c.is_available %}
-          <td style="padding: 5px;" > Yes</td>
-          {% else %}
-          <td style="padding: 5px;" > No</td>
-          {% endif %} {% endcomment %}
-         <td style="padding: 5px;" >
+          
+          
+          
+         <td>
           <!-- edit -->
-           
-          <!-- Edit button -->
-          <button type="button" class="fs-7 btn btn-warning" data-bs-toggle="modal" data-bs-target="#confirmEdit{{ c.slug }}">
-            <i title="" class="fa fa-edit text-black">edit</i>
-          </button>
+
+            <!-- Button trigger modal -->
+            <a type="button" class="fs-7 btn btn-warning" data-bs-toggle="modal" data-bs-target="#confirmEdit{{forloop.counter}}">
+              <i title="" class="fa fa-edit text-black">edit</i>
+            </a> 
             <!--Edit Modal -->
-             
-            <div class="modal fade" id="confirmEdit{{ c.slug }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+             <div class="modal fade" id="confirmEdit{{forloop.counter}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
               <div class="modal-dialog">
 
                 <div class="modal-content">
@@ -170,16 +191,13 @@
                         <input name='product_price' value="{{c.product_price}}"  type="text" id="form3Example3cg" class="form-control form-control-lg" />
                         <label class="form-label" for="form3Example3cg">Price</label>
                       </div>
-                      <div class="form-outline mb-4">
-                        <input name='quantity' value="{{c.quantity}}"  type="text" id="form3Example3cg" class="form-control form-control-lg" />
-                        <label class="form-label" for="form3Example3cg">Quantity</label>
-                      </div>
                       <div style="width: 100px;" class="card-header category-img position-relative overflow-hidden bg-transparent border p-0">
                       </div> 
                       <div class="form-outline mb-4">
                         <input name="product_image" type="file" accept="image/png, image/jpeg, image/svg" class="form-control"id="image-inputs"/>
                         <small id="image-errors" class="text-danger text-center"></small>
                       </div>
+                      
                       
       
                       
@@ -200,15 +218,27 @@
                       </select>
                         <label class="form-label" for="form3Example3cg">Category</label>
                       </div>
+                      <div class="form-outline mb-4">
+                        <select class="form-select form-select-sm mt-3" aria-label=".form-select-sm example" name="offer">
+                          <option >No offer</option>
+                          {% for c in offer %}
+                          <option value="{{ c.id }}">{{ c.offer_name }}</option>
+                          {% endfor %}
+                      </select>
+                      <label class="form-label" for="form3Example3cg">Offer</label>
+                        </div>
                     <div class="form-outline mb-4">
                       <input name='product_description' value="{{c.product_description}}"  type="text" id="form3Example3cg" class="form-control form-control-lg" />
                       <label class="form-label" for="form3Example3cg">Description</label>
                     </div>
                     <div class="form-outline mb-4">
-                      <input name='product_description_detailed' value="{{c.product_description_detailed}}"  type="text" id="form3Example3cg" class="form-control form-control-lg" />
+                      <input name='product_description' value="{{c.product_description_detailed}}"  type="text" id="form3Example3cg" class="form-control form-control-lg" />
                       <label class="form-label" for="form3Example3cg">Detailed Description</label>
                     </div>
-                   
+                    <div class="form-outline mb-4">
+                      <input name='quantity' value="{{c.quantity}}"  type="text" id="form3Example3cg" class="form-control form-control-lg" />
+                      <label class="form-label" for="form3Example3cg">Quantity</label>
+                    </div>
 
                     <!-- one here -->
 
@@ -264,7 +294,7 @@
     </table>
     </div>
   </div>
- 
+ </div>
  
   {% if message %}
   <div class="message">
@@ -272,5 +302,179 @@
     <a href="{%url 'product'%}">
       <h4 class="font-weight-bold text-center pt-5" style="color: #403c3c52;font-weight: bold;">{{ message }}</h4> </a></div>
   {% endif %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.js"></script>
+  <script>
+    
+    const imageForm = document.getElementById('image-form');
+    const confirmBtn = document.getElementById('confirm-btn');
+    const input = document.getElementById('id_file');
+    const csrf = document.getElementsByName('csrfmiddlewaretoken');
+  
+    input.addEventListener('change', () => {
+      const alertBox = document.getElementById('alert-box');
+      const imageBox = document.getElementById('image-box');
+      alertBox.innerHTML = "";
+      confirmBtn.classList.remove('not-visible');
+      const img_data = input.files[0];
+      const url = URL.createObjectURL(img_data);
+      imageBox.innerHTML = `<img src="${url}" id="image" width="700px">`;
+      var $image = $('#image');
+      console.log($image);
+      $image.cropper({
+        aspectRatio: 10 / 2,
+        crop: function(event) {
+          console.log(event.detail.x);
+          console.log(event.detail.y);
+          console.log(event.detail.width);
+          console.log(event.detail.height);
+          console.log(event.detail.rotate);
+          console.log(event.detail.scaleX);
+          console.log(event.detail.scaleY);
+        }
+      });
+      var cropper = $image.data('cropper');
+      confirmBtn.addEventListener('click', () => {
+        cropper.getCroppedCanvas().toBlob((blob) => {
+          console.log('confirmed');
+          const fd = new FormData();
+          fd.append('csrfmiddlewaretoken', csrf[0].value);
+          fd.append('file', blob, 'my-image.png');
+          $.ajax({
+            type: 'POST',
+            url: imageForm.action,
+            enctype: 'multipart/form-data',
+            data: fd,
+            success: function(response) {
+              console.log('success', response);
+              alertBox.innerHTML = `<div class="alert alert-success" role="alert">
+                                              Successfully saved and cropped the selected image
+                                          </div>`;
+            },
+            error: function(error) {
+              console.log('error', error);
+              alertBox.innerHTML = `<div class="alert alert-danger" role="alert">
+                                              Ups...something went wrong
+                                          </div>`;
+            },
+            cache: false,
+            contentType: false,
+            processData: false,
+          });
+        });
+      });
+    });
+  
+    input2.addEventListener('change', () => {
+      const alertBox2 = document.getElementById('alert-box2');
+      const imageBox2 = document.getElementById('image-box2');
+      alertBox2.innerHTML = "";
+      cropbtn_2.classList.remove('not-visible');
+      const img_data2 = input2.files[0];
+      const url2 = URL.createObjectURL(img_data2);
+      imageBox2.innerHTML = `<img src="${url2}" id="image2" width="700px">`;
+      var $image2 = $('#image2');
+      console.log($image2);
+      $image2.cropper({
+        aspectRatio: 11 / 2,
+        crop: function(event) {
+          console.log(event.detail.x);
+          console.log(event.detail.y);
+          console.log(event.detail.width);
+          console.log(event.detail.height);
+          console.log(event.detail.rotate);
+          console.log(event.detail.scaleX);
+          console.log(event.detail.scaleY);
+        }
+      });
+      var cropper2 = $image2.data('cropper');
+      cropbtn_2.addEventListener('click', () => {
+        cropper2.getCroppedCanvas().toBlob((blob2) => {
+          console.log('confirmed');
+          const fd2 = new FormData();
+          fd2.append('csrfmiddlewaretoken', csrf[0].value);
+          fd2.append('file', blob2, 'my-image2.png');
+          $.ajax({
+            type: 'POST',
+            url: imageForm2.action,
+            enctype: 'multipart/form-data',
+            data: fd2,
+            success: function(response) {
+              console.log('success', response);
+              alertBox2.innerHTML = `<div class="alert alert-success" role="alert">
+                                              Successfully saved and cropped the selected image
+                                          </div>`;
+            },
+            error: function(error) {
+              console.log('error', error);
+              alertBox2.innerHTML = `<div class="alert alert-danger" role="alert">
+                                              Ups...something went wrong
+                                          </div>`;
+            },
+            cache: false,
+            contentType: false,
+            processData: false,
+          });
+        });
+      });
+    });
+  
+    input3.addEventListener('change', () => {
+      const alertBox3 = document.getElementById('alert-box3');
+      const imageBox3 = document.getElementById('image-box3');
+      alertBox3.innerHTML = "";
+      cropbtn_3.classList.remove('not-visible');
+      const img_data3 = input3.files[0];
+      const url3 = URL.createObjectURL(img_data3);
+      imageBox3.innerHTML = `<img src="${url3}" id="image3" width="700px">`;
+      var $image3 = $('#image3');
+      console.log($image3);
+      $image3.cropper({
+        aspectRatio: 10 / 2,
+        crop: function(event) {
+          console.log(event.detail.x);
+          console.log(event.detail.y);
+          console.log(event.detail.width);
+          console.log(event.detail.height);
+          console.log(event.detail.rotate);
+          console.log(event.detail.scaleX);
+          console.log(event.detail.scaleY);
+        }
+      });
+      var cropper3 = $image3.data('cropper');
+      cropbtn_3.addEventListener('click', () => {
+        cropper3.getCroppedCanvas().toBlob((blob3) => {
+          console.log('confirmed');
+          const fd3 = new FormData();
+          fd3.append('csrfmiddlewaretoken', csrf[0].value);
+          fd3.append('file', blob3, 'my-image3.png');
+          $.ajax({
+            type: 'POST',
+            url: imageForm3.action,
+            enctype: 'multipart/form-data',
+            data: fd3,
+            success: function(response) {
+              console.log('success', response);
+              alertBox3.innerHTML = `<div class="alert alert-success" role="alert">
+                                              Successfully saved and cropped the selected image
+                                          </div>`;
+            },
+            error: function(error) {
+              console.log('error', error);
+              alertBox3.innerHTML = `<div class="alert alert-danger" role="alert">
+                                              Ups...something went wrong
+                                          </div>`;
+            },
+            cache: false,
+            contentType: false,
+            processData: false,
+          });
+        });
+      });
+    });
+  </script>
+  
 
 {% endblock %}

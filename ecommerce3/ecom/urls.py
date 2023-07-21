@@ -37,6 +37,7 @@ urlpatterns = [
     path('user/',include('userprofile.urls')),
     path('wishlist/', include('wishlist.urls')),
     path('blog/', include('blog.urls')),
+    path('offer/',include('offer.urls')),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
