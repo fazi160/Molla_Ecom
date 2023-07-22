@@ -184,3 +184,18 @@ def search_view(request):
 
     return render(request, 'search.html', {'query': query, 'products': products, 'categories': categories})
 
+
+# views.py
+from django.http import JsonResponse
+from wishlist.models import Wishlist
+from cart.models import Cart
+
+def update_counts(request):
+    wishlist_count = 0
+    cart_count = 0
+
+    if request.user.is_authenticated:
+        wishlist_count = Wishlist.objects.filter(user=request.user).count()
+        cart_count = Cart.objects.filter(user=request.user).count()
+
+    return JsonResponse({"wishlist_count": wishlist_count, "cart_count": cart_count})

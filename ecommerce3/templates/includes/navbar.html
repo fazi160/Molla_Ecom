@@ -1,6 +1,7 @@
 {% load static %}
 <header class="header header-12">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>  
+      
 
     <div class="header-middle">
         <div class="container">
@@ -171,3 +172,29 @@
         });
     });
 </script> {% endcomment %}
+<script>
+  // Function to update the wishlist and cart counts
+  function updateCounts() {
+    $.ajax({
+      url: "{% url 'update_counts' %}", // Replace 'update_counts' with the actual URL for updating counts in your Django views
+      type: "GET",
+      dataType: "json",
+      success: function (data) {
+        // Update wishlist count
+        $(".wishlist-count").text(data.wishlist_count);
+        
+        // Update cart count
+        $(".cart-count").text(data.cart_count);
+      },
+      error: function (xhr, status, error) {
+        console.error(error);
+      }
+    });
+  }
+
+  // Call the updateCounts function initially to populate the counts on page load
+  updateCounts();
+
+  // Set an interval to update the counts every few seconds (adjust the time as per your requirement)
+  setInterval(updateCounts, 1000); // 1000 milliseconds = 5 seconds
+</script>

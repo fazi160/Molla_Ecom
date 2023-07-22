@@ -1,0 +1,218 @@
+{% extends 'adminapp/dashboardbase.html' %}
+{% block title %}Product
+{% endblock  %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+
+<!-- jquery -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+<!-- cropper -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropper/4.1.0/cropper.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropper/4.1.0/cropper.min.css">
+
+
+{% block content %} 
+
+  {% if messages %}
+
+{% for message in messages %}
+
+<div class="text-center text-danger">
+<strong>{{message}}</strong>
+</div>
+{% endfor %}
+{% endif %}
+
+
+
+<p>helloo</p>
+  
+  <!--Add Product  Modal -->
+  <div class="modal fade" id="addCategory" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Add Category</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+    
+          <form action="{% url 'addcoupon'%}"  enctype="multipart/form-data" method="POST">
+            {% csrf_token %}
+         
+            <div class="form-outline mb-4">
+              <input name='coupon_code' type="text" id="form3Example3cg" class="form-control form-control-lg" />
+              <label class="form-label" for="form3Example3cg">Coupon code</label>
+            </div>
+            <div class="form-outline mb-4">
+                <input name='discount'   type="number" id="form3Example3cg" class="form-control form-control-lg" />
+                <label class="form-label" for="form3Example3cg">Discount</label>
+              </div>
+          <div class="form-outline mb-4">
+            <input name='min_value'   type="number" id="form3Example3cg" class="form-control form-control-lg" />
+            <label class="form-label" for="form3Example3cg">Min value</label>
+          </div>
+          <div class="form-outline mb-4">
+            <input name='valid_from' type="date" id="formValidFrom" class="form-control form-control-lg" />
+            <label class="form-label" for="formValidFrom">Valid from</label>
+          </div>
+          <div class="form-outline mb-4">
+            <input name='valid_till' type="date" id="formValidTill" class="form-control form-control-lg" />
+            <label class="form-label" for="formValidTill">Valid till</label>
+          </div>
+          <div class="form-outline mb-4">
+            <input name='checkbox'   type="checkbox" />
+            <label class="form-label" for="form3Example3cg">Active</label>
+          </div>
+           <div class="d-flex justify-content-center">
+              <button type="submit"
+                class="btn btn-danger btn-lg gradient-custom-4 w-50 text-light" type="submit">Save Changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    </div>
+  <!--end of add product modal-->
+
+
+
+<div class="col-lg-12 grid-margin stretch-card">
+  <div class="card">
+    <div class="card-body">
+        <a type="button" href="{% url 'addcoupon' %}" class="btn btn-primary w-60" style="margin-top: 20px;margin-left: 10px;" data-bs-toggle="modal" data-bs-target="#addCategory">
+            <i  class="fa fa-plus">Add Coupon</i>
+          </a>
+          <div class="search-field d-none d-xl-block" style="float: right;">
+            <form action="{%url 'search_coupon'%}">
+              <input type="text" placeholder="Search..." name="keyword" style="border-radius: 20px; height: 40px; text-align: center; font-size: 16px;">
+              <button type="submit" style="display: none;"></button>
+          </form>
+            </div>
+          <br>
+          <br>
+      <h4 class="card-title">Coupon</h4>
+     
+      <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Coupon code</th>
+                <th scope="col">Discount</th>
+                <th scope="col">Min value</th>
+                <th scope="col">Valid from</th>
+                <th scope="col">Valid till</th>
+                <th scope="col">Active</th>
+                <th scope="col">Action</th>
+            </tr>
+          </thead>
+      <tbody>
+        
+
+                  
+        {% for c in coupon %}
+
+        <tr style="padding: 5px;" >
+          <td style="padding: 5px;" > {{c.coupon_code}} </td>
+          <td style="padding: 5px;" >  {{c.discount}} </td>
+            <td style="padding: 5px;" >  {{c.min_value}} </td>
+            <td style="padding: 5px;" >  {{c.valid_from}} </td>
+            <td style="padding: 5px;" >  {{c.valid_till}} </td>
+          <td style="padding: 5px;" >  {{c.active}} </td>
+         <td>
+          <!-- edit -->
+
+            <!-- Button trigger modal -->
+            <a type="button" class="fs-7 btn btn-warning" data-bs-toggle="modal" data-bs-target="#confirmEdit{{forloop.counter}}">
+              <i title="" class="fa fa-edit text-black">edit</i>
+            </a> 
+            <!--Edit Modal -->
+             <div class="modal fade" id="confirmEdit{{forloop.counter}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Product</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <form  method="POST" action="{% url 'editoffer' c.id %}"  enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <div class="form-outline mb-4">
+                          <input name='offername' value="{{c.offer_name}}"  type="text" id="form3Example3cg" class="form-control form-control-lg" required/>
+                          <label class="form-label" for="form3Example3cg">Offer name</label>
+                        </div>
+                    
+                      <div class="form-outline mb-4">
+                        <input name='discount' value="{{c.discount_amount}}"  type="number" id="form3Example3cg" class="form-control form-control-lg" required/>
+                        <label class="form-label" for="form3Example3cg">Discount</label>
+                      </div>
+                      <div class="form-outline mb-4">
+                          <input type="date" id="start-date" name="start_date" value="{{c.start_date}}" id="form3Example3cg" class="form-control form-control-lg"  required>
+                          <label class="form-label" for="form3Example3cg">Start date</label>
+                        </div>
+                        <div class="form-outline mb-4">
+                          <input type="date" id="end-date" name="end_date" value="{{c.end_date}}" id="form3Example3cg" class="form-control form-control-lg" required>
+                          <label class="form-label" for="form3Example3cg">End date</label>
+                        </div>
+                       <div class="d-flex justify-content-center">
+                          <button type="submit"
+                            class="btn btn-danger btn-lg gradient-custom-4 w-50 text-light" type="submit" >Save Changes</button>
+                        </div>
+        
+                      </form>
+                  </div>
+                </div>
+              </div>
+             </div>
+
+            <!-- Button trigger modal -->
+              <button type="button" class="btn btn-danger text-black" data-bs-toggle="modal" data-bs-target="#exampleModal{{forloop.counter}}">
+                Delete
+              </button>
+
+              <!-- Modal  for delete the product -->
+              <div class="modal fade" id="exampleModal{{forloop.counter}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="exampleModalLabel">Delete</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      delete Product {{c.coupon_code}}
+                    </div>
+                    <div class="modal-footer">
+                      <form action="{% url 'deletecoupon' c.id %}" >
+                          
+                        <button type="submit" class="btn btn-danger">Confirm</button>
+                      </form>
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+          </td>
+          <!--deleting ended-->
+
+       </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    </div>
+  </div>
+ </div>
+ 
+ {% if message %}
+ <div class="message"><a href="{%url 'admincoupon'%}"><h1 class="font-weight-bold text-center pt-5" style="color: #403c3c52;font-weight: bold;">{{ message }}</h4> </a></div>
+{% endif %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.js"></script>
+ 
+  
+
+{% endblock %}

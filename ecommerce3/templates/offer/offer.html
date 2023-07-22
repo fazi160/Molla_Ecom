@@ -65,21 +65,12 @@
         <a type="button" href="{% url 'addoffer'%}" class="btn btn-primary w-60" style="margin-top: 20px;margin-left: 10px;" data-bs-toggle="modal" data-bs-target="#addCategory">
             <i  class="fa fa-plus">Add Offer</i>
           </a>
-        <div class="search-field d-none d-xl-block" style="float: right;">
-            <form class="d-flex align-items-center" action="#">
-              <div class="input-group form-control">
-                <div class=" bg-transparent border-0" style="font-size: 25px;">
-                    <a href="#"> <i class="mdi mdi-refresh"></i></a>
-                    </div>
-                
-              <input type="text" class="form-control bg-transparent border-0 h-100" name="keyword" placeholder="Search Offer"> 
-              <div class=" bg-transparent border-0">
-                <button type="submit"> <i class=" mdi mdi-magnify"></i></button>
-               </div>
-              </div>
-              
-            </form>
-          </div>
+          <div class="search-field d-none d-xl-block" style="float: right;">
+            <form action="{%url 'search_offer' %}">
+              <input type="text" placeholder="Search..." name="keyword" style="border-radius: 20px; height: 40px; text-align: center; font-size: 16px;">
+              <button type="submit" style="display: none;"></button>
+          </form>
+            </div>
           <br>
           <br>
       <h4 class="card-title">Offer</h4>
@@ -128,9 +119,6 @@
                   <div class="modal-body">
                     <form  method="POST" action="{% url 'editoffer' c.id %}"  enctype="multipart/form-data">
                       {% csrf_token %}
-
-      
-                   
 
                       <div class="form-outline mb-4">
                         <input name='offername' value="{{c.offer_name}}"  type="text" id="form3Example3cg" class="form-control form-control-lg" required/>

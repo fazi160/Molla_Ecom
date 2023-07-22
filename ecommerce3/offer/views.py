@@ -107,3 +107,25 @@ def deleteoffer(request,delete_id):
     except Offer.DoesNotExist:
         messages.error(request, "The specified offer does not exist.")
         return redirect('adminoffer')
+
+def search_offer(request):
+    if not request.user.is_superuser:
+        return redirect('adminsignin')
+
+    if 'keyword' in request.GET:
+        keyword = request.GET['keyword']
+        if keyword:
+            offer = Offer.objects.filter(offer_name__icontains=keyword).order_by('id')
+            if offer.exists():
+                context = {
+                    'offer': offer,
+                }
+                return render (request,'offer/offer.html',context)
+            else:
+                message = "offer not found."
+                return render(request,'offer/offer.html', {'message': message})
+        else:
+            message = "Please enter a valid search keyword"
+            return render(request, 'offer/offer.html', {'message': message})
+    else:
+        return render(request, 'error/index.html')

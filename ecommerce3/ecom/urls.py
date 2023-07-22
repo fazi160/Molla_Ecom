@@ -38,6 +38,7 @@ urlpatterns = [
     path('wishlist/', include('wishlist.urls')),
     path('blog/', include('blog.urls')),
     path('offer/',include('offer.urls')),
+    path('coupon/',include('coupon.urls')),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
