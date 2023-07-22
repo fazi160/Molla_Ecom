@@ -102,7 +102,7 @@ def product_detail(request,product_id):
     # related=product.objects.all()
     related = Product.objects.order_by('?')[:5]
 
-    return render(request,'inner_product.html',{'pro_detail':prod ,'allpro':related})
+    return render(request,'inner_product.html', {'pro_detail':prod ,'allpro':related})
 
 
 @login_required(login_url='user_login')

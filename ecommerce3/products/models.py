@@ -49,8 +49,8 @@ class Product(models.Model):
 
     def __str__(self):
         return self.product_name
-    # def get_offer(self):
-    #     return self.product_price - self.offer.discount_amount
+    def get_offer(self):
+        return self.product_price - self.offer.discount_amount
 
 
 

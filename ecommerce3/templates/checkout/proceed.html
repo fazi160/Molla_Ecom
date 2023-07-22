@@ -1,6 +1,7 @@
 
 {% extends 'base.html' %}
 {% load static %}
+{% load mathfilters %}
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
 {% block content %}
 
@@ -330,8 +331,9 @@
                                         {% for i in cartitems %}
                                         <tr>
                                             <td><a href="#">{{i.product}}</a></td>
-                                            <td>{{i.product_qty}}</td>
-                                            <td>{{i.total}}</td>
+                                            <td style="text-align: center;">{{i.product_qty}}</td>
+                                            <td>{{ i.product_price_with_offer|mul:i.product_qty }}</td>
+                                            
                                         </tr>
                                             {% endfor %}
                                       

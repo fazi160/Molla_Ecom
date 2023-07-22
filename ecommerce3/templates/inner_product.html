@@ -31,17 +31,21 @@
                         <div class="product-details sticky-content">
                             <h1 class="product-title">{{pro_detail.product_name}}</h1><!-- End .product-title -->
 
-                            
+                            <br>
 
                             <div class="product-price">
-                                ₹ {{pro_detail.product_price}}
-                                {% comment %} <span class="new-price"></span> {% endcomment %}
-                                {% comment %} <span class="old-price">$80.00</span> {% endcomment %}
-                            </div><!-- End .product-price -->
+                                {% if pro_detail.offer %}
+                                    <del class="text-danger">₹ {{ pro_detail.product_price }}</del>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;₹ {{ pro_detail.get_offer }}
+                                {% else %}
+                                    ₹ {{ pro_detail.product_price }} 
+                                {% endif %}
+                            </div>
+                            
 
-                            <div class="product-content">
-                                <p>{{pro_detail.product_description}}</p>
-                            </div><!-- End .product-content -->
+                            <br>
+                            <br>
+                            
+                            
 
                             <!-- End .details-filter-row -->
 

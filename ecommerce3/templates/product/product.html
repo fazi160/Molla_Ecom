@@ -150,7 +150,7 @@
           <td style="padding: 5px;" >  {{c.id}}  </td>
           <td style="padding: 5px;" >  {{c.product_name}} </td>
          
-          <td style="padding: 5px;" >₹  {{c.product_price}}</td>
+          <td>{% if c.offer %}<del class="text-danger">₹  {{c.product_price}}</del> {{c.get_offer}}{% else %}₹ {{c.product_price}} {% endif %}</td>
           <td style="padding: 5px;" > 
             <div style="width: 60px;" class="overflow-hidden">
               <img class="w-100" src=" {{c.product_image.url}}" alt="">

@@ -149,11 +149,24 @@
                                                             <td class="product_cart_item_text">
                                                               <h6 >{{ order_item.product.product_name }}</h6>
                                                             </td>
-                                                            <td><h6 >₹ {{ order_item.product.product_price }}</h6></td>
-                                                            <td>{{ order_item.quantity }}</td>
-                                                            <td class="cart__price total">
-                                                              {{ order_item|calculate_total_price|floatformat:2 }}
+                                                            
 
+                                                            <td>
+                                                              {% if order_item.product.offer %}
+                                                                <del class="text-danger">₹ {{ order_item.product.product_price }}</del>
+                                                                ₹ {{ order_item.product.get_offer }}
+                                                              {% else %}
+                                                                ₹ {{ order_item.product.product_price }}
+                                                              {% endif %}
+                                                            </td>
+
+                                                            <td>{{ order_item.quantity }}</td>
+                                                            <td id="item_total_{{ order_item.id }}">
+                                                              {% if order_item.product.offer %}
+                                                                ₹ {{ order_item.product.get_offer | mul:order_item.quantity | floatformat:2 }}
+                                                              {% else %}
+                                                                ₹ {{ order_item.product.product_price | mul:order_item.quantity | floatformat:2 }}
+                                                              {% endif %}
                                                             </td>
                                                             <td>
                                                               {% if order_item.status == 'Pending' %}
@@ -1046,5 +1059,21 @@
               });
             });
             
+        </script>
+
+        <script>
+          // Function to update item total price based on offer or regular price
+          function updateItemTotal(item) {
+            var price = item.product.offer ? item.product.get_offer : item.product.product_price;
+            var quantity = item.quantity;
+            var total = price * quantity;
+            document.getElementById('item_total_' + item.id).textContent = '₹ ' + total.toFixed(2);
+          }
+      
+          // Fetch order items data from Django context and update prices and totals
+          var orderItems = JSON.parse('{{ order_item | safe }}');
+          orderItems.forEach(function(item) {
+            updateItemTotal(item);
+          });
         </script>
 {% endblock %}

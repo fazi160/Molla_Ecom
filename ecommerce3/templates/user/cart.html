@@ -2,6 +2,7 @@
 
 {% extends 'base1.html' %}
 {% load static %}
+{% load total %}  
 {% load mathfilters %}
 {% block content %}
 
@@ -73,20 +74,8 @@
                                     </div>
                                 </td>
                                 <td class="column-2">{{item.product.product_name}}</td>
-                                <td class="column-3"> ₹ {{item.product.product_price}} </td>
+                                <td class="column-3"> {% if item.product.offer %}<del class="text-danger">₹  {{item.product.product_price}}</del> {{item.product.get_offer}}{% else %}₹ {{item.product.product_price}} {% endif %} </td>
                                 <td class="column-4">
-                                        {% comment %} <div class="wrap-num-product flex-w m-l-auto m-r-0">
-                                            <div data-productid="{{}}" data-price="{{item.product.price}}" class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m changeQuantity">
-                                                <i class="fs-16 zmdi zmdi-minus "></i>
-                                            </div>
-        
-                                            <input readonly id="pro_qty{{item.product.id}}" class="mtext-104 cl3 txt-center num-product" type="number" name="num-product1" value="{{item.product_qty}}">
-        
-                                            <div data-productid="{{item.product.id}}" data-price="{{item.product.price}}" class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m changeQuantity">
-                                                <i class="fs-16 zmdi zmdi-plus "></i>
-                                            </div>
-                                        </div> {% endcomment %}
-                                    
                                     <div class="input-group  quantity mx-auto" style="width: 100px;" >
                                          
                                         <div class="input-group-btn">
@@ -101,51 +90,32 @@
                                             <button data-price="{{item.product.price}}" data-productid="{{item.product.id}}" class="btn btn-sm border border-secondary btn-plus changeQuantity">
                                                 <i class="fa fa-plus"></i>
                                             </button>
-                                        </div>
-                                    
-                                    
+                                        </div>                               
                                     </div> 
-
-                                  
-
                                 </td>
-
-                                {% with counter=forloop.counter %}
-                                
-                                <td class="column-5 cart__price total">₹
-                                    <span id="single_product_total{{item.product.id}}">{{ item.product.product_price| mul:item.product_qty }} </span>
+                                  {% comment %} <td class="column-5 cart__price total">
+                                    {% if item.product.offer %}
+                                      ₹{{ item.product.get_offer|mul:item.product_qty }}
+                                    {% else %}
+                                    ₹{{ item.product.product_price|mul:item.product_qty }}
+                                    {% endif %}
+                                </td> {% endcomment %}
+                                <td class="column-5 cart__price total" id="single_product_total{{item.product.id}}">
+                                    {% if item.product.offer %}
+                                        ₹{{ item.product.get_offer|mul:item.product_qty }}
+                                    {% else %}
+                                        ₹{{ item.product.product_price|mul:item.product_qty }}
+                                    {% endif %}
                                 </td>
-                                {% endwith %}
-                                <td class="cart__close">
-                                    <a class="text-danger" href="{% url 'deletecartitem' item.product.id %}" >Remove</a> 
-                                </td>
-                            </tr>                                                                           
-                            {% endfor %}
-                        
+                                  <td class="cart__close">
+                                      <a class="text-danger" href="{% url 'deletecartitem' item.product.id %}" >Remove</a> 
+                                  </td>
+                              </tr>                                                                           
+                              {% endfor %}
                         </table>
                     </div>
-
-                    
-                    <div class="flex-w flex-sb-m bor15 p-t-18 p-b-15 p-lr-40 p-lr-15-sm">
-                        <div class="flex-w flex-m m-r-20 m-tb-5">
-                            <input class="stext-104 cl2 plh4 size-117 bor13 p-lr-20 m-r-10 m-tb-5" type="text" name="coupon" placeholder="Coupon Code">
-                                
-                            <div class="flex-c-m stext-101 cl2 size-118 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-5">
-                                Apply coupon
-                            </div>
-                        </div>
-
-                        <div class="flex-c-m stext-101 cl2 size-119 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-10">
-                            <a href="{% url 'cart' %}"> Update Cart</a>
-                           
-                        </div>
-                    </div>
-
-                    
                 </div>
             </div>
-          
-
             <div class="col-sm-10 col-lg-7 col-xl-5 m-lr-auto m-b-50">
                 <div class="bor10 p-lr-40 p-t-30 p-b-40 m-l-63 m-r-40 m-lr-0-xl p-lr-15-sm">
                     <h4 class="mtext-109 cl2 p-b-30">
@@ -192,21 +162,6 @@
                         </div>
                     </div>
 
-                   
-
-                    {% comment %} <div class="flex-w flex-t p-t-27 p-b-33">
-                        <div class="size-208">
-                            <span class="mtext-101 cl2">
-                                Grand Total:
-                            </span>
-                        </div>
-
-                        <div class="size-209 p-t-1">
-                            <span class="mtext-110 cl2">
-                                ₹  {{grand_total | floatformat:2}}
-                            </span>
-                        </div>
-                    </div> {% endcomment %}
                     
 
                   <a href="{% url 'checkout' %}" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer">
@@ -282,7 +237,11 @@
                     document.getElementById('sub_total').textContent = sub_total
                     document.getElementById('tax_field').textContent = sub_total * 0.18
                     document.getElementById('grand_total').textContent = sub_total + (sub_total *0.18)
-                    document.getElementById('single_product_total'+product_id).textContent = parseInt(response.product_price) * parseInt(response.quantity)
+                
+                    setTimeout(function() {
+                        document.getElementById('single_product_total' + product_id).textContent = response.total_price;
+                    }, 100); // A small delay in milliseconds (adjust as needed)
+                    console.log(single_product_total, "5555555555555555555555555555555555")
                    
                     
                 }

@@ -11,33 +11,37 @@ from products.models import Product
 
 @login_required(login_url='user_login')
 def cart(request):
-
-    cart=Cart.objects.filter(user=request.user).order_by('id')
-    single_product_total = [0]
-    total_price=0
-    tax=0
-    grand_total=0
-
+    cart = Cart.objects.filter(user=request.user).order_by('id')
+    single_product_total = []
+    total_price = 0
+    tax = 0
+    single_total = 0
+    grand_total = 0
 
     for item in cart:
+        if item.product.offer is None:
+            total_price += item.product.product_price * item.product_qty
+            single_product_total.append(item.product.product_price * item.product_qty)
+          
+        else:
+            total_price += item.product.product_price * item.product_qty
+            single_product_total.append((item.product.product_price - item.product.offer.discount_amount) * item.product_qty)
+            total_price -= item.product.offer.discount_amount * item.product_qty
 
-        total_price=total_price + item.product.product_price * item.product_qty
-        single_product_total.append(item.product.product_price * item.product_qty)
-       
-        tax=total_price * 0.18
-        grand_total=total_price + tax
 
-    context={
-        'cart':cart,
-        'total_price':total_price,
-        'tax':tax,
-        'single_product_total':single_product_total,
-        'grand_total':grand_total
+    tax = total_price * 0.18
+    grand_total = total_price + tax
+    print(total_price, tax, grand_total, "allllllllllllllllllllllllllllllllllllllllllllllllllllllllllll", single_product_total)
+    context = {
+        'cart': cart,
+        'total_price': total_price,
+        'tax': tax,
+        'single_product_total': single_product_total,
+        'grand_total': grand_total
     }
 
+    return render(request, 'user/cart.html', context)
 
-    return render(request,'user/cart.html',context)
-    # return render(request,'temporary.html',context)
 
 
 
@@ -99,10 +103,12 @@ def update_cart(request):
                 carts = Cart.objects.filter(user = request.user).order_by('id')
                 total_price = 0
                 for item in carts:
-                    # if item.product.offer == None:
-                    #     total_price = total_price + item.product.product_price * item.product_qty
-                    # else :
-                    total_price = total_price + item.product.product_price * item.product_qty
+                    if item.product.offer == None:
+                        total_price = total_price + item.product.product_price * item.product_qty
+                    else :
+                        total_price = total_price + item.product.product_price * item.product_qty
+                        total_price = total_price - (item.product.offer.discount_amount * item.product_qty)
+
                        
                 return JsonResponse({'status': 'Updated successfully','sub_total':total_price,'product_price':cart.product.product_price,'quantity':prod_qty})
             else:

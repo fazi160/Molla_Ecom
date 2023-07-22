@@ -282,7 +282,11 @@
                                         </div><!-- End .product-cat -->
                                         <h3 class="product-title"><a href="{% url 'product_detail' j.slug %}">{{j.product_name}}</a></h3><!-- End .product-title -->
                                         <div class="product-price">
-                                            ₹ {{j.product_price}}
+                                            {% if j.offer %}
+                                            <del class="text-danger">₹  {{j.product_price}}</del>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{j.get_offer}}
+                                            {% else %}
+                                            ₹ {{j.product_price}} 
+                                            {% endif %}
                                         </div><!-- End .product-price -->
 
                                         <div class="product-footer">
