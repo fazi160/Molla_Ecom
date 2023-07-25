@@ -1,11 +1,11 @@
-# Create your views here.
+
 from django.shortcuts import render,redirect
 from .models import Offer
 from django.contrib import messages
 from django.utils import timezone
 from datetime import datetime
 # Create your views here.
-# offer
+
 def adminoffer(request):
     context = {
         'offer' : Offer.objects.all()

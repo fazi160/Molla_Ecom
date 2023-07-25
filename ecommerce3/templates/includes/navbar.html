@@ -39,31 +39,33 @@
                 </div><!-- End .header-search -->
                 
                 
-
-                    <div class="wishlist">
-                        <!-- button for wishlist -->
-                        <a href={% url 'wishlist' %} title="Wishlist">
-                            <div class="icon">
-                                <i class="icon-heart-o"></i>
-                                <span class="wishlist-count badge">{{ wishlist_count }}</span>
-                            </div>
-                            <p>Wishlist</p>
-                        </a>
-                    </div><!-- End .compare-dropdown -->
-
-                    <div class="dropdown cart-dropdown">
-                        <!-- button for cart -->
-                        <a href="{% url 'cart' %}" class="dropdown-toggle" role="button" >
-                            <div class="icon">
-                                <i class="icon-shopping-cart"></i>
-                                <span class="cart-count">{{ cart_count }}</span>
-                            </div>
-                            <p>Cart</p>
-                        </a>
-
-                       
-                    </div> 
-                    
+                <div class="header-right" style="text-align: left;">
+                    <div style="display: inline-block; margin-right: 10px;">
+                        <div class="wishlist">
+                            <!-- button for wishlist -->
+                            <a href="{% url 'wishlist' %}" title="Wishlist">
+                                <div class="icon">
+                                    <i class="icon-heart-o"></i>
+                                    <span class="wishlist-count badge">{{ wishlist_count }}</span>
+                                </div>
+                                <p style="display: inline-block;">Wishlist</p>
+                            </a>
+                        </div><!-- End .wishlist -->
+                    </div>
+                
+                    <div style="display: inline-block;">
+                        <div class="dropdown cart-dropdown">
+                            <!-- button for cart -->
+                            <a href="{% url 'cart' %}" class="dropdown-toggle" role="button">
+                                <div class="icon">
+                                    <i class="icon-shopping-cart"></i>
+                                    <span class="cart-count">{{ cart_count }}</span>
+                                </div>
+                                <p style="display: inline-block;">Cart</p>
+                            </a>
+                        </div> 
+                    </div>
+                </div><!-- End .header-right -->
                     
                 </div>
             </div><!-- End .header-right -->
@@ -125,53 +127,10 @@
             <input type="search" class="form-control" name="mobile-search" id="mobile-search" placeholder="Search in..." required>
             <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
         </form>
-        
-        <div class="social-icons">
-            <a href="#" class="social-icon" target="_blank" title="Facebook"><i class="icon-facebook-f"></i></a>
-            <a href="#" class="social-icon" target="_blank" title="Twitter"><i class="icon-twitter"></i></a>
-            <a href="#" class="social-icon" target="_blank" title="Instagram"><i class="icon-instagram"></i></a>
-            <a href="#" class="social-icon" target="_blank" title="Youtube"><i class="icon-youtube"></i></a>
-        </div><!-- End .social-icons -->
     </div><!-- End .mobile-menu-wrapper -->
 </div><!-- End .mobile-menu-container -->
 </div>
-{% comment %} <script>
-    $(document).ready(function () {
-        // Bind an event to the search input field
-        $('#q').on('keyup', function () {
-            // Get the current user input
-            const searchQuery = $(this).val().trim();
 
-            // Send an AJAX request to the Django view to get suggestions
-            $.ajax({
-                type: 'GET',
-                url: '/get_suggestions/', // Replace with your actual URL
-                data: { search_query: searchQuery },
-                success: function (data) {
-                    // Clear the previous suggestions
-                    $('#suggestions').empty();
-
-                    // Loop through the suggestions and display them in a dropdown
-                    data.suggestions.forEach(function (suggestion) {
-                        $('#suggestions').append(
-                            `<li><a href="${suggestion.url}">${suggestion.name} (${suggestion.type})</a></li>`
-                        );
-                    });
-
-                    // Show or hide the dropdown based on the number of suggestions
-                    if (data.suggestions.length > 0) {
-                        $('#suggestions-dropdown').show();
-                    } else {
-                        $('#suggestions-dropdown').hide();
-                    }
-                },
-                error: function (error) {
-                    console.log('Error fetching suggestions:', error);
-                }
-            });
-        });
-    });
-</script> {% endcomment %}
 <script>
   // Function to update the wishlist and cart counts
   function updateCounts() {

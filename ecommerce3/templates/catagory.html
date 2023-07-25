@@ -10,41 +10,37 @@
 
         	</div><!-- End .page-header -->
             
-            <br><br><br>
+            <nav aria-label="breadcrumb" class="breadcrumb-nav mb-2">
+                <div class="container">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="#">Shop</a></li>
+                    </ol>
+                </div><!-- End .container -->
+            </nav><!-- End .breadcrumb-nav -->
+            <br><br>    
 
             <div class="page-content">
                 <div class="container">
-                    <div class="toolbox">
-                        <div class="toolbox-left">
-                            <br>
-                            <a href="#" class="sidebar-toggler"><i class="icon-bars"></i>Filters</a>
-                        </div><!-- End .toolbox-left -->
-                    </div>
-        		<!-- End .toolbox -->
                 <br>    
                     <div class="products">
                         <div class="row">
                             {% for j in categories %}
-                            {% comment %} <a href="{% url 'category_detail' j.category.categories %}" class="col-6 col-md-4 col-lg-4 col-xl-3"> {% endcomment %}
-
-                            <div href="#"  class="col-6 col-md-4 col-lg-4 col-xl-3">
+                            <div href="{% url 'category_detail' j.id %}"  class="col-6 col-md-4 col-lg-4 col-xl-3">
                                 <div class="product">
                                     <figure class="product-media">
-                                        <a href="product.html">
+                                        <a href="{% url 'category_detail' j.id %}">
                                             <img src="{{j.categories_image.url}}" alt="Product image" class="product-image">
                                         </a>
-
                                     </figure><!-- End .product-media -->
 
-                                    <div class="product-body">
-                                        
-                                        <h3 class="product-title"><a href="{% url 'category_detail' j.id %}">{{j.categories}}</a></h3><!-- End .product-title -->
-                                        {{j.categories_discription}}
+                                    <div class="product-body">                                        
+                                        <h2 class="product-title"><a href="{% url 'category_detail' j.id %}" style="font-size: 18px; text-transform: uppercase;">{{j.categories}}</a></h2><!-- End .product-title -->
+                                        <p style="font-size: 15px;">{{j.categories_discription}}</p>
                                     </div><!-- End .product-body -->
                                 </div><!-- End .product -->
                             </div><!-- End .col-sm-6 col-lg-4 col-xl-3 -->
                             {% endfor %}
-                            
                         </div><!-- End .row -->
                     </div><!-- End .products -->
                 </div>

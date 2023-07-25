@@ -12,16 +12,15 @@
         <br>
         <br>
         <br>
-        <div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
-            <a href="{% url 'home' %}" class="stext-109 cl8 hov-cl1 trans-04">
-                Home
-                <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
-            </a>
-    
-            <span class="stext-109 cl4">
-                Checkout
-            </span>
-        </div>
+        <<nav aria-label="breadcrumb" class="breadcrumb-nav mb-2">
+            <div class="container">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'cart' %}">Cart</a></li>
+                    <li class="breadcrumb-item"><a href="#">Checkout</a></li>
+                </ol>
+            </div><!-- End .container -->
+        </nav><!-- End .breadcrumb-nav -->
     </div><!-- End .breadcrumb-nav -->
 
     <div class="page-content">
@@ -125,7 +124,7 @@
                                         </a>
                                     </div><!-- End .card-header -->
                                     <div id="collapse-11" class="collapse" aria-labelledby="heading-11" data-parent="#accordion-payment">
-                                        <button type="button" class="site-btn mb-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                        <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal">
                                             New Address
                                        
                                         </button>
@@ -140,16 +139,16 @@
                                     {% for adrs in address %}
                                             <div class="card mb-3">
                                              
-                                              <div class="custom-control custom-radio h-100 m-2 d-flex align-items-center">
-                                                <input type="radio" class="custom-control-input " id="{{adrs.id}}" name="address" value="{{adrs.id}}" {% if index == 0 %}checked{% endif %} checked>
-                                                <label class="custom-control-label" for="{{adrs.id}}">{{adrs.first_name}} {{adrs.last_name}}</label>
+                                            <div class="custom-control custom-radio h-100 m-2 d-flex align-items-center" style="display: flex;">
+                                                <input type="radio" class="custom-control-input " id="{{adrs.id}}" name="address" value="{{adrs.id}}" {% if index == 0 %}checked{% endif %} checked >
+                                                <label class="custom-control-label" for="{{adrs.id}}" style="font-size: 25px;">{{adrs.first_name}} {{adrs.last_name}}</label>
                                             </div>
                                             
                                                   
                                               <div class="card-body">
                                                 <h5 class="card-title">Mob : {{adrs.phone}}</h5>
                                                 <h5 class="card-title">{{adrs.address}}, {{adrs.pincode}}</h5>
-                                                <p class="card-text">{{adrs.city}}-{{adrs.state}}-{{adrs.country}}</p>
+                                                <p class="card-text">{{adrs.city}}-{{adrs.state}}</p>
                                               <div>
                 
                                               <!-- Button trigger vie address -->
@@ -308,12 +307,7 @@
 
                             </div>
                         <aside class="col-lg-4" >
-                            <div class="checkout-discount">
-                                <form action="#">
-                                    <input type="text" class="form-control"  id="checkout-discount-input">
-                                    <label for="checkout-discount-input" class="text-truncate">Have a coupon? <span>Click here to enter your code</span></label>
-                                </form>
-                            </div>
+                            
                             <div class="summary" style="float:right">
                              
                                 <h3 class="summary-title">Your Order</h3><!-- End .summary-title -->
@@ -354,12 +348,22 @@
 
                                             <td>  ₹ {{tax | floatformat:2}}</td>
                                         </tr>
+
+
+                                        <tr class="summary-coupon">
+                                            <td>Coupon Discount:</td>
+                                            <td></td>
+                                            <td class="coupon-details" data-coupon-discount=""></td>
+                                        </tr>
+
                                         <tr class="summary-total">
                                             <td>Total:</td>
                                             <td></td>
+                                            <td>₹ <span id="grand-total">{{ grand_total }}</span></td>
+                                        </tr>
+                                        
+                                          
 
-                                            <td>₹ {{grand_total}}</td>
-                                        </tr><!-- End .summary-total -->
                                     </tbody>
                                 </table><!-- End .table table-summary -->
 
@@ -382,18 +386,18 @@
                                 </div><!-- End .card -->
                                 
                                 <div class="card">
-                                    <div class="card-header" id="heading-5">
+                                    <div class="card-header" id="heading-111">
                                         <h2 class="card-title">
-                                            <a class="collapsed" data-payment-method="stripe" role="button" data-toggle="collapse" href="#collapse-5" aria-expanded="false" aria-controls="collapse-5">
-                                                Credit Card (Stripe)
-                                                <img src="assets/images/payments-summary.png" alt="payments cards">
+                                            <a class="collapsed" id="payment" data-payment-method="wallet" role="button" data-toggle="collapse" href="#collapse-111" aria-expanded="false" aria-controls="collapse-111">
+                                               Wallet 
                                             </a>
                                         </h2>
                                     </div><!-- End .card-header -->
-                                    <div id="collapse-5" class="collapse" aria-labelledby="heading-5" data-parent="#accordion-payment">
-                                        <div class="card-body"> Donec nec justo eget felis facilisis fermentum.Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Lorem ipsum dolor sit ame.
-                                        </div><!-- End .card-body -->
-                                    </div><!-- End .collapse -->
+                                    <div id="collapse-111" class="collapse" aria-labelledby="heading-111" data-parent="#accordion-payment">
+                                        <div class="card-body">
+                                            Nullam malesuada erat ut turpis. Suspendisse urna ni
+                                        </div>
+                                     </div>
                                 </div><!-- End .card -->
                                 
                                 <div class="card">
@@ -422,15 +426,18 @@
                            
                             </div><!-- End .summary -->
 
-                            
-
-                                
-                            </div><!-- End .summary -->
+                            <div class="form-group">
+                                <label for="coupon-select">Select Coupon (optional)</label>
+                                <select class="form-control" id="coupon-select">
+                                    <option value="">Choose a coupon</option>
+                                    {% for coupon in active_coupons %}
+                                    <option value="{{ coupon.coupon_code }}">{{ coupon.coupon_code }} ({{ coupon.discount }}% off)</option>
+                                    {% endfor %}
+                                </select>
+                            </div><!-- End .summary --> 
                         </aside><!-- End .col-lg-3 -->
                     </div><!-- End .row -->
                 </form>
-                <!-- end form -->
-               
             </div><!-- End .container -->
         </div><!-- End .checkout -->
     </div><!-- End .page-content -->
@@ -441,132 +448,248 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/alertifyjs/build/alertify.min.js"></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 
 <script>
-  $(document).ready(function() {
-      $('.purchase').click(function(e) {
-          e.preventDefault();
-
-          var fname = $("[name='first_name']").val();
-          var phone = $("[name='phone']").val();
-          var email = $("[name='email']").val();
-          var order_note = $("[name='ordernote']").val();
-          var token = $("[name='csrfmiddlewaretoken']").val();
-          var selectedAddress = $("input[name='address']:checked").val();
-          var paymentMethod = $("a[data-toggle='collapse'][aria-expanded='true']").data('payment-method');
-
-          if (!selectedAddress) {
-              swal("Alert!", "Address field is mandatory!", "error");
-              console.log('Address field is empty');
-              return false;
-          } else {
-              var data = {
-                  "payment_method": paymentMethod,
-                  "order_note": order_note,
-                  "address": selectedAddress,
-                  "csrfmiddlewaretoken": token
-              };
-
-              console.log(data, '11111111111111111111111');
-
-              // Check the selected payment method and execute the corresponding AJAX request
-              if (paymentMethod === "cod") {
-                  $.ajax({
-                      method: "POST",
-                      url: "{% url 'placeorder' %}",
-                      data: data,
-                      dataType: 'json'
-                  }).done(function(response) {
+    $(document).ready(function() {
+        $('.purchase').click(function(e) {
+            e.preventDefault();
+  
+            var fname = $("[name='first_name']").val();
+            var phone = $("[name='phone']").val();
+            var email = $("[name='email']").val();
+            var order_note = $("[name='ordernote']").val();
+            var token = $("[name='csrfmiddlewaretoken']").val();
+            var selectedAddress = $("input[name='address']:checked").val();
+            var paymentMethod = $("a[data-toggle='collapse'][aria-expanded='true']").data('payment-method');
+            
+  
+            if (!selectedAddress) {
+                swal("Alert!", "Address field is mandatory!", "error");
+                console.log('Address field is empty');
+                return false;
+            } else {
+                var data = {
+                    "payment_method": paymentMethod,
+                    "order_note": order_note,
+                    "address": selectedAddress,
+                    "csrfmiddlewaretoken": token
+                };
+  
+                console.log(data, '11111111111111111111111');
+  
+                // Check the selected payment method and execute the corresponding AJAX request
+  
+                if (paymentMethod === "wallet") {
+                    $.ajax({
+                        method: "POST",
+                        url: "/checkout/placeorder/",
+                        data: data,
+                        dataType: 'json'
+                    }).done(function(response) {
                       console.log(response);
-
-                      if (response.status === 'cannot place order') {
+  
+                      if (response.status === 'Your wallet amount is very low') {
                           swal("Error!", response.status, "error");
                           $('.placeorder').load(location.href + " .placeorder");
+                          window.location.href = '/checkout/checkout/';
                       } else if (response.status === 'Your order has been placed successfully') {
                           swal("Congratulations!", response.status, "success");
                           $('.placeorder').load(location.href + " .placeorder");
+                          window.location.href = '/';
                       } else {
                           swal("Error!", response.status, "error");
                           $('.placeorder').load(location.href + " .placeorder");
+                          window.location.href = '/';
                       }
-                      window.location.href = '/';
+                      
                   }).fail(function(xhr, errmsg, err) {
                       alert('Error: ' + errmsg);
                       console.log(xhr.responseText);
                       console.log(err);
                   });
-              } else if (paymentMethod === "razorpay") {
-                  // The Razorpay code from the second script goes here
-                  $.ajax({
-                    method:"GET",
-                    url:"/checkout/proceedtopay/",
-                    success: function(response) {
-                     var options = {
-                       "key": "rzp_test_mYEIb1JhBAjCQk", // Enter the Key ID generated from the Dashboard
-                       "amount": 1*100,//response.total_price * 100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
-                       "currency": "INR",
-                       "name": "Molla Books",
-                       "description": "Thank you for buying with us",
-                       "image": "https://example.com/your_logo",
-                       //"order_id": "order_IluGWxBm9U8zJ8", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-                       "handler": function (responseb){
-                         alert(responseb.razorpay_payment_id);
-                           data = {
-                             
-                             "payment_method" : "Razorpay",
-                             "payment_id" : responseb.razorpay_payment_id,
-                             "address": selectedAddress,
-                             csrfmiddlewaretoken: token
-                             
-                           }
-                             $.ajax({
-                               method:"POST",
-                               url:"{% url 'placeorder' %}",
-                               data: data,
-                               success: function (responsec) {
-                                 console.log(responsec)
-                                 swal("Congratulations!", responsec.status,"success").then((value) => {
-                                    
-                                 });
-                                 window.location.href = '/'
-                               }
-         
-                           });
-                       },
-                       "prefill": {
-                           "name": fname,
-                           "email" : email,
-                           'contact' : phone,
-                       },
-                       
-                       "theme": {
-                           "color": "#3399cc"
-                       }
-                   };
-                   var rzp1 = new Razorpay(options);
-                   rzp1.on('payment.failed', function (response){
-                           alert(response.error.code);
-                           alert(response.error.description);
-                           alert(response.error.source);
-                           alert(response.error.step);
-                           alert(response.error.reason);
-                           alert(response.error.metadata.order_id);
-                           alert(response.error.metadata.payment_id);
-                   });
-                   rzp1.open();
-                     console.log(responsec);
-         
-                    }
-                 });
-              } 
-          }
-      });
-  });
-</script>
-
-
-
+              }
+                
+                else if (paymentMethod === "cod") {
+                    $.ajax({
+                        method: "POST",
+                        url: "/checkout/placeorder/",
+                        data: data,
+                        dataType: 'json'
+                    }).done(function(response) {
+                        console.log(response);
   
+                        if (response.status === 'cannot place order') {
+                            swal("Error!", response.status, "error");
+                            $('.placeorder').load(location.href + " .placeorder");
+                        } else if (response.status === 'Your order has been placed successfully') {
+                            swal("Congratulations!", response.status, "success");
+                            $('.placeorder').load(location.href + " .placeorder");
+                        } else {
+                            swal("Error!", response.status, "error");
+                            $('.placeorder').load(location.href + " .placeorder");
+                        }
+                        window.location.href = '/';
+                    }).fail(function(xhr, errmsg, err) {
+                        alert('Error: ' + errmsg);
+                        console.log(xhr.responseText);
+                        console.log(err);
+                    });
+                } else if (paymentMethod === "razorpay") {
+                    // The Razorpay code from the second script goes here
+                    $.ajax({
+                      method:"GET",
+                      url:"/checkout/proceedtopay/",
+                      success: function(response) {
+                       var options = {
+                         "key": "rzp_test_mYEIb1JhBAjCQk", // Enter the Key ID generated from the Dashboard
+                         "amount": 1*100,//response.total_price * 100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                         "currency": "INR",
+                         "name": "Molla Books",
+                         "description": "Thank you for buying with us",
+                         "image": "https://example.com/your_logo",
+                         //"order_id": "order_IluGWxBm9U8zJ8", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+                         "handler": function (responseb){
+                           alert(responseb.razorpay_payment_id);
+                             data = {
+                               
+                               "payment_method" : "Razorpay",
+                               "payment_id" : responseb.razorpay_payment_id,
+                               "address": selectedAddress,
+                               csrfmiddlewaretoken: token
+                               
+                             }
+                               $.ajax({
+                                 method:"POST",
+                                 url:"{% url 'placeorder' %}",
+                                 data: data,
+                                 success: function (responsec) {
+                                   console.log(responsec)
+                                   swal("Congratulations!", responsec.status,"success").then((value) => {
+                                      
+                                   });
+                                   window.location.href = '/'
+                                 }
+           
+                             });
+                         },
+                         "prefill": {
+                             "name": fname,
+                             "email" : email,
+                             'contact' : phone,
+                         },
+                         
+                         "theme": {
+                             "color": "#3399cc"
+                         }
+                     };
+                     var rzp1 = new Razorpay(options);
+                     rzp1.on('payment.failed', function (response){
+                             alert(response.error.code);
+                             alert(response.error.description);
+                             alert(response.error.source);
+                             alert(response.error.step);
+                             alert(response.error.reason);
+                             alert(response.error.metadata.order_id);
+                             alert(response.error.metadata.payment_id);
+                     });
+                     rzp1.open();
+                       console.log(responsec);
+           
+                      }
+                   });
+                } 
+            }
+        });
+   
+
+        $('#coupon-select').change(function () {
+            console.log("function is called");
+            var selectedCoupon = $(this).val();
+            var selectedProduct = $("input[name='product_id']").val(); // Assuming the product_id is provided as a hidden input
+        
+            var grandTotal = parseFloat($('#grand-total').text().replace('₹ ', ''));
+        
+            if (selectedCoupon) {
+                var data = {
+                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+                    'coupon_code': selectedCoupon,
+                    'grand_total': grandTotal,
+                };
+        
+                // If a product is selected, add its ID to the data to check for offers related to the product
+                if (selectedProduct) {
+                    data.product_id = selectedProduct;
+                }
+        
+                $.ajax({
+                    type: "POST",
+                    url: "/checkout/apply_coupon/",
+                    data: data,
+                    dataType: 'json',
+                    success: function (response) {
+                        console.log("Successssssssssssssssssssssssssss");
+                        console.log(response);
+        
+                        if (response.status === 'Discounts applied successfully') {
+                            // Update the displayed grand total and coupon details
+                            console.log("eligibleeeeeeeeeeeeeeeeeeeeeeeee");
+                            console.log("Grand Total before update:", response.grand_total);
+                            console.log(typeof response.grand_total);
+        
+                            var newGrandTotal = parseFloat(response.grand_total);
+                            var couponDiscount = parseFloat(response.coupon_discount);
+        
+                            // Calculate the new grand total after applying the coupon discount
+                            var updatedGrandTotal = grandTotal - (grandTotal * couponDiscount / 100);
+        
+                            console.log(couponDiscount, "discount showing", updatedGrandTotal, grandTotal);
+                            var difference = grandTotal - updatedGrandTotal;
+        
+                            $('#coupon-details').text('Coupon Applied: ' + selectedCoupon + ' (₹ ' + couponDiscount.toFixed(2) + ')');
+                            $('#grand-total').text(' ' + updatedGrandTotal.toFixed(2));
+        
+                            // Update the coupon details in the summary table with the coupon discount value
+                            $('.summary-coupon .coupon-details').text('% ' + couponDiscount.toFixed(2) + ' (Difference: ₹ ' + difference.toFixed(2) + ')');
+                            $('.summary-coupon .coupon-details').data('coupon-discount', couponDiscount.toFixed(2));
+        
+                            // If the coupon is successfully applied, update the coupon dropdown to show the applied coupon
+                            $("#coupon-select option[value='" + selectedCoupon + "']").prop("selected", true);
+                        } else if (response.status === 'Coupon already used') {
+                            console.log("Coupon already used");
+                            alert(response.status);
+                        } else {
+                            console.log("errorrrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
+                            alert('An error occurred while applying the coupon. Please check.');
+                        }
+        
+                        // Check if there is an offer discount
+                        if (response.offer_discount) {
+                            var offerDiscount = parseFloat(response.offer_discount);
+                            $('.summary-coupon .coupon-details').text('₹ ' + offerDiscount.toFixed(2));
+                            $('.summary-coupon .coupon-details').data('coupon-discount', offerDiscount.toFixed(2));
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        alert('An error occurred while applying the coupon. Please try again later.');
+                        console.log(error);
+                    }
+                });
+            }
+        });
+        
+        
+        
+        
+                    
+    });
+</script>
+  
+  
+  
+  
+
  
 {% endblock %}

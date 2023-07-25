@@ -12,6 +12,14 @@
         		</div><!-- End .container -->
         	</div><!-- End .page-header -->
             
+            <nav aria-label="breadcrumb" class="breadcrumb-nav mb-2">
+                <div class="container">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="#">Product</a></li>
+                    </ol>
+                </div><!-- End .container -->
+            </nav><!-- End .breadcrumb-nav -->
 
             <div class="page-content">
                 <div class="container">
@@ -63,15 +71,17 @@
                                             <a href="#">{{j.author}}</a>
                                         </div><!-- End .product-cat -->
                                         
-                                        <h3 class="product-title"><a href="{% url 'product_detail' j.slug %}">{{j.product_name}}</a></h3><!-- End .product-title -->
-                                        <div class="product-price">
+                                        <h3 class="product-title"><a href="{% url 'product_detail' j.slug %}" style="font-size: 18px; text-transform: uppercase;">{{j.product_name}}</a></h3><!-- End .product-title -->
+                                        <div class="product-price" style="font-size: 20px;">
                                             {% if j.offer %}
                                             <del class="text-danger">₹  {{j.product_price}}</del>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{j.get_offer}}
                                             {% else %}
                                             ₹ {{j.product_price}} 
                                             {% endif %}
                                         </div><!-- End .product-price -->
-                                        {{j.category}}<!-- End .discribtion -->
+                                        <p style="font-size: 18px;">{{j.category}}</p><!-- End .discribtion -->
+                                        <br>
+                                        <p style="font-size: 15px;">{{j.product_description}}</p>
                                     </div><!-- End .product-body -->
                                     <div class="product-action">
                                         

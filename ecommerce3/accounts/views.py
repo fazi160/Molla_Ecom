@@ -1,28 +1,18 @@
 from django.shortcuts import render,redirect
-# from product.models import Product
 from django.views.decorators.cache import cache_control,never_cache
-
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate,login,logout
 from django.core.exceptions import ValidationError
-
 from django.contrib.auth.models import User
 from django.contrib import messages,auth
-
-# verification email
 from .models import UserOTP
 import re
 import random
 from django.conf import settings
-import random
 from django.core.mail import send_mail
 from django.core.validators import validate_email
 
 # Create your views here.
-
-
-
-
 
 
 def user_signup(request):

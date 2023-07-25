@@ -12,7 +12,6 @@ from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
 from django.db.models import DateField
 from django.db.models import Sum
-from django.db.models.functions import TruncDay
 from django.db.models.functions import TruncDay, Cast
 from django.http import HttpResponse
 from django.shortcuts import render,redirect,get_object_or_404

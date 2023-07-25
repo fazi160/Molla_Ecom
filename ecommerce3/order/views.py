@@ -6,24 +6,10 @@ from django.http import JsonResponse
 from django.views.decorators.cache import cache_control
 from django.contrib.auth.decorators import login_required
 from products.models import Product
-# Create your views here.
 from userprofile.models import Wallet
-# user side
 from django.contrib import messages
-
 from django.db.models import Q
 from .models import Orderreturn
-from django.shortcuts import render,redirect
-from cart.models import Cart
-from userprofile.models import Address
-from checkout.models import Order,OrderItem
-from django.http import JsonResponse
-from django.views.decorators.cache import cache_control
-from django.contrib.auth.decorators import login_required
-# Create your views here.
-
-# user side
-
 
 
 def admin_orders(request):

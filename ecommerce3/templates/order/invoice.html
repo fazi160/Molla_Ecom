@@ -1,0 +1,97 @@
+
+
+<!DOCTYPE html>
+<html>
+{% load mathfilters %}
+<head>
+    <title>Invoice</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+        }
+        .invoice-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+        }
+        .invoice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .invoice-logo {
+            width: 100px;
+        }
+        .invoice-details {
+            margin-top: 20px;
+        }
+        .invoice-items {
+            margin-top: 30px;
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .invoice-items th,
+        .invoice-items td {
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+        .invoice-footer {
+            margin-top: 20px;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <div class="invoice-container">
+        <div class="invoice-header">
+            <img src="#" alt="Logo" class="invoice-logo">
+            <h1>Invoice</h1>
+        </div>
+        <div class="invoice-details">
+            <p>Hello {{order.user.username}},</p>
+            <p>Your Order has been placed successfully.</p>
+            <p>Thank you for choosing Molla Books!</p>
+            <p>Payment mode: {{order.payment_mode}}</p>
+            <p>Payment ID: {{order.payment_id}}</p>
+            <p>Order Tracking ID: {{order.tracking_no}}</p>
+            <p>Order Time: {{order.tracking_no}}</p>
+            
+        </div>
+        <table class="invoice-items">
+            <thead>
+                <tr>
+                    <th>Product Image</th>
+                    <th>Product Name</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Total Price</th>
+
+                </tr>
+            </thead>
+            <tbody>
+              
+                {% for item in order_items %}
+                <tr>
+                    <td><img src="{{ item.product.product_image.path }}"  width="50"> </td>
+                    <td>{{ item.product.product_name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.product.product_price }}</td>
+                    <td>{{ item.product.product_price |mul:item.quantity}} +tax</td>
+                    
+                </tr>
+                {% endfor %}
+
+               
+
+
+             
+            </tbody>
+        </table>
+        <div class="invoice-footer">
+            <p>Total Price: {{order.total_price}}</p>
+        </div>
+    </div>
+</body>
+</html>

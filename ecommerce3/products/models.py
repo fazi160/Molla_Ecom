@@ -8,14 +8,6 @@ from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
 
 
-# Create your models here.
-
-
-
-
-
-
-
 # product
 class Product(models.Model):
     product_name = models.CharField(unique=True,max_length=50)

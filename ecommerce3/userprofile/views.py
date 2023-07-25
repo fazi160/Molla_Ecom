@@ -113,7 +113,6 @@ def add_address(request):
         ads.phone=phone
         ads.email=email
         ads.state=state
-        # ads.order_note=order_note
         ads.save()
 
         return redirect('user_profile')

@@ -32,12 +32,7 @@
                             <li class="nav-item">
                                 <a class="nav-link" id="tab-orders-link" data-toggle="tab" href="#tab-orders" role="tab" aria-controls="tab-orders" aria-selected="false">Orders</a>
                             </li>
-                            {% comment %} <li class="nav-item">
-                                <a class="nav-link" id="tab-Cart-link" data-toggle="tab" href="#tab-Cart" role="tab" aria-controls="tab-Cart" aria-selected="false">Cart</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="tab-wishlist-link" data-toggle="tab" href="#tab-wishlist" role="tab" aria-controls="tab-wishlist" aria-selected="false">Wishlist</a>
-                            </li> {% endcomment %}
+                            
                             <li class="nav-item">
                                 <a class="nav-link" id="tab-address-link" data-toggle="tab" href="#tab-address" role="tab" aria-controls="tab-address" aria-selected="false">Adresses</a>
                             </li>
@@ -53,16 +48,14 @@
 
                     <div class="col-md-8 col-lg-9">
                         <div class="tab-content">
-                          <div class="tab-pane fade show active" id="tab-dashboard" role="tabpanel" aria-labelledby="tab-dashboard-link">
-                            <p>Hello <span class="font-weight-normal text-dark">{{ user.first_name }}</span></p>
-                            <p>Your Wallet:</p>
+                          <div class="tab-pane fade show active" id="tab-dashboard" role="tabpanel" aria-labelledby="tab-dashboard-link" style="font-size: 16px;">
+                            <p style="font-size: 20px;">Hello <span class="font-weight-normal text-dark"><b style="text-transform: uppercase;">{{ user.first_name }} {{user.last_name}}</b></span></p>
+                            
                             {% for wallet in wallets %}
-                                <p>Balance: <span class="font-weight-normal text-dark">{{ wallet.wallet }}</span></p>
+                            <p style="font-size: 18px;">Your Wallet: <span class="font-weight-normal text-dark" style="font-size: 20px;">{{ wallet.wallet }}</span></p>
                             {% endfor %}
                             <br>
-                            From your account dashboard you can view your <a href="#tab-orders" class="tab-trigger-link link-underline">recent orders</a>,
-                            manage your <a href="#tab-address" class="tab-trigger-link">shipping and billing addresses</a>,
-                            and <a href="#tab-account" class="tab-trigger-link">edit your password and account details</a>.
+                           
                         </div><!-- .End .tab-pane -->
                         
 
@@ -379,7 +372,7 @@
                             </div><!-- .End .tab-pane -->
                             
                             <div class="tab-pane fade" id="tab-address" role="tabpanel" aria-labelledby="tab-address-link">
-                              <p>The following addresses will be used on the checkout page by default.</p>
+                              <p style="font-size: 16px;">The following addresses will be used on the checkout page by default.</p>
                               <!--add address modal -->
                               <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                   <div class="modal-dialog" style="max-width: 600px; max-height: 650px; overflow-y: auto; overflow-x: hidden; ">
@@ -579,7 +572,7 @@
                                                            
                                                             <div class="custom-control custom-radio h-100 m-2 d-flex align-items-center">
                                                               <input type="radio" class="custom-control-input " id="{{adrs.id}}" name="address" value="{{adrs.id}}" {% if index == 0 %}checked{% endif %} checked>
-                                                              <label class="custom-control-label" for="{{adrs.id}}">{{adrs.first_name}} {{adrs.last_name}}</label>
+                                                              <label class="custom-control-label" for="{{adrs.id}}" style="font-size: 18px;">{{adrs.first_name}} {{adrs.last_name}}</label>
                                                           </div>
                                                           
                                                                 

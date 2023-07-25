@@ -24,7 +24,7 @@ def createcategory(request):
         image = request.FILES.get('image', None)
         name = request.POST['categories']
         description = request.POST['categories_discription']
-# validation
+    # validation
         if name.strip() =='':
             messages.error(request,'Image Not Fount')
             return redirect('categories')
@@ -34,7 +34,7 @@ def createcategory(request):
         if category.objects.filter(categories=name).exists():
             messages.error(request, 'category name already exists')
             return redirect('categories')
-# Save
+    # Save
         categr = category(categories=name,categories_discription = description,categories_image=image)
         categr.save()
         return redirect('categories')
@@ -49,7 +49,7 @@ def editcategory(request, editcategory_id):
         name = request.POST['categories']
         description = request.POST['categories_discription']
 
-# validation
+    # validation
         try:
             caterg = category.objects.get(slug=editcategory_id)
             image = request.FILES.get('image')

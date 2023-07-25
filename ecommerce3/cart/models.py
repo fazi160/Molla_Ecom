@@ -11,9 +11,6 @@ class Cart(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 
-    # def sub_total(self):
-    #     return self.produc.product_price * self.product_qty
-
     def __str__(self):
         return f"{self.id}"
     

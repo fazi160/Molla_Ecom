@@ -6,6 +6,15 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="http://127.0.0.1:8000/static/user/js/bootstrap.bundle.min.js"></script>
 
+<nav aria-label="breadcrumb" class="breadcrumb-nav mb-2">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'product_show' %}">Products</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Product</li>
+        </ol>
+    </div><!-- End .container -->
+</nav><!-- End .breadcrumb-nav -->
     <br><br>       
 <main class="main">
     <div class="page-content">
@@ -17,9 +26,7 @@
                             <figure class="product-main-image">
                                 <img id="product-zoom" src="{{pro_detail.product_image.url}}" alt="product image">
 
-                                {% comment %} <a href="#" id="btn-product-gallery" class="btn-product-gallery">
-                                    <i class="icon-arrows"></i>
-                                </a> {% endcomment %}
+                                
                             </figure><!-- End .product-main-image -->
 
                             <!-- End .product-image-gallery -->
@@ -29,44 +36,24 @@
                     <div class="col-md-6">
                         <br><br><br>
                         <div class="product-details sticky-content">
-                            <h1 class="product-title">{{pro_detail.product_name}}</h1><!-- End .product-title -->
+                            <h1 class="product-title" style="font-size: 30px; text-transform: uppercase;">{{pro_detail.product_name}}</h1><!-- End .product-title -->
 
                             <br>
 
-                            <div class="product-price">
+                            <div class="product-price" style="font-size: 30px;">
                                 {% if pro_detail.offer %}
                                     <del class="text-danger">₹ {{ pro_detail.product_price }}</del>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;₹ {{ pro_detail.get_offer }}
                                 {% else %}
                                     ₹ {{ pro_detail.product_price }} 
                                 {% endif %}
                             </div>
-                            
 
                             <br>
                             <br>
-                            
-                            
 
-                            <!-- End .details-filter-row -->
-
-                            {% comment %} <div class="details-filter-row details-row-size">
-                                <label for="qty">Qty:</label>
-                                <div class="product-details-quantity">
-                                    <input type="number" id="qty" class="form-control" value="1" min="1" max="10" step="1" data-decimals="0" required>
-                                </div><!-- End .product-details-quantity -->
-                            </div><!-- End .details-filter-row --> {% endcomment %}
-
-                            <div class="product-details-action">
-                                {% comment %} <a class="add-to-cart-btn btn-product btn-cart" data-product_id="{{ pro_detail.id }}"><span>add to cart</span></a> {% endcomment %}
-                                <button class="add-to-cart-btn btn btn-light " data-product_id="{{ pro_detail.id }}">Add to Cart</button>
-
-                                
-                                {% comment %} <div class="flex-m bor9 p-r-10 m-r-11 ">
-                                    <a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 js-addwish-detail tooltip100 addToWishlist"   data-productid="product.id" data-tooltip="Add to Wishlist">
-                                        Add to Wishlist<i class="zmdi zmdi-favorite addToWishlist" data-product_id="{{ pro_detail.id }}" style="font-size: x-large;"></i>
-                                    </a>
-                                </div> {% endcomment %}
-                                <button class="addToWishlist btn btn-link " data-product_id="{{ pro_detail.id }}">Add to Wishlist</button>
+                            <div class="product-details-action" style="font-size: 75px;">
+                                <button class="add-to-cart-btn btn btn-light " data-product_id="{{ pro_detail.id }}" style="padding: 20px; line-height: 1.5; font-size: 20px;">Add to Cart</button>
+                                <button class="addToWishlist btn btn-link " data-product_id="{{ pro_detail.id }}" style="padding: 20px; line-height: 1.5; font-size: 20px;">Add to Wishlist</button>
 
                             </div><!-- End .product-details-action -->
 
@@ -74,7 +61,7 @@
                                 <div class="card card-box card-sm">
                                     <div class="card-header" id="product-desc-heading">
                                         <h2 class="card-title">
-                                            <a class="collapsed" role="button" data-toggle="collapse" href="#product-accordion-desc" aria-expanded="false" aria-controls="product-accordion-desc">
+                                            <a class="collapsed" role="button" data-toggle="collapse" href="#product-accordion-desc" aria-expanded="false" aria-controls="product-accordion-desc" style="font-size: 18px;">
                                                 Description
                                             </a>
                                         </h2>
@@ -82,7 +69,7 @@
                                     <div id="product-accordion-desc" class="collapse" aria-labelledby="product-desc-heading" data-parent="#product-accordion">
                                         <div class="card-body">
                                             <div class="product-desc-content">
-                                                <p>{{pro_detail.product_description_detailed}}</p>
+                                                <p style="font-size: 18px;">{{pro_detail.product_description_detailed}}</p>
                                             </div><!-- End .product-desc-content -->
                                         </div><!-- End .card-body -->
                                     </div><!-- End .collapse -->
@@ -101,7 +88,7 @@
                                     <div id="product-accordion-shipping" class="collapse show" aria-labelledby="product-shipping-heading" data-parent="#product-accordion">
                                         <div class="card-body">
                                             <div class="product-desc-content">
-                                                <p>We deliver to over 100 countries around the world. For full details of the delivery options we offer, please view our <a href="#">Delivery information</a><br>
+                                                <p style="font-size: 18px;">We deliver to over 100 countries around the world. For full details of the delivery options we offer, please view our <a href="#">Delivery information</a><br>
                                                 We hope you’ll love every purchase, but if you ever need to return an item you can do so within a month of receipt. For full details of how to make a return, please view our <a href="#">Returns information</a></p>
                                             </div><!-- End .product-desc-content -->
                                         </div><!-- End .card-body -->
@@ -145,25 +132,26 @@
                 {% for k in allpro %}
                 <div class="product product-7">
                     <figure class="product-media">
-                        <a href="">
-                            <img src="{{k.product_image.url}}" alt="Product image" class="product-image"> <!-- image fields -->
+                        <a href="{% url 'product_detail' k.slug %}">
+                            <img src="{{k.product_image.url}}" alt="Product image" class="product-image" onclick="window.location.href='{% url 'product_detail' k.slug %}';"> <!-- image fields -->
                         </a>
-                        <div class="product-action-vertical">
-                            <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
                         
-                        </div><!-- End .product-action -->
                         <div class="product-action-vertical">
-                        
-                    
+
                     </figure><!-- End .product-media -->
                     <div class="product-body">
                         <div class="product-cat">
-                            <a href="#">{{k.category}}</a>
+                            <a href="#" style="font-size: 20px;">{{k.category}}</a>
                         </div><!-- End .product-cat -->
-                        <h3 class="product-title"><a href="product.html">{{k.product_name}}</a></h3><!-- End .product-title -->
-                        <div class="product-price">
-                            ₹ {{k.product_price}}
+                        <h3 class="product-title"><a href="{% url 'product_detail' k.slug %}" style="font-size: 18px; text-transform: uppercase;">{{k.product_name}}</a></h3><!-- End .product-title -->
+                        <div class="product-price" style="font-size: 20px;">
+                            {% if k.offer %}
+                            <del class="text-danger">₹  {{k.product_price}}</del>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{k.get_offer}}
+                            {% else %}
+                            ₹ {{k.product_price}} 
+                            {% endif %}
                         </div><!-- End .product-price -->
+                        <p style="font-size: 15px;">{{k.product_description}}</p>
                     </div><!-- End .product-body -->
                 </div><!-- End .product -->
                 {% endfor %}

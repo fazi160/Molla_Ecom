@@ -5,8 +5,10 @@
 {% load total %}  
 {% load mathfilters %}
 {% block content %}
-
-
+<script src="{%static 'cart/style.css'%}"></script>
+<script src="{%static 'cart/style.css.map'%}"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap"
+    rel="stylesheet">
 <!-- SweetAlert CSS CDN -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.css">
 
@@ -38,10 +40,12 @@
 <br>
 <div class="col-sm-10 col-lg-7 col-xl-5 m-lr-auto m-b-50">
 
-<button  class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer">
-    <a href="{% url 'home' %}">
- Continue Shopping</a>
-</button>
+    <div style="text-align: center;">
+        <button class="btn" type="button" style="background-color: #15a78a; border: none; border-radius: 4px; padding: 10px 20px; color: #fff; font-size: 16px; cursor: pointer;">
+            <a href="{% url 'home' %}" style="color: #fff; text-decoration: none;">Continue Shopping</a>
+        </button>
+    </div>
+    
 
 </div>
 <br>
@@ -63,7 +67,7 @@
                                 <th class="column-1">Product</th>
                                 <th class="column-2"></th>
                                 <th class="column-3">Price</th>
-                                <th class="column-4">Quantity</th>
+                                <th class="column-4" style="text-align: center;">Quantity</th>
                                 <th class="column-5">Total</th>
                             </tr>
                             {% for item in cart %}
@@ -76,30 +80,26 @@
                                 <td class="column-2">{{item.product.product_name}}</td>
                                 <td class="column-3"> {% if item.product.offer %}<del class="text-danger">₹  {{item.product.product_price}}</del> {{item.product.get_offer}}{% else %}₹ {{item.product.product_price}} {% endif %} </td>
                                 <td class="column-4">
-                                    <div class="input-group  quantity mx-auto" style="width: 100px;" >
-                                         
+                                    <div class="input-group quantity mx-auto" style="max-width: 700px;">
                                         <div class="input-group-btn">
-                                            <button data-price="{{item.product.price}}" data-productid="{{item.product.id}}" class="btn btn-sm border border-secondary btn-minus changeQuantity"  >
+                                            <button data-price="{{item.product.price}}" data-productid="{{item.product.id}}" class="btn btn-sm border border-secondary btn-minus changeQuantity" style="padding: 10px; width: 30px;">
                                                 <i class="fa fa-minus"></i>
                                             </button>
                                         </div>
-
-                                        <input readonly id="pro_qty{{item.product.id}}" type="text" class="form-control form-control-sm  text-center" value="{{item.product_qty}}">
-
+                                
+                                        <input readonly id="pro_qty{{item.product.id}}" type="text" class="form-control form-control-sm text-center" value="{{item.product_qty}}">
+                                
                                         <div class="input-group-btn sifan">
-                                            <button data-price="{{item.product.price}}" data-productid="{{item.product.id}}" class="btn btn-sm border border-secondary btn-plus changeQuantity">
+                                            <button data-price="{{item.product.price}}" data-productid="{{item.product.id}}" class="btn btn-sm border border-secondary btn-plus changeQuantity" style="padding: 10px; width: 30px;">
                                                 <i class="fa fa-plus"></i>
                                             </button>
-                                        </div>                               
-                                    </div> 
+                                        </div>
+                                    </div>
                                 </td>
-                                  {% comment %} <td class="column-5 cart__price total">
-                                    {% if item.product.offer %}
-                                      ₹{{ item.product.get_offer|mul:item.product_qty }}
-                                    {% else %}
-                                    ₹{{ item.product.product_price|mul:item.product_qty }}
-                                    {% endif %}
-                                </td> {% endcomment %}
+                                
+                                
+                                
+                                  
                                 <td class="column-5 cart__price total" id="single_product_total{{item.product.id}}">
                                     {% if item.product.offer %}
                                         ₹{{ item.product.get_offer|mul:item.product_qty }}

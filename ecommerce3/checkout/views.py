@@ -1,25 +1,31 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
-# Create your views here.
 from cart.models import Cart
 from userprofile.models import Address, Wallet
-from django.http import JsonResponse
-from userprofile.models import Address
-from django.contrib import messages
 from products.models import Product
 from checkout.models import Order, OrderItem
-from django.shortcuts import render, redirect
 import random
 import string
+from django.http import JsonResponse
 from decimal import Decimal
-from django.db.models import Sum
-from django.db.models import F, ExpressionWrapper, DecimalField
-
-from django.db.models import F, ExpressionWrapper, DecimalField, Sum
+from django.contrib import messages
+from django.http.response import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from coupons.models import Coupon, Usercoupon
+from django.db.models import Subquery
+from django.core.exceptions import ValidationError
 from django.db.models.functions import Coalesce
-
 from django.db.models import F, ExpressionWrapper, DecimalField, Sum, Case, When
+from xhtml2pdf import pisa
+from django.template.loader import render_to_string
+from django.shortcuts import get_object_or_404
+
+from django.contrib.auth.models import User
+from django.core.mail import send_mail, EmailMessage
+from django.conf import settings
+import os
+from django.http import HttpResponse
 
 def checkout(request):
     cartitems = Cart.objects.filter(user=request.user)
@@ -40,29 +46,30 @@ def checkout(request):
     # Calculate the total price after applying the offer for all items in the cart
     total_price = cartitems.aggregate(sum_total=Sum('total_with_offer')).get('sum_total', 0)
     
+    # Check if total_price is None and set it to 0 if it is None
+    if total_price is None:
+        total_price = Decimal('0')
+    
     tax_rate = Decimal('0.18')  # Convert tax rate to Decimal
     tax = total_price * tax_rate
     grand_total = total_price + tax
     
     address = Address.objects.filter(user=request.user)
-
+    active_coupons = Coupon.objects.filter(active=True)
     context = {
         'cartitems': cartitems,
         'total_price': total_price,
         'grand_total': grand_total,
         'tax': tax,
-        'address': address
+        'address': address,
+        'active_coupons': active_coupons,
     }
 
     return render(request, 'checkout/proceed.html', context)
 
-
-
-
-
-
 def placeorder(request):
     if request.method == 'POST':
+        print("order placedddddddddddddddddddddddddddddddddddd")
         # Retrieve the current user
         user = request.user
 
@@ -97,6 +104,16 @@ def placeorder(request):
             item_total_price = product_price_with_offer * item.product_qty
             cart_total_price += item_total_price  # Accumulate the total price of all cart items
 
+        # Check if a coupon code was selected and apply the coupon discount
+        selected_coupon_code = request.POST.get('coupon_code')
+        if selected_coupon_code:
+            try:
+                coupon = Coupon.objects.get(coupon_code=selected_coupon_code)
+                if coupon.active:
+                    cart_total_price -= cart_total_price * (coupon.discount / 100)
+            except Coupon.DoesNotExist:
+                pass
+
         tax_rate = Decimal('0.18')  # Convert tax rate to Decimal
         tax = cart_total_price * tax_rate
         cart_total_price += tax
@@ -128,15 +145,64 @@ def placeorder(request):
         # Delete the cart items after the order is placed
         cart_items.delete()
 
+        # Check if a valid coupon code was applied and create a Usercoupon entry
+        if selected_coupon_code:
+            try:
+                coupon = Coupon.objects.get(coupon_code=selected_coupon_code)
+                if coupon.active:
+                    Usercoupon.objects.create(coupon=coupon, user=user, total_price=cart_total_price)
+            except Coupon.DoesNotExist:
+                pass
+
         payment_mode = request.POST.get('payment_method')
-        if (payment_mode == "Razorpay") or payment_mode == 'cod':
+        if payment_mode == "cod" or payment_mode == 'razorpay' or payment_mode == 'wallet':
+            generate_invoice_pdf(request, neworder.id)
             return JsonResponse({'status': "Your order has been placed successfully"})
 
     return redirect('checkout')
 
+def generate_invoice_pdf(request, order_id):
+    print("invoice called by place order", order_id)
+    try:
+        order = Order.objects.get(id=order_id) 
+        order_items = OrderItem.objects.filter(order=order)
+    except Order.DoesNotExist:
+        # Handle the case if the order does not exist
+        return HttpResponse("Order not found", status=404)
 
+    # Render the XHTML template with dynamic data
+    context = {
+        'order': order,
+        'order_items': order_items,
+    }
+    rendered_template = render_to_string('order/invoice.html', context)
 
+    # Convert the XHTML content to PDF
+    pdf_file = os.path.join(settings.BASE_DIR, 'invoice.pdf')
+    with open(pdf_file, 'wb') as pdf:
+        pisa.CreatePDF(rendered_template, dest=pdf)
 
+    # Send the email with both the PDF attachment and the order confirmation
+    subject = "Welcome to Molla Books, Your Order is Placed!!!"
+    message = f'''
+        Your order has been placed successfully.
+        Hello {order.user.username},
+        Your Order has been placed successfully.
+        Thank you for choosing Molla Books!
+        Payment mode: {order.payment_mode}
+        Your Payment ID is {order.payment_id}
+        Your Order Tracking ID: {order.tracking_no}
+    '''
+    from_email = settings.EMAIL_HOST_USER
+    to_email = [order.user.email]
+
+    email = EmailMessage(subject, message, from_email, to_email)
+    email.attach_file(pdf_file)  # Attach the PDF to the email
+    email.send()
+
+    # Delete the temporary PDF file
+    os.remove(pdf_file)
+    return redirect('placeorder')
 
 def add_checkout_address(request):
     if request.method == 'POST':
@@ -171,34 +237,56 @@ def razarypaycheck(request):
     
     return JsonResponse({'total_price': grand_total})
 
-
-
-
-
-
-
-# def checkout(request):
-
-    # cartitems=Cart.objects.filter(user=request.user)
-    # total_price=0
-    # grand_total=0
-    # tax=0
-
-    # for item in cartitems:
-    #     total_price = total_price + item.product.product_price * item.product_qty
-    #     tax = total_price * 0.18
-    #     grand_total = total_price + tax
-
-    # address=Address.objects.filter(user=request.user)
-
-
-    # context={
-    #     'cartitems' : cartitems,
-    #     'total_price' : total_price,
-    #     'grand_total' : grand_total,
-    #     'tax':tax,
-    #     'address' : address
-    # }
+def apply_coupon(request):
+    if request.method == 'POST':
+        coupon_code = request.POST.get('coupon_code')
+        grand_total = Decimal(request.POST.get('grand_total'))
+        print("lllllllllllllllllllllllllllllllllll   Coupon Code:", coupon_code)
         
+        try:
+            active_offer = None
+            product_offers = None
 
-    # return render(request,'checkout/proceed.html',context)
+            # Check for an applicable offer related to the product
+            if 'product_id' in request.POST:
+                product_id = request.POST.get('product_id')
+                product_offers = Offer.objects.filter(product_id=product_id, start_date__lte=date.today(), end_date__gte=date.today())
+                if product_offers.exists():
+                    active_offer = product_offers.first()
+
+            # Check for an applicable coupon
+            if coupon_code:
+                existing_coupon = Coupon.objects.get(coupon_code=coupon_code)
+
+                if not existing_coupon.active:
+                    return JsonResponse({'status': 'Coupon is not active'})
+
+                if Usercoupon.objects.filter(coupon=existing_coupon, user=request.user).exists():
+                    return JsonResponse({'status': 'Coupon already used'})
+
+                # Check if the user has placed an order with the coupon before adding it
+                if Order.objects.filter(user=request.user, od_status='Delivered').exists():
+                    # Apply the coupon discount to the grand total
+                    grand_total -= (grand_total * existing_coupon.discount / 100)
+
+                    # Save the coupon usage for the current user with total_price as 0
+                    Usercoupon.objects.create(coupon=existing_coupon, user=request.user, total_price=0)
+
+            if active_offer:
+                # Apply offer discount to the grand total (if available for the selected product)
+                grand_total -= (grand_total * active_offer.discount_amount / 100)
+
+            return JsonResponse({
+                'status': 'Discounts applied successfully',
+                'offer_discount': active_offer.discount_amount if active_offer else 0,
+                'coupon_discount': existing_coupon.discount if coupon_code else 0,
+                'grand_total': grand_total,
+            })
+
+        except Coupon.DoesNotExist:
+            return JsonResponse({'status': 'Coupon does not exist'})
+        except Exception as e:
+            print("Errrrrrrrrrrrrrror:", e)
+            return JsonResponse({'status': str(e)})
+
+    return JsonResponse({'status': 'Invalid request'})

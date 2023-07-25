@@ -173,7 +173,7 @@
                                     
                                     <div class="product-body">
                                         
-                                        <h3 class="product-title"><a href="{% url 'category_detail' i.id %}">{{i.categories}}</a></h3><!-- End .product-title -->
+                                        <h3 class="product-title"><a href="{% url 'category_detail' i.id %}"><b style="text-transform: uppercase;font-size: 18px;">{{i.categories}}</b></a></h3><!-- End .product-title -->
                                         {{i.categories_discription}}
                                     </div><!-- End .product-body -->
                                 </div><!-- End .product -->
@@ -219,7 +219,9 @@
                                         <div class="product-cat">
                                             by <a href="#">{{last_added.author}}</a>
                                         </div><!-- End .product-cat -->
-                                        <h3 class="product-title"><a href="{% url 'product_detail' last_added.slug %}">{{last_added.product_name}}</a></h3><!-- End .product-title -->
+                                        <h2 class="product-title"><a href="{% url 'product_detail' last_added.slug %}"><b style="text-transform: uppercase;">{{last_added.product_name}}</b></a></h2><!-- End .product-title -->
+                                       
+
                                         <div class="product-price">
                                             ₹ {{last_added.product_price}}
                                         </div><!-- End .product-price -->
@@ -275,24 +277,22 @@
                                             <img src="{{j.product_image.url}}" alt="Product image" class="product-image">
                                         </a>
                                     </figure><!-- End .product-media -->
-
                                     <div class="product-body">
-                                        <div class="product-cat">
-                                            by <a href="#">{{j.author}}</a>
+                                        <div class="product-cat" style="font-size: 18px;">
+                                            by <a >{{j.author}}</a>
                                         </div><!-- End .product-cat -->
-                                        <h3 class="product-title"><a href="{% url 'product_detail' j.slug %}">{{j.product_name}}</a></h3><!-- End .product-title -->
-                                        <div class="product-price">
+                                        <h2 class="product-title"><a href="{% url 'product_detail' j.slug %}"><b style="text-transform: uppercase;">{{j.product_name}}</b></a></h2><!-- End .product-title -->
+                                        <div class="product-price" style="font-size: 22px;">
                                             {% if j.offer %}
-                                            <del class="text-danger">₹  {{j.product_price}}</del>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{j.get_offer}}
+                                            <del class="text-danger" >₹  {{j.product_price}}</del>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{j.get_offer}}
                                             {% else %}
                                             ₹ {{j.product_price}} 
                                             {% endif %}
                                         </div><!-- End .product-price -->
-
                                         <div class="product-footer">
                                              
                                             <div class="product-details-action">
-                                                {% comment %} <a class="add-to-cart-btn btn-product btn-cart" data-product_id="{{ pro_detail.id }}"><span>add to cart</span></a> {% endcomment %}
+                                                <p style="font-size: 17px;">{{j.product_description}}</p>
                                                 <button class="add-to-cart-btn btn btn-light " data-product_id="{{ j.id }}">Add to Cart</button>
                                                 <button class="addToWishlist btn btn-link " data-product_id="{{ j.id }}">Add to Wishlist</button>
                                            </div><!-- End .product-details-action -->                
@@ -306,82 +306,7 @@
                 </div><!-- End .row -->
             </div><!-- End .container -->
 
-            <div class="mb-5"></div><!-- End .mb-3 -->
-
-            
-            <div class="block">
-                <div class="block-wrapper ">
-                    <div class="container">
-                        <div class="heading heading-flex">
-                            <div class="heading-left">
-                                <h2 class="title">Authors</h2><!-- End .title -->
-                            </div><!-- End .heading-left -->
-
-                            <div class="heading-right">
-                                <a href="category.html" class="title-link">View more Authors <i class="icon-long-arrow-right"></i></a>
-                            </div><!-- End .heading-right -->
-                        </div><!-- End .header-flex -->
-
-                        <div class="owl-carousel carousel-equal-height owl-simple" data-toggle="owl" 
-                            data-owl-options='{
-                                "nav": false, 
-                                "dots": true,
-                                "margin": 20,
-                                "loop": false,
-                                "responsive": {
-                                    "0": {
-                                        "items":2
-                                    },
-                                    "480": {
-                                        "items":2
-                                    },
-                                    "768": {
-                                        "items":3
-                                    },
-                                    "992": {
-                                        "items":4
-                                    },
-                                    "1200": {
-                                        "items":5
-                                    },
-                                    "1440": {
-                                        "items":6
-                                    }
-                                }
-                            }'>
-
-                            {% for k in authors %}
-                            <div class="product">
-                                <span class="product-label label-sale">Sale</span>
-                                <figure class="product-media">
-                                    <a href="product.html">
-                                        <img src="{{k.author_image.url}}" alt="Product image" class="product-image">
-                                    </a>
-                                </figure><!-- End .product-media -->
-
-                                <div class="product-body">
-                                    
-                                    <h3 class="product-title"><a href="product.html">{{k.author_name}}</a></h3><!-- End .product-title -->
-                                    
-
-                                    
-                                        
-
-                                            <p> {{k.author_discription}} </p>
-                                        
-
-                                    
-                                </div><!-- End .product-body -->
-                            </div><!-- End .product -->
-                            {% endfor %}
-                            
-
-                            
-                        </div><!-- End .owl-carousel -->
-                    </div><!-- End .container -->
-                </div><!-- End .block-wrapper -->
-            </div><!-- End .block -->
-
+            <div class="mb-5"></div>
             <div class="mb-5"></div><!-- End .mb-5 -->
 
             
@@ -407,23 +332,6 @@
         
     </div><!-- End .page-wrapper -->
     <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
-
-    
-
-            <div class="social-icons">
-                <a href="#" class="social-icon" target="_blank" title="Facebook"><i class="icon-facebook-f"></i></a>
-                <a href="#" class="social-icon" target="_blank" title="Twitter"><i class="icon-twitter"></i></a>
-                <a href="#" class="social-icon" target="_blank" title="Instagram"><i class="icon-instagram"></i></a>
-                <a href="#" class="social-icon" target="_blank" title="Youtube"><i class="icon-youtube"></i></a>
-            </div><!-- End .social-icons -->
-       
-    
-     
-    <!-- Add this somewhere in your HTML body -->
-{% comment %} <button id="test-alert-btn">Test SweetAlert</button> {% endcomment %}
-
-   
-
 
 </body>
 
@@ -499,13 +407,5 @@
       });
     });
   </script>
-{% comment %} <script>
-  // Add this script after including the SweetAlert library
-    $(document).ready(function() {
-    $('#test-alert-btn').click(function() {
-        swal('Hello, this is a test alert!');
-    });
-    });
-</script> {% endcomment %}
 
 {% endblock %}

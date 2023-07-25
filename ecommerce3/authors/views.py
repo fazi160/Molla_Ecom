@@ -57,7 +57,7 @@ def editauthors(request, editauthors_id):
         cname = request.POST['author_name']
      
         cdescription = request.POST['author_discription']
-# validation
+    # validation
         if cname.strip() == '':
             messages.error(request, "Name Field empty")
             return redirect('authors')

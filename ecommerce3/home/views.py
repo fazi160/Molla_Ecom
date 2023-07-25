@@ -20,10 +20,10 @@ from products.models import Product
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.db.models import Count
+from django.http import JsonResponse
+from wishlist.models import Wishlist
+from cart.models import Cart
 
-def sample(request): #delete after checking
-    product=Product.objects.all()
-    return render(request, 'sample.html', {'product':product})
 def home(request):
 
     pro=Product.objects.all()
@@ -48,7 +48,7 @@ def shop(request):
 
 def category_detail(request, cat_id):
 
-    # pro = product.objects.filter(category__slug=cat_id)
+    
     pro = Product.objects.select_related('category').filter(category__id=cat_id)
     return render(request, 'productcate.html', {'products':pro})
 
@@ -185,10 +185,6 @@ def search_view(request):
     return render(request, 'search.html', {'query': query, 'products': products, 'categories': categories})
 
 
-# views.py
-from django.http import JsonResponse
-from wishlist.models import Wishlist
-from cart.models import Cart
 
 def update_counts(request):
     wishlist_count = 0
