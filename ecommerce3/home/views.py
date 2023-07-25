@@ -1,28 +1,19 @@
-
 from django.shortcuts import render,redirect
-from django.http import JsonResponse
 from django.views.decorators.cache import cache_control,never_cache
-
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate,login,logout as dj_logout
-from django.http import JsonResponse, HttpResponse
-from django.template.loader import render_to_string
 from products.models import Product
 from categories.models import category
 from authors.models import author
 from django.contrib.auth.models import User
 from wishlist.models import Wishlist
 from django.db.models import Q
-from django.shortcuts import render
-from django.http import JsonResponse
-from django.template.loader import render_to_string
-from products.models import Product
-from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.db.models import Count
-from django.http import JsonResponse
-from wishlist.models import Wishlist
 from cart.models import Cart
+from django.http import JsonResponse, HttpResponse
+from django.template.loader import render_to_string
+  
 
 def home(request):
 
@@ -31,26 +22,56 @@ def home(request):
     auth = author.objects.all()
     last_added = Product.objects.latest('id')
 
-    
-
-
-    
     return render(request,'home.html',{'products_list':pro, 'categories':cate, 'authors':auth, 'last_added':last_added})
-
 
 def shop(request):
     cate=category.objects.all()
 
-    
     return render(request,'catagory.html',{'categories':cate})
-
-
 
 def category_detail(request, cat_id):
 
     
     pro = Product.objects.select_related('category').filter(category__id=cat_id)
     return render(request, 'productcate.html', {'products':pro})
+
+
+
+
+
+
+
+def filter_products(request):
+    if request.method == 'POST':
+        print('Received POST data:', request.POST)
+        selected_categories = request.POST.getlist('categories[]')
+        selected_authors = request.POST.getlist('authors[]')
+        print('Selected Categories:', selected_categories)  # Check the selected categories in the console
+        print('Selected Authors:', selected_authors)  # Check the selected authors in the console
+
+        # Filter products based on selected categories and authors
+        filtered_products = Product.objects.all()
+
+        if selected_categories:
+            print("catagorys check")
+            filtered_products = filtered_products.filter(category__categories__in=selected_categories)
+
+        if selected_authors:
+            filtered_products = filtered_products.filter(author__author_name__in=selected_authors)
+
+        context = {
+            'products': filtered_products,
+        }
+
+        # Render the HTML template for the filtered products
+        product_list_html = render_to_string('filtered_product_list.html', context)
+
+        # Return the JSON response with the filtered product list HTML
+        return JsonResponse({'product_list_html': product_list_html})
+    else:
+        # Handle the GET request
+        return JsonResponse({})
+
 
 
 def product_show(request):
@@ -91,9 +112,13 @@ def product_show(request):
         'author': all_authors,
     }
 
-    return render(request, 'product.html', context)
-
-
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        # Render the filtered product list template and return it as JSON response
+        product_list_html = render_to_string('filtered_product_list.html', context)
+        return JsonResponse({'product_list_html': product_list_html})
+    else:
+        # For regular non-AJAX requests, render the entire page with the product list
+        return render(request, 'product.html', context)
 
 def product_detail(request,product_id):
 
@@ -104,7 +129,6 @@ def product_detail(request,product_id):
 
     return render(request,'inner_product.html', {'pro_detail':prod ,'allpro':related})
 
-
 @login_required(login_url='user_login')
 def user_logout(request):
     if request.user.is_authenticated:
@@ -114,52 +138,18 @@ def user_logout(request):
     else:
         return redirect('home')
 
-
 @login_required(login_url='user_login')
 def shoppingcart(request):
 
     return render(request,'shoping-cart.html')
 
-
-
 def about(request):
 
     return render(request,'about.html')
 
-
 def blog(request):
 
     return render(request,'blog.html')
-
-
-
-
-def filter_products(request):
-    if request.method == 'POST':
-        selected_categories = request.POST.getlist('categories')
-        selected_authors = request.POST.getlist('authors')
-        print(selected_authors, '8888888888888888888888888')
-        print(selected_categories, '9999999999999999999999')
-        # Filter products based on selected categories and authors
-        filtered_products = Product.objects.all()
-
-        if selected_categories:
-            filtered_products = filtered_products.filter(category__categories__in=selected_categories)
-
-        if selected_authors:
-            filtered_products = filtered_products.filter(author__author_name__in=selected_authors)
-
-        context = {
-            'products': filtered_products,
-        }
-
-        product_list_html = render_to_string('product_list.html', context)
-        return JsonResponse({'product_list_html': product_list_html})
-    else:
-        return JsonResponse({})  # Handle the GET request
-
-
-
 
 def search_view(request):
     query = request.GET.get('q')
@@ -171,7 +161,8 @@ def search_view(request):
         products = Product.objects.filter(
             Q(product_name__icontains=query) | 
             Q(product_description__icontains=query) |
-            Q(author__author_name__icontains=query)  # Search by author name
+            Q(author__author_name__icontains=query)  |
+            Q(product_description_detailed__icontains=query)
         )
 
         categories = category.objects.filter(
@@ -183,8 +174,6 @@ def search_view(request):
        
 
     return render(request, 'search.html', {'query': query, 'products': products, 'categories': categories})
-
-
 
 def update_counts(request):
     wishlist_count = 0

@@ -1,270 +1,274 @@
-{% extends 'base.html' %}
-{% load static %}
+    {% extends 'base.html' %}
+    {% load static %}
 
-{% block content %}
+    {% block content %}
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="http://127.0.0.1:8000/static/user/js/bootstrap.bundle.min.js"></script>
-        <main class="main">
-        	<div class="page-header text-center" style="background-image: url('/static/user/images/page-header-bg.jpg')">
-        		<div class="container">
-        			<h1 class="page-title"><span>Check Your Favroit</span>Books</h1>
-        		</div><!-- End .container -->
-        	</div><!-- End .page-header -->
-            
-            <nav aria-label="breadcrumb" class="breadcrumb-nav mb-2">
-                <div class="container">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
-                        <li class="breadcrumb-item"><a href="#">Product</a></li>
-                    </ol>
-                </div><!-- End .container -->
-            </nav><!-- End .breadcrumb-nav -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="http://127.0.0.1:8000/static/user/js/bootstrap.bundle.min.js"></script>
+>
+            <main class="main">
+                <div class="page-header text-center" style="background-image: url('/static/user/images/page-header-bg.jpg')">
+                    <div class="container">
+                        <h1 class="page-title"><span>Check Your Favroit</span>Books</h1>
+                    </div><!-- End .container -->
+                </div><!-- End .page-header -->
+                
+                <nav aria-label="breadcrumb" class="breadcrumb-nav mb-2">
+                    <div class="container">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                            <li class="breadcrumb-item"><a href="#">Product</a></li>
+                        </ol>
+                    </div><!-- End .container -->
+                </nav><!-- End .breadcrumb-nav -->
 
-            <div class="page-content">
-                <div class="container">
-                    <div class="toolbox">
-                        <div class="toolbox-left">
-                            <br>
-                            <a href="#" class="sidebar-toggler"><i class="icon-bars"></i>Filters</a>
-                        </div><!-- End .toolbox-left -->
-                        <div class="toolbox-right">
-        					<div class="toolbox-sort">
-        						<label for="sortby">Sort by:</label>
-        						<div class="select-custom">
-                                    <select name="sortby" id="sortby" class="form-control" onchange="window.location.href='{% url 'product_show' %}?' + this.value;">
-                                        <option value="">Sort by:</option>
-                                        <option value="sort=atoz">A To Z</option>
-                                        <option value="sort=ztoa">Z To A</option>
-                                        <option value="sort=ltoh">Low To High</option>
-                                        <option value="sort=htol">High To Low</option>
-                                    </select>
-                                    
-								</div>
-        					</div><!-- End .toolbox-sort -->
-        				</div><!-- End .toolbox-right -->
-                    </div>
-        		<!-- End .toolbox -->
-                   
-                    <div class="products">
-                        <div class="row">
-                            {% for j in products %}
-                            <div  href="{% url 'product_detail' j.slug %}" class="col-6 col-md-4 col-lg-4 col-xl-3">
-                                <div class="product">
-                                    <figure class="product-media">
-                                        <a href="{% url 'product_detail' j.slug %}">
-                                            <img src="{{j.product_image.url}}" alt="Product image" class="product-image" onclick="window.location.href='{% url 'product_detail' j.slug %}';">
-                                          </a>
-                                        <div class="product-action-vertical">
-                                            
-                                            <a href="#" class="btn-product-icon btn-wishlist btn-expandable addToWishlistLink" data-product_id="{{ j.id }}"><span>Add to Wishlist</span></a>
-
+                <div class="page-content">
+                    <div class="container">
+                        <div class="toolbox">
+                            <div class="toolbox-left">
+                                <br>
+                                <a href="#" class="sidebar-toggler"><i class="icon-bars"></i>Filters</a>
+                            </div><!-- End .toolbox-left -->
+                            <div class="toolbox-right">
+                                <div class="toolbox-sort">
+                                    <label for="sortby">Sort by:</label>
+                                    <div class="select-custom">
+                                        <select name="sortby" id="sortby" class="form-control" onchange="window.location.href='{% url 'product_show' %}?' + this.value;">
+                                            <option value="">Sort by:</option>
+                                            <option value="sort=atoz">A To Z</option>
+                                            <option value="sort=ztoa">Z To A</option>
+                                            <option value="sort=ltoh">Low To High</option>
+                                            <option value="sort=htol">High To Low</option>
+                                        </select>
                                         
-                                        </div><!-- End .product-action -->
-                                        <div class="product-action-vertical">
-                                        
-                                    
-                                    </figure><!-- End .product-media -->
-
-                                    <div class="product-body">
-                                        <div class="product-cat">
-                                            <a href="#">{{j.author}}</a>
-                                        </div><!-- End .product-cat -->
-                                        
-                                        <h3 class="product-title"><a href="{% url 'product_detail' j.slug %}" style="font-size: 18px; text-transform: uppercase;">{{j.product_name}}</a></h3><!-- End .product-title -->
-                                        <div class="product-price" style="font-size: 20px;">
-                                            {% if j.offer %}
-                                            <del class="text-danger">₹  {{j.product_price}}</del>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{j.get_offer}}
-                                            {% else %}
-                                            ₹ {{j.product_price}} 
-                                            {% endif %}
-                                        </div><!-- End .product-price -->
-                                        <p style="font-size: 18px;">{{j.category}}</p><!-- End .discribtion -->
-                                        <br>
-                                        <p style="font-size: 15px;">{{j.product_description}}</p>
-                                    </div><!-- End .product-body -->
-                                    <div class="product-action">
-                                        
-                                        <button class="add-to-cart-btn btn btn-link " data-product_id="{{ j.id }}">Add to Cart</button>
-                                    </div><!-- End .product-action -->
-                                    
-                                </div><!-- End .product -->
-                            </div><!-- End .col-sm-6 col-lg-4 col-xl-3 -->
-                            {% endfor %}
-                            
-                        </div><!-- End .row -->
-                    </div><!-- End .products -->
-                </div>
-            </div>
-                   
-
-            <div class="sidebar-filter-overlay"></div><!-- End .sidebar-filter-overlay -->
-            
-            <aside class="sidebar-shop sidebar-filter">
-                <div class="sidebar-filter-wrapper">
-                    <div class="widget widget-clean">
-                        <label><i class="icon-close"></i>Filters</label>
-                        <a href="#" class="sidebar-filter-clear">Clean All</a>
-                    </div><!-- End .widget -->
-                    <form id="filterForm" method="POST" action="{% url 'filter_products' %}">
-                        {% csrf_token %}
-                        <div class="widget widget-collapsible">
-                            <h3 class="widget-title">
-                                <a data-toggle="collapse" href="#widget-1" role="button" aria-expanded="true" aria-controls="widget-1">
-                                    Category
-                                </a>
-                            </h3><!-- End .widget-title -->
+                                    </div>
+                                </div><!-- End .toolbox-sort -->
+                            </div><!-- End .toolbox-right -->
+                        </div>
+                    <!-- End .toolbox -->
                     
-                            <div class="collapse show" id="widget-1">
-                                <div class="widget-body">
-                                    <div class="filter-items filter-items-count">
-                                        {% for i in cate %}
-                                        <div class="filter-item">
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="cat-{{ forloop.counter }}" name="categories" value="{{ i.categories }}">
-                                                
-                                                <label class="custom-control-label" for="cat-{{ forloop.counter }}">{{ i.categories }}</label>
-                                            </div><!-- End .custom-checkbox -->
-                                            <span class="item-count">0</span> <!-- Replace '0' with the actual count of items (if available). -->
-                                        </div><!-- End .filter-item -->
-                                        {% endfor %}
-                                    </div><!-- End .filter-items -->
-                                </div><!-- End .widget-body -->
-                            </div><!-- End .collapse -->
-                        </div><!-- End .widget -->
-                    
-                        <div class="widget widget-collapsible">
-                            <h3 class="widget-title">
-                                <a data-toggle="collapse" href="#widget-2" role="button" aria-expanded="true" aria-controls="widget-2">
-                                    Author
-                                </a>
-                            </h3><!-- End .widget-title -->
-                    
-                            <div class="collapse show" id="widget-2">
-                                <div class="widget-body">
-                                    <div class="filter-items filter-items-count">
-                                        {% for a in author %}
-                                        <div class="filter-item">
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="author-{{ forloop.counter }}" name="authors" value="{{ a.author_name }}">
-                                                <label class="custom-control-label" for="author-{{ forloop.counter }}">{{ a.author_name }}</label>
-                                            </div><!-- End .custom-checkbox -->
-                                            <span class="item-count">0</span> <!-- Replace '0' with the actual count of items (if available). -->
-                                        </div><!-- End .filter-item -->
-                                        {% endfor %}
-                                    </div><!-- End .filter-items -->
-                                </div><!-- End .widget-body -->
-                            </div><!-- End .collapse -->
-                        </div><!-- End .widget -->
-                    
-                        <!-- Add the submit button -->
-                        <button type="submit" class="btn btn-primary">Filter Products</button>
+                    <div id="productListContainer">
                         
+<div class="products">
+    <div class="row">
+        {% for j in products %}
+        <div  href="{% url 'product_detail' j.slug %}" class="col-6 col-md-4 col-lg-4 col-xl-3">
+            <div class="product">
+                <figure class="product-media">
+                    <a href="{% url 'product_detail' j.slug %}">
+                        <img src="{{j.product_image.url}}" alt="Product image" class="product-image" onclick="window.location.href='{% url 'product_detail' j.slug %}';">
+                    </a>
+                    <div class="product-action-vertical">
+                        <a href="#" class="btn-product-icon btn-wishlist btn-expandable addToWishlistLink" data-product_id="{{ j.id }}"><span>Add to Wishlist</span></a>
+                    </div><!-- End .product-action -->
+                </figure><!-- End .product-media -->
+
+                <div class="product-body">
+                    <div class="product-cat">
+                        <a href="#">{{ j.author }}</a>
+                    </div><!-- End .product-cat -->
                     
-                        <a href="{% url 'product_show' %}" class="btn btn-secondary">Clear Filters</a>
-                    </form>
-                </div><!-- End .sidebar-filter-wrapper -->
-            </aside><!-- End .sidebar-filter -->
+                    <h3 class="product-title"><a href="{% url 'product_detail' j.slug %}" style="font-size: 18px; text-transform: uppercase;">{{ j.product_name }}</a></h3><!-- End .product-title -->
+                    
+                    <div class="product-price" style="font-size: 20px;">
+                        {% if j.offer %}
+                        <del class="text-danger">₹ {{ j.product_price }}</del>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ j.get_offer }}
+                        {% else %}
+                        ₹ {{ j.product_price }}
+                        {% endif %}
+                    </div><!-- End .product-price -->
+                    
+                    <p style="font-size: 18px;">{{ j.category }}</p><!-- End .description -->
+                    <br>
+                    <p style="font-size: 15px;">{{ j.product_description }}</p>
+                </div><!-- End .product-body -->
+                
+                <div class="product-action">
+                    <button class="add-to-cart-btn btn btn-link" data-product_id="{{ j.id }}">Add to Cart</button>
+                </div><!-- End .product-action -->
+            </div><!-- End .product -->
+        </div><!-- End .col-sm-6 col-lg-4 col-xl-3 -->
+        {% endfor %}
+    </div><!-- End .row -->
+</div><!-- End .products -->
+
+                    </div>
+                </div>
+                </div>
+                    
+
+                <div class="sidebar-filter-overlay"></div><!-- End .sidebar-filter-overlay -->
+                
+                <aside class="sidebar-shop sidebar-filter">
+                    <div class="sidebar-filter-wrapper">
+                        <div class="widget widget-clean">
+                            <label><i class="icon-close"></i>Filters</label>
+                            <a href="{% url 'product_show' %}" class="sidebar-filter-clear">Clean All</a>
+                        </div><!-- End .widget -->
+                        <form id="filterForm" method="POST" action="{% url 'filter_products' %}">
+                            {% csrf_token %}                            <div class="widget widget-collapsible">
+                                <div class="widget widget-collapsible">
+                                    <!-- Category filter items -->
+                                    <h3 class="widget-title">
+                                        <a data-toggle="collapse" href="#widget-1" role="button" aria-expanded="true" aria-controls="widget-1">
+                                            Category
+                                        </a>
+                                    </h3>
+                                    <div class="collapse show" id="widget-1">
+                                        <div class="widget-body">
+                                            <div class="filter-items filter-items-count">
+                                                {% for i in cate %}
+                                                <div class="filter-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox" class="custom-control-input" id="cat-{{ forloop.counter }}" name="categories[]" value="{{ i.categories }}">
+                                                        <label class="custom-control-label" for="cat-{{ forloop.counter }}">{{ i.categories }}</label>
+                                                    </div>
+                                                </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        
+                                <div class="widget widget-collapsible">
+                                    <!-- Author filter items -->
+                                    <h3 class="widget-title">
+                                        <a data-toggle="collapse" href="#widget-2" role="button" aria-expanded="true" aria-controls="widget-2">
+                                            Author
+                                        </a>
+                                    </h3>
+                                    <div class="collapse show" id="widget-2">
+                                        <div class="widget-body">
+                                            <div class="filter-items filter-items-count">
+                                                {% for a in author %}
+                                                <div class="filter-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox" class="custom-control-input" id="author-{{ forloop.counter }}" name="authors[]" value="{{ a.author_name }}">
+                                                        <label class="custom-control-label" for="author-{{ forloop.counter }}">{{ a.author_name }}</label>
+                                                    </div>
+                                                </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        
+                                <!-- Add the submit button -->
+                                <input type="submit" value="Filter" class="btn btn-primary">
+                            </form>
+                        </aside>                        
+            </div><!-- End .container -->
+        </div><!-- End .page-content -->
+    </main><!-- End .main -->
+
+    </div><!-- End .page-wrapper -->
+        <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
+
+        <!-- Mobile Menu -->
+        
+
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+        <script>
+            $('.add-to-cart-btn').click(function(e) {
+            e.preventDefault();
+            console.log('2222222222222222222222222222222222222222222222222222222222222222222222')
             
-                    
-        </div><!-- End .container -->
-    </div><!-- End .page-content -->
-</main><!-- End .main -->
-
-</div><!-- End .page-wrapper -->
-    <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
-
-    <!-- Mobile Menu -->
-    
-
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
-    <script>
-        $('.add-to-cart-btn').click(function(e) {
-          e.preventDefault();
-          console.log('2222222222222222222222222222222222222222222222222222222222222222222222')
-         
-          var product_id = $(this).data('product_id');
-          var quantity = 1; // Or get quantity from a form input field
-          console.log(product_id,'111111111111111111111111111111111111111111111111111111111111')
-          
-          $.ajax({
-            method: "POST",
-            url: "{% url 'add_cart' %}",
-            data: {
-              'product_qty': 1,
-              'prod_id': product_id,
-              csrfmiddlewaretoken: '{{ csrf_token }}'
-            },
-            success: function(response) {
-              console.log(response);
-              
-              if (response.status === 'Product already in Cart' || response.status === 'No such product found' || response.status === 'Only few quantity available') {
-                swal("Error!", response.status, "error");
-                $('.cartdata').load(location.href + " .cartdata");
-              } else if (response.status === 'Product added successfully') {
-                swal("Congratulations!", response.status, "success");
-                $('.cartdata').load(location.href + " .cartdata");
-              } else {
-                swal("Error!", response.status, "error");
-                $('.cartdata').load(location.href + " .cartdata");
-              }
-            }
-          });
-        });
-      </script>
-    
-      <script>
-        $(document).ready(function() {
-          $('.addToWishlistLink').on('click', function(event) {
-            event.preventDefault(); // Prevent the default link click behavior
-        
             var product_id = $(this).data('product_id');
-        
+            var quantity = 1; // Or get quantity from a form input field
+            console.log(product_id,'111111111111111111111111111111111111111111111111111111111111')
+            
             $.ajax({
-              method: "POST",
-              url: "{% url 'add_wishlist' %}",
-              data: {
+                method: "POST",
+                url: "{% url 'add_cart' %}",
+                data: {
+                'product_qty': 1,
                 'prod_id': product_id,
                 csrfmiddlewaretoken: '{{ csrf_token }}'
-              },
-              success: function(response) {
+                },
+                success: function(response) {
                 console.log(response);
-        
-                if (response.status === 'Product already in wishlist' || response.status === 'No such product found' || response.status === 'Only few quantity available') {
-                  swal("Error!", response.status, "error");
-                  $('.cartdata').load(location.href + " .cartdata");
+                
+                if (response.status === 'Product already in Cart' || response.status === 'No such product found' || response.status === 'Only few quantity available') {
+                    swal("Error!", response.status, "error");
+                    $('.cartdata').load(location.href + " .cartdata");
                 } else if (response.status === 'Product added successfully') {
-                  swal("Congratulations!", response.status, "success");
-                  $('.cartdata').load(location.href + " .cartdata");
+                    swal("Congratulations!", response.status, "success");
+                    $('.cartdata').load(location.href + " .cartdata");
                 } else {
-                  swal("Error!", response.status, "error");
-                  $('.cartdata').load(location.href + " .cartdata");
+                    swal("Error!", response.status, "error");
+                    $('.cartdata').load(location.href + " .cartdata");
                 }
-              }
+                }
             });
-        
-            // This line should be inside the event handler function, not outside
-            console.log('Adding product with ID ' + product_id + ' to wishlist.');
-          });
-        });
+            });
         </script>
         
+        <script>
+            $(document).ready(function() {
+            $('.addToWishlistLink').on('click', function(event) {
+                event.preventDefault(); // Prevent the default link click behavior
+            
+                var product_id = $(this).data('product_id');
+            
+                $.ajax({
+                method: "POST",
+                url: "{% url 'add_wishlist' %}",
+                data: {
+                    'prod_id': product_id,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success: function(response) {
+                    console.log(response);
+            
+                    if (response.status === 'Product already in wishlist' || response.status === 'No such product found' || response.status === 'Only few quantity available') {
+                    swal("Error!", response.status, "error");
+                    $('.cartdata').load(location.href + " .cartdata");
+                    } else if (response.status === 'Product added successfully') {
+                    swal("Congratulations!", response.status, "success");
+                    $('.cartdata').load(location.href + " .cartdata");
+                    } else {
+                    swal("Error!", response.status, "error");
+                    $('.cartdata').load(location.href + " .cartdata");
+                    }
+                }
+                });
+            
+                // This line should be inside the event handler function, not outside
+                console.log('Adding product with ID ' + product_id + ' to wishlist.');
+            });
+            });
+            </script>
+            
+        
+
+
     
-<!-- ... -->
+
+    <!-- Add this at the beginning of your HTML file to include the jQuery library -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
     $(document).ready(function () {
-        $('#filterForm').on('submit', function(event) {
+        $('#filterForm').on('submit', function (event) {
             event.preventDefault(); // Prevent form submission
 
             // Get the selected categories and authors
-            const selectedCategories = $('input[name="categories"]:checked').val();
-            const selectedAuthors = $('input[name="authors"]:checked').val();
+            const selectedCategories = $('input[name="categories[]"]:checked').map(function () {
+                return $(this).val();
+            }).get();
+            const selectedAuthors = $('input[name="authors[]"]:checked').map(function () {
+                return $(this).val();
+            }).get();
+
+            // Log the selected categories and authors (for debugging)
+            console.log('AJAX Request Data:', selectedCategories, selectedAuthors);
 
             // AJAX call to filter_products view
             $.ajax({
                 method: "POST",
-                url: "/filter_products/",
+                url: "{% url 'filter_products' %}",
                 data: {
                     'categories': selectedCategories,
                     'authors': selectedAuthors,
@@ -272,7 +276,8 @@
                 },
                 dataType: 'json',
                 success: function (response) {
-                    // Update the product list with the filtered data
+                    console.log('AJAX Response:', response);
+                    // Update the product list container with the filtered data
                     $('#productListContainer').html(response.product_list_html);
                 },
                 error: function (error) {
@@ -283,9 +288,5 @@
     });
 </script>
 
-
-
-
-        
 </html>
 {% endblock %} 
