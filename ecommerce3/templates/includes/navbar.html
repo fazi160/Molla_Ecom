@@ -90,8 +90,8 @@
                             <a href="{% url 'product_show' %}">Product</a>
                         </li>
        
-                        <li class="{% if request.path == '/blog/' %}active{% endif %}">
-                            <a href="{% url 'blog' %}">Blog</a>  
+                        <li class="{% if request.path == '/blog_show/' %}active{% endif %}">
+                            <a href="{% url 'blog_show' %}">Blog</a>  
                         </li>
                         {% if user.id is not None %}
                         <li class="{% if request.path == '/user_logout/' %}active{% endif %}">

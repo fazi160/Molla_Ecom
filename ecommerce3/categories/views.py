@@ -77,7 +77,7 @@ def editcategory(request, editcategory_id):
         return redirect ('categories')
 
 # Delete Category
-
+@login_required(login_url='admin_login')
 def deletecategory(request,deletecategory_id):
     if not request.user.is_superuser:
         return redirect('admin_login')

@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<body>
+    <div class="page-wrapper">
+        <main class="main">
+            <div class="page-header text-center" style="background-image: url('/static/user/images/page-header-bg.jpg')">
+                <div class="container">
+                    <h1 class="page-title">Blog</h1>
+                </div><!-- End .container -->
+            </div><!-- End .page-header -->
+            <nav aria-label="breadcrumb" class="breadcrumb-nav mb-2">
+                <div class="container">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>    
+                        <li class="breadcrumb-item active" aria-current="page">Blog</li>
+                    </ol>
+                </div><!-- End .container -->
+            </nav><!-- End .breadcrumb-nav -->
+            <div class="page-content" style="margin-bottom: 1000px;"> <!-- Add some bottom margin to the page-content -->
+                <div class="container">
+                    <div class="row">
+                        {% for i in blog %}
+                        <div class="col-sm-6">
+                            <div class="card p-3" style="height: 350px;"> <!-- Set the desired height here -->
+                                <img src="{{i.blog_image.url}}" alt="image desc" class="card-img-top" style="width: 100%; height: auto;">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{i.blog_name}}</h5>
+                                    <p class="card-text">{{ i.blog_discription|truncatechars:100 }}</p>
+                                    <button class="show-more-btn btn btn-primary">Show More</button>
+                                    <div class="full-description" style="display: none;">
+                                        {{ i.blog_discription }}
+                                    </div>
+                                </div>
+                            </div><!-- End .card -->
+                        </div><!-- End .col-sm-6 -->
+                        {% endfor %}
+                    </div><!-- End .row -->
+                </div><!-- End .container -->
+            </div><!-- End .page-content -->
+        </main><!-- End .main -->
+    </div><!-- End .page-wrapper -->
+</body>
+
+<style>
+    /* CSS for card styling */
+    .card {
+        margin-bottom: 20px;
+    }
+
+    /* CSS for setting card width and increasing card size */
+    .col-sm-6 {
+        max-width: 450px; /* Adjust the maximum width as needed */
+        margin: 0 auto; /* Center the cards */
+    }
+
+    /* Increase card padding */
+    .card-body {
+        padding: 20px;
+    }
+</style>
+
+<script>
+    // Get all "Show More" buttons and attach click event listener
+    const showMoreBtns = document.querySelectorAll('.show-more-btn');
+    showMoreBtns.forEach((btn) => {
+        btn.addEventListener('click', function () {
+            // Toggle the display of the full description when the button is clicked
+            const cardBody = btn.closest('.card-body');
+            const fullDescription = cardBody.querySelector('.full-description');
+            fullDescription.style.display = fullDescription.style.display === 'none' ? 'block' : 'none';
+        });
+    });
+</script>
+{% endblock %}
