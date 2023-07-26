@@ -90,7 +90,18 @@
 
                           <div class="card-body">
                             <h5 class="card-title">Reports</h5>
-
+                            <form id="filterForm" method="GET" action="{% url 'dashboard' %}">
+                              <div class="filter-container">
+                                <label for="filter">Select Time Range:</label>
+                                <select id="filter" name="filter" onchange="onFilterChange()" onload="setInitialFilter()">
+                                  <option value="3_days" {% if filter_value == '3_days' %}selected{% endif %}>Last 3 Days</option>
+                                  <option value="7_days" {% if filter_value == '7_days' %}selected{% endif %}>Last 7 Days</option>
+                                  <option value="30_days" {% if filter_value == '30_days' %}selected{% endif %}>Last 30 Days</option>
+                                  <option value="all" {% if not filter_value or filter_value == 'all' %}selected{% endif %}>All</option>
+                                </select>
+                              </div>
+                            </form>
+                            
                             <!-- Line Chart -->
                             <div id="reportsChart"></div>
                             <script>
@@ -217,4 +228,63 @@
 <script src="{% static 'dashboard/libs/simplebar/dist/simplebar.js'%}"></script>
 <script src="{% static 'dashboard/js/dashboard.js'%}"></script> 
 <script src="{% static 'dashboard/js/custom.js'%}"></script> 
+
+<script>
+  // Keep the original data to reset the chart when needed
+  const originalData = [{% for sale in sales_by_day %}{{ sale.total_sales|floatformat:2 }},{% endfor %}];
+
+  // Function to update the chart data based on the selected filter
+  function updateChartData(filterValue) {
+    const data = originalData.slice(); // Copy the original data
+
+    if (filterValue === 'today') {
+      const todayData = [{% for sale in sales_by_day %}{% if sale.day|date:"Y-m-d" == today|date:"Y-m-d" %}{{ sale.total_sales|floatformat:2 }},{% endif %}{% endfor %}];
+      data.fill(0); // Fill the data array with zeros
+      data.splice(-todayData.length, todayData.length, ...todayData); // Replace the zeros with today's sales data
+    } else if (filterValue === '3_days') {
+      // Filter data for the last 3 days
+      // ... implement logic to filter data for the last 3 days ...
+    } else if (filterValue === '7_days') {
+      // Filter data for the last 7 days
+      // ... implement logic to filter data for the last 7 days ...
+    }else if (filterValue === '30_days') {
+      // Filter data for the last 7 days
+      // ... implement logic to filter data for the last 7 days ...
+    }
+
+    // Update the chart data
+    apexChart.updateSeries([{ name: 'Sales', data }]);
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const apexChart = new ApexCharts(document.querySelector("#reportsChart"), {
+      // ... your existing chart configuration ...
+    });
+
+    apexChart.render();
+
+    // Event listener for the filter dropdown
+    document.querySelector("#filter").addEventListener("change", (event) => {
+      const selectedFilter = event.target.value;
+      // Redirect to the dashboard page with the selected filter value
+      window.location.href = `/dashboard/?filter=${selectedFilter}`;
+    });
+  });
+</script>
+
+<script>
+  function onFilterChange() {
+    var selectedValue = document.getElementById('filter').value;
+    localStorage.setItem('selectedFilter', selectedValue);
+    document.getElementById('filterForm').submit();
+  }
+
+  function setInitialFilter() {
+    var selectedValue = localStorage.getItem('selectedFilter');
+    if (selectedValue) {
+      document.getElementById('filter').value = selectedValue;
+    }
+  }
+</script>
+
 {% endblock %}

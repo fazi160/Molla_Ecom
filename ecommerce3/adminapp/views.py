@@ -253,6 +253,25 @@ def dashboard(request):
     sales_by_day = orders.annotate(day=TruncDay('created_at')).values('day').annotate(total_sales=Sum('total_price')).order_by('day')
     # formatted_dates = [item['day'].strftime('%Y-%m-%dT%H:%M:%S.%fZ') for item in sales_by_day]
 
+    filter_value = request.GET.get('filter', 'all')  # Get the selected filter from the request query parameter
+
+    # Determine the date range based on the selected filter
+    if filter_value == 'today':
+        today = timezone.now().date()
+        sales_by_day = orders.filter(created_at__date=today).annotate(day=TruncDay('created_at')).values('day').annotate(total_sales=Sum('total_price')).order_by('day')
+    elif filter_value == '3_days':
+        three_days_ago = today - timedelta(days=3)
+        sales_by_day = orders.filter(created_at__gte=three_days_ago, created_at__lte=today).annotate(day=TruncDay('created_at')).values('day').annotate(total_sales=Sum('total_price')).order_by('day')
+    elif filter_value == '7_days':
+        seven_days_ago = today - timedelta(days=7)
+        sales_by_day = orders.filter(created_at__gte=seven_days_ago, created_at__lte=today).annotate(day=TruncDay('created_at')).values('day').annotate(total_sales=Sum('total_price')).order_by('day')
+    elif filter_value == '30_days':
+        thirty_days_ago = today - timedelta(days=30)
+        sales_by_day = orders.filter(created_at__gte=thirty_days_ago, created_at__lte=today).annotate(day=TruncDay('created_at')).values('day').annotate(total_sales=Sum('total_price')).order_by('day')
+    else:
+        sales_by_day = orders.annotate(day=TruncDay('created_at')).values('day').annotate(total_sales=Sum('total_price')).order_by('day')
+
+
     revenue += revenue * 0.18
 
     context = {
