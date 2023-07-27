@@ -54,9 +54,32 @@
                             {% for wallet in wallets %}
                             <p style="font-size: 18px;">Your Wallet: <span class="font-weight-normal text-dark" style="font-size: 20px;">{{ wallet.wallet }}</span></p>
                             {% endfor %}
-                            <br>
-                           
+                            
+                            {% if referral_code %}
+                            <p style="font-size: 18px;">Your Referral Code: <span class="font-weight-normal text-dark" style="font-size: 20px;">{{ referral_code.code }}</span></p>
+                            
+                            <button id="copyLinkBtn">Copy Invite Link</button>
+
+                            {% else %}
+                                <p>You do not have a referral code yet.</p>
+                            {% endif %}
+                        
+
+                            {% if not is_referral_code_used %}
+                                <h2>Enter Referral Code</h2>
+                                <form action="{% url 'referral_check' %}" method="POST">
+                                    {% csrf_token %}
+                                    <label for="refid">Enter Referral Code:</label>
+                                    <input type="text" id="refid" name="refid" required>
+                                    <button type="submit">Submit</button>
+                                </form>
+                            {% endif %}
+
+
+
                         </div><!-- .End .tab-pane -->
+
+
                         
 
                             <div class="tab-pane fade" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
@@ -462,7 +485,7 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                   </div>
                                   <div class="modal-body" style="margin-left:35px; ">
-              
+                                    {% if address %}
                                   <form action="{% url 'edit_address' address.id %}" method="post">
                                           {% csrf_token %}
                                       <div class="row">
@@ -526,7 +549,7 @@
               
                                       </div>
                                       </form>
-              
+                                      {% endif %}
                                   </div>
                               </div>
                           </div>
@@ -1067,4 +1090,45 @@
             updateItemTotal(item);
           });
         </script>
+
+
+
+
+        <script>
+          document.addEventListener('DOMContentLoaded', function () {
+              // Get the current URL dynamically
+              const currentURL = window.location.href;
+      
+              // Get the referral code of the sender (replace 'SENDER_REFERRAL_CODE' with the actual referral code)
+              const senderReferralCode = "{{ referral_code.code }}";
+      
+              // Add a click event listener to the copy button
+              document.getElementById('copyLinkBtn').addEventListener('click', function () {
+                  // Concatenate the text and referral code to create the invite link
+                  const pageName = 'Molla Books';
+                  const inviteText = `Join ${pageName} using my referral code: `;
+                  const inviteLink = inviteText + senderReferralCode + '   ' + currentURL;
+      
+                  // Create a temporary input element to copy the link
+                  const tempInput = document.createElement('input');
+                  tempInput.setAttribute('value', inviteLink);
+                  document.body.appendChild(tempInput);
+      
+                  // Select the input element's content
+                  tempInput.select();
+                  tempInput.setSelectionRange(0, 99999); // For mobile devices
+      
+                  // Copy the selected text to the clipboard
+                  document.execCommand('copy');
+      
+                  // Remove the temporary input element from the DOM
+                  document.body.removeChild(tempInput);
+      
+                  // Display a success message (optional)
+                  alert('Invite link copied to clipboard!');
+              });
+          });
+      </script>
+
+      
 {% endblock %}

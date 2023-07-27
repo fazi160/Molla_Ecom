@@ -11,9 +11,32 @@ import random
 from django.conf import settings
 from django.core.mail import send_mail
 from django.core.validators import validate_email
+from .models import ReferralCode
+from userprofile.models import Wallet
 
 # Create your views here.
+import random
+import string
 
+def generate_referral_code():
+    characters = string.ascii_letters + string.digits
+    code = ''.join(random.choice(characters) for _ in range(8))
+    return code
+
+
+
+def add_to_wallet(user, amount):
+    try:
+        wallet = Wallet.objects.get(user=user)
+    except Wallet.DoesNotExist:
+        # Create a new wallet if it doesn't exist for the user
+        wallet = Wallet.objects.create(user=user, wallet=amount)
+    else:
+        # Update the existing wallet balance
+        wallet.wallet += amount
+        wallet.save()
+
+        
 
 def user_signup(request):
 
@@ -35,6 +58,19 @@ def user_signup(request):
                 auth.login(request,usr)
                  # messages.success(request,f'Account is created for {usr.email}')
                 UserOTP.objects.filter(user=usr).delete()
+
+                # Assign referral code after user is active
+                referral_code = generate_referral_code()
+
+                while ReferralCode.objects.filter(code=referral_code).exists():
+                    # Regenerate referral code if it already exists in the ReferralCode table
+                    referral_code = generate_referral_code()
+
+                ReferralCode.objects.create(user=usr, code=referral_code)
+
+                # Add 10 units to the user's wallet
+                add_to_wallet(usr, 0)
+
                 return redirect('home')
             else:
                 messages.warning(request,f'you Entered a Wrong OTP')
@@ -129,6 +165,8 @@ def user_signup(request):
                 return render(request,'accounts/register.html',context)
             else:
                 pass
+
+            
 
             if password1 == password2:
 

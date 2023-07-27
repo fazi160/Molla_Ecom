@@ -12,21 +12,27 @@ from wishlist.models import Wishlist
 from checkout.models import Address
 from checkout.models import Order,OrderItem
 from django.http import JsonResponse
+from accounts.models import ReferralCode
 
 
 
 
-@cache_control(no_cache=True,must_revalidate=True,no_store=True)
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required(login_url='user_login')
 def user_profile(request):
     user = request.user
     orders = Order.objects.filter(user=user).order_by('-created_at')
     orderitems = OrderItem.objects.filter(order__in=orders).order_by('-order__created_at')
 
+    referral_code = ReferralCode.objects.filter(user=request.user).first()
+    is_referral_code_used = referral_code.used if referral_code else False
+
     user_info = {
         'address': Address.objects.filter(user=request.user).first(),
         'user': User.objects.get(username=request.user),
         'wallets': Wallet.objects.filter(user=request.user),
+        'referral_code': referral_code,
+        'is_referral_code_used': is_referral_code_used,
         'cart': Cart.objects.filter(user=request.user).order_by('-id'),
         'wishlist': Wishlist.objects.filter(user=request.user).order_by('-id'),
         'addresses': Address.objects.filter(user=request.user),
@@ -35,6 +41,7 @@ def user_profile(request):
     }
 
     return render(request, 'user/user_dashboard/userpro.html', user_info)
+
 
 
 
@@ -56,7 +63,8 @@ def view_order_detail(request,orderitem_id):
     return render(request, 'user/user_dashboard/order_detailed.html',cotext)
 
 
-
+@cache_control(no_cache=True,must_revalidate=True,no_store=True)
+@login_required(login_url='signin')
 def add_address(request):
 
     if request.method == 'POST':
@@ -116,7 +124,9 @@ def add_address(request):
         ads.save()
 
         return redirect('user_profile')
-    
+
+@cache_control(no_cache=True,must_revalidate=True,no_store=True)
+@login_required(login_url='signin')  
 def editprofile(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -146,6 +156,8 @@ def editprofile(request):
 
 
 # Change Password 
+@cache_control(no_cache=True,must_revalidate=True,no_store=True)
+@login_required(login_url='signin')
 def changepassword(request):
     if request.method == 'POST':
         old_password = request.POST.get('old_password')
@@ -170,12 +182,16 @@ def changepassword(request):
     return redirect('profile')
 
 # delete Address
+@cache_control(no_cache=True,must_revalidate=True,no_store=True)
+@login_required(login_url='signin')
 def deleteaddress(request,delete_id):
     address = Address.objects.get(id = delete_id)
     address.delete()
     return redirect('user_profile')
 
 
+@cache_control(no_cache=True,must_revalidate=True,no_store=True)
+@login_required(login_url='signin')
 def edit_address(request,edit_id):
 
     if request.method == 'POST':
@@ -242,3 +258,76 @@ def edit_address(request,edit_id):
         return redirect('user_profile')
     else:
         return redirect('user_profile')
+
+
+
+
+
+from django.shortcuts import get_object_or_404
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@login_required(login_url='signin')
+def referral_check(request):
+    user = request.user
+
+    # Get the ReferralCode instance associated with the user
+    referral_obj = get_object_or_404(ReferralCode, user=user)
+    
+    if referral_obj.used:
+        messages.warning(request, 'You have already used a referral code.')
+        return redirect('user_profile')
+
+    if request.method == 'POST':
+        print("111111111111111111111111111111111111111111111")
+        user_input_code = request.POST.get('refid')
+        print(user_input_code, "1111111111111111111111111111111111111111111111")
+
+        try:
+            # Try to get the ReferralCode object based on the provided code
+            referral_code = ReferralCode.objects.get(code=user_input_code)
+        except ReferralCode.DoesNotExist:
+            # Referral code does not exist
+            messages.warning(request, 'Invalid referral code.')
+        else:
+            # Check if the referral code is not related to the current user
+            if referral_code.user != user:
+                # Referral code is valid and not related to the current user
+                print("It worked well")
+
+                # Add money to the wallet of the user related to the referral code (50 units)
+                add_money_to_wallet(referral_code.user, 50)
+
+                # Add money to the wallet of the current user (referrer) (100 units)
+                add_money_to_wallet(user, 100)
+
+                # Mark the referral code as used
+                referral_code.used = True
+                referral_code.save()
+
+                # Mark the user as having used a referral code
+                referral_obj.used = True
+                referral_obj.save()
+
+                # You can perform additional actions if needed, like giving rewards, etc.
+
+            else:
+                # Referral code is related to the current user
+                messages.warning(request, 'Referral code is already associated with your account.')
+
+    return redirect('user_profile')
+
+
+
+
+
+def add_money_to_wallet(user, amount):
+    try:
+        wallet = Wallet.objects.get(user=user)
+    except Wallet.DoesNotExist:
+        # Create a new wallet if it doesn't exist for the user
+        wallet = Wallet.objects.create(user=user, wallet=amount)
+    else:
+        # Update the existing wallet balance
+        wallet.wallet += amount
+        wallet.save()
+

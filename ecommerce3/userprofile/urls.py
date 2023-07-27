@@ -10,5 +10,6 @@ urlpatterns = [
     path('deleteaddress/<int:delete_id>', views.deleteaddress, name='deleteaddress'),
     path('vieworderdetail/<orderitem_id>', views.view_order_detail, name='view_order_detail'),
     path('edit_address/<int:edit_id>', views.edit_address, name='edit_address'),
+    path('referral_check/', views.referral_check, name='referral_check')
 
 ]

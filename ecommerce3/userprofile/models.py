@@ -23,3 +23,15 @@ class Address(models.Model):
 class Wallet(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
     wallet = models.PositiveIntegerField(null=True)
+
+
+    def add_to_wallet(user, amount):
+        try:
+            wallet = Wallet.objects.get(user=user)
+        except Wallet.DoesNotExist:
+            # Create a new wallet if it doesn't exist for the user
+            wallet = Wallet.objects.create(user=user, wallet=amount)
+        else:
+            # Update the existing wallet balance
+            wallet.wallet += amount
+            wallet.save()
