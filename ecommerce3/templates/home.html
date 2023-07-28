@@ -210,7 +210,7 @@
 
                                 <div class="product-wrap">
                                     <figure class="product-media">
-                                        <a href="{% url 'product_detail' last_added.slug %}">
+                                        <a href="{% url 'product_detail' last_added.id %}">
                                             <img src="{{last_added.product_image.url}}" alt="Product image" class="product-image">
                                         </a>
                                     </figure><!-- End .product-media -->
@@ -219,7 +219,7 @@
                                         <div class="product-cat">
                                             by <a href="#">{{last_added.author}}</a>
                                         </div><!-- End .product-cat -->
-                                        <h2 class="product-title"><a href="{% url 'product_detail' last_added.slug %}"><b style="text-transform: uppercase;">{{last_added.product_name}}</b></a></h2><!-- End .product-title -->
+                                        <h2 class="product-title"><a href="{% url 'product_detail' last_added.id %}"><b style="text-transform: uppercase;">{{last_added.product_name}}</b></a></h2><!-- End .product-title -->
                                        
 
                                         <div class="product-price">
@@ -273,7 +273,7 @@
                                 {% for j in products_list %}
                                 <div class="product">
                                     <figure class="product-media">
-                                        <a href="{% url 'product_detail' j.slug %}">
+                                        <a href="{% url 'product_detail' j.id %}">
                                             <img src="{{j.product_image.url}}" alt="Product image" class="product-image">
                                         </a>
                                     </figure><!-- End .product-media -->
@@ -281,7 +281,7 @@
                                         <div class="product-cat" style="font-size: 18px;">
                                             by <a >{{j.author}}</a>
                                         </div><!-- End .product-cat -->
-                                        <h2 class="product-title"><a href="{% url 'product_detail' j.slug %}"><b style="text-transform: uppercase;">{{j.product_name}}</b></a></h2><!-- End .product-title -->
+                                        <h2 class="product-title"><a href="{% url 'product_detail' j.id %}"><b style="text-transform: uppercase;">{{j.product_name}}</b></a></h2><!-- End .product-title -->
                                         <div class="product-price" style="font-size: 22px;">
                                             {% if j.offer %}
                                             <del class="text-danger" >₹  {{j.product_price}}</del>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{j.get_offer}}

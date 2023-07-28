@@ -27,11 +27,11 @@
                     <div class="products">
                         <div class="row">
                             {% for j in products %}
-                            <div  href="{% url 'product_detail' j.slug %}" class="col-6 col-md-4 col-lg-4 col-xl-3">
+                            <div  href="{% url 'product_detail' j.id %}" class="col-6 col-md-4 col-lg-4 col-xl-3">
                                 <div class="product">
                                     <figure class="product-media">
-                                        <a href="">
-                                            <img src="{{j.product_image.url}}" alt="Product image" class="product-image"> <!-- image fields -->
+                                        <a href="{% url 'product_detail' j.id %}">
+                                            <img src="{{j.product_image.url}}" alt="Product image" class="product-image" href="{% url 'product_detail' j.id %}"> <!-- image fields -->
                                         </a>
                                         <div class="product-action-vertical">
                                             <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
@@ -47,7 +47,7 @@
                                             <a href="#">{{j.author}}</a>
                                         </div><!-- End .product-cat -->
                                         
-                                        <h3 class="product-title"><a href="{% url 'product_detail' j.slug %}">{{j.product_name}}</a></h3><!-- End .product-title -->
+                                        <h3 class="product-title"><a href="{% url 'product_detail' j.id %}">{{j.product_name}}</a></h3><!-- End .product-title -->
                                         <div class="product-price">
                                             ₹ {{j.product_price}}
                                         </div><!-- End .product-price -->

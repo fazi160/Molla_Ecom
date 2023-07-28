@@ -123,7 +123,7 @@ def product_show(request):
 def product_detail(request,product_id):
 
 
-    prod=Product.objects.get(slug=product_id)
+    prod=Product.objects.get(id=product_id)
     # related=product.objects.all()
     related = Product.objects.order_by('?')[:5]
 

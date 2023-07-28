@@ -132,8 +132,8 @@
                 {% for k in allpro %}
                 <div class="product product-7">
                     <figure class="product-media">
-                        <a href="{% url 'product_detail' k.slug %}">
-                            <img src="{{k.product_image.url}}" alt="Product image" class="product-image" onclick="window.location.href='{% url 'product_detail' k.slug %}';"> <!-- image fields -->
+                        <a href="{% url 'product_detail' k.id %}">
+                            <img src="{{k.product_image.url}}" alt="Product image" class="product-image" onclick="window.location.href='{% url 'product_detail' k.id %}';"> <!-- image fields -->
                         </a>
                         
                         <div class="product-action-vertical">
@@ -143,7 +143,7 @@
                         <div class="product-cat">
                             <a href="#" style="font-size: 20px;">{{k.category}}</a>
                         </div><!-- End .product-cat -->
-                        <h3 class="product-title"><a href="{% url 'product_detail' k.slug %}" style="font-size: 18px; text-transform: uppercase;">{{k.product_name}}</a></h3><!-- End .product-title -->
+                        <h3 class="product-title"><a href="{% url 'product_detail' k.id %}" style="font-size: 18px; text-transform: uppercase;">{{k.product_name}}</a></h3><!-- End .product-title -->
                         <div class="product-price" style="font-size: 20px;">
                             {% if k.offer %}
                             <del class="text-danger">₹  {{k.product_price}}</del>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{k.get_offer}}
