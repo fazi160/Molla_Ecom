@@ -20,13 +20,13 @@ from django.db.models import F, ExpressionWrapper, DecimalField, Sum, Case, When
 from xhtml2pdf import pisa
 from django.template.loader import render_to_string
 from django.shortcuts import get_object_or_404
-
 from django.contrib.auth.models import User
 from django.core.mail import send_mail, EmailMessage
 from django.conf import settings
 import os
 from django.http import HttpResponse
 
+@login_required(login_url='user_login')
 def checkout(request):
     cartitems = Cart.objects.filter(user=request.user)
     
@@ -67,6 +67,7 @@ def checkout(request):
 
     return render(request, 'checkout/proceed.html', context)
 
+@login_required(login_url='user_login')
 def placeorder(request):
     if request.method == 'POST':
         print("order placedddddddddddddddddddddddddddddddddddd")
@@ -161,6 +162,8 @@ def placeorder(request):
 
     return redirect('checkout')
 
+
+
 def generate_invoice_pdf(request, order_id):
     print("invoice called by place order", order_id)
     try:
@@ -204,6 +207,7 @@ def generate_invoice_pdf(request, order_id):
     os.remove(pdf_file)
     return redirect('placeorder')
 
+@login_required(login_url='user_login')
 def add_checkout_address(request):
     if request.method == 'POST':
         address = Address()

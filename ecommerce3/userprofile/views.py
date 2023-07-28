@@ -71,7 +71,6 @@ def add_address(request):
 
         first_name=request.POST.get('firstname')
         last_name=request.POST.get('lastname')
-        country=request.POST.get('country')
         address=request.POST.get('address')
         city=request.POST.get('city')
         pincode=request.POST.get('pincode')
@@ -88,9 +87,7 @@ def add_address(request):
             messages.error(request,'names cannot be empty!!!')
             return redirect('user_profile')
         
-        if country.strip()=='':
-            messages.error(request,'Country cannot be empty')
-            return redirect('user_profile')
+        
         if city.strip()=='':
             messages.error(request,'city cannot be empty')
             return redirect('user_profile')
@@ -114,7 +111,6 @@ def add_address(request):
         ads.user=request.user
         ads.first_name=first_name
         ads.last_name=last_name
-        ads.country=country
         ads.address=address
         ads.city=city
         ads.pincode=pincode
@@ -198,7 +194,7 @@ def edit_address(request,edit_id):
 
         first_name=request.POST.get('firstname')
         last_name=request.POST.get('lastname')
-        country=request.POST.get('country')
+        
         address=request.POST.get('address')
         city=request.POST.get('city')
         pincode=request.POST.get('pincode')
@@ -215,9 +211,7 @@ def edit_address(request,edit_id):
             messages.error(request,'names cannot be empty!!!')
             return redirect('user_profile')
         
-        if country.strip()=='':
-            messages.error(request,'Country cannot be empty')
-            return redirect('user_profile')
+        
         if city.strip()=='':
             messages.error(request,'city cannot be empty')
             return redirect('user_profile')
@@ -245,7 +239,6 @@ def edit_address(request,edit_id):
         ads.user=request.user
         ads.first_name=first_name
         ads.last_name=last_name
-        ads.country=country
         ads.address=address
         ads.city=city
         ads.pincode=pincode
@@ -263,7 +256,7 @@ def edit_address(request,edit_id):
 
 
 
-from django.shortcuts import get_object_or_404
+
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required(login_url='signin')

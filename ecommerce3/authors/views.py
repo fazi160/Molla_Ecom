@@ -87,6 +87,7 @@ def editauthors(request, editauthors_id):
     return render(request, 'author/editauthors.html', {'catego': cate})
 
 # Delete author
+@login_required(login_url='admin_login')
 def deleteauthors(request,deleteauthors_id):
     if not request.user.is_superuser:
         return redirect('admin_login')

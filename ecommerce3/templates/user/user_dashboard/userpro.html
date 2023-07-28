@@ -48,6 +48,14 @@
 
                     <div class="col-md-8 col-lg-9">
                         <div class="tab-content">
+                          {% if messages %}
+                          <ul class="messages">
+                            {% for message in messages %}
+                              <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                            {% endfor %}
+                          </ul>
+                          {% endif %}
+
                           <div class="tab-pane fade show active" id="tab-dashboard" role="tabpanel" aria-labelledby="tab-dashboard-link" style="font-size: 16px;">
                             <p style="font-size: 20px;">Hello <span class="font-weight-normal text-dark"><b style="text-transform: uppercase;">{{ user.first_name }} {{user.last_name}}</b></span></p>
                             
@@ -58,25 +66,37 @@
                             {% if referral_code %}
                             <p style="font-size: 18px;">Your Referral Code: <span class="font-weight-normal text-dark" style="font-size: 20px;">{{ referral_code.code }}</span></p>
                             
-                            <button id="copyLinkBtn">Copy Invite Link</button>
-
+                            {% comment %} <button id="copyLinkBtn">Copy Invite Link</button> {% endcomment %}
+                            <style>
+                              .narrow-btn {
+                                max-width: 150px;
+                              }
+                            </style>
+                            
+                            <button id="copyLinkBtn" class="btn btn-light btn-block narrow-btn">Copy Invite Link</button>
+                            
                             {% else %}
                                 <p>You do not have a referral code yet.</p>
                             {% endif %}
                         
 
                             {% if not is_referral_code_used %}
-                                <h2>Enter Referral Code</h2>
+                                <h4>Enter Referral Code</h4>
                                 <form action="{% url 'referral_check' %}" method="POST">
                                     {% csrf_token %}
-                                    <label for="refid">Enter Referral Code:</label>
+                                    <label for="refid"></label>
                                     <input type="text" id="refid" name="refid" required>
                                     <button type="submit">Submit</button>
                                 </form>
+
+                                {% if messages %}
+                                <ul class="messages">
+                                  {% for message in messages %}
+                                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                                  {% endfor %}
+                                </ul>
+                                {% endif %}
                             {% endif %}
-
-
-
                         </div><!-- .End .tab-pane -->
 
 
@@ -293,107 +313,6 @@
                                 {% endif %}
                             </div><!-- .End .tab-pane -->
 
-                            <div class="tab-pane fade" id="tab-Cart" role="tabpanel" aria-labelledby="tab-Cart-link">
-
-                                {% if cart %}
-
-                                <div style="margin-top: -50px; ">
-                                <a href="{% url 'cart' %}" class="btn btn-outline-primary-2"><span>Open Cart</span><i class="icon-long-arrow-right"></i></a>
-
-                                </div>
-                                
-                                <div class="wrap-table-shopping-cart" style="margin-top: 10px;">
-                                    <table class="table table-striped">
-                                        <thead class="table_head">
-                                            <tr>
-                                                <th>Product</th>
-                                                <th>Product Name</th>
-                                                <th>Price</th>
-                                                <th>Quantity</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {% for item in cart %}
-                                            <tr class="table_row" id="product-div{{item.product.id}}">
-                                                <td>
-                                                    <div class="how-itemcart1">
-                                                        <img src="{{item.product.product_image.url}}" alt="Product Image" class="img-thumbnail" style="max-width: 80px;">
-                                                    </div>
-                                                </td>
-                                                <td>{{item.product.product_name}}</td>
-                                                <td>₹ {{item.product.product_price}}</td>
-                                                <td>{{item.product_qty}}</td>
-                                                <td class="cart__close">
-                                                    <a class="text-danger" href="{% url 'deletecartitem' item.product.id %}">Remove</a>
-                                                </td>
-                                            </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
-                                </div>
-                                                                
-                                <br>
-                                <div style="width: max-content;" class="m-l-280">
-                                <a href="{% url 'checkout' %}" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer">
-                                   Proceed to  Checkout
-                                </a>
-                            </div>
-            
-                                 {% else %}
-
-
-                                <p>Your Cart is empty</p>
-                                <a href="{% url 'shop' %}" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
-
-                                {% endif %}
-                            
-                            </div><!-- .End .tab-pane -->
-
-                            
-                            <div class="tab-pane fade" id="tab-wishlist" role="tabpanel" aria-labelledby="tab-wishlist-link">
-                                {% if wishlist %}
-                                <div style="margin-top: -50px;">
-                                    <a href="{% url 'wishlist' %}" class="btn btn-outline-primary-2"><span>Open Wishlist</span><i class="icon-long-arrow-right"></i></a>
-                                </div>
-                                <div class="wrap-table-shopping-cart" style="margin-top: 10px;">
-                                    <table class="table-shopping-cart">
-                                        <thead class="table_head"> 
-                                            <tr>
-                                                <th class="column-1">Product</th>
-                                                <th class="column-2">Name</th>
-                                                <th class="column-3">Price</th>
-                                                <th class="column-4">Stock Status</th>
-                                                <th class="column-5">Add to Cart</th>
-                                                <th class="column-6">Remove</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {% for i in wishlist %}
-                                            <tr class="table_row">
-                                                <td class="column-1">
-                                                    <div class="how-itemcart1">
-                                                        <img src="{{i.product.product_image.url}}" alt="Product Image" class="img-thumbnail" style="max-width: 80px;">
-                                                    </div>
-                                                </td>
-                                                <td class="column-2">{{i.product.product_name}}</td>
-                                                <td class="column-3">{{i.product.product_price}}</td>
-                                                <td class="column-4"><span class="stock-status">In Stock</span></td>
-                                                <td class="column-5">
-                                                    <button class="btn btn-block btn-outline-primary-2"><i class="icon-cart-plus"></i><a href="{% url 'add_cart' %}">Add to Cart</a></button>
-                                                </td>
-                                                <td class="column-6"><a class="text-danger" href="{% url 'delete_wishlist' i.product.id %}"><i class="icon-close"></i></a></td>
-                                            </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
-                                </div>
-                                {% else %}
-                                <p>Your Wishlist is empty</p>
-                                <a href="{% url 'shop' %}" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
-                                {% endif %}
-                            </div><!-- .End .tab-pane -->
-                            
                             <div class="tab-pane fade" id="tab-address" role="tabpanel" aria-labelledby="tab-address-link">
                               <p style="font-size: 16px;">The following addresses will be used on the checkout page by default.</p>
                               <!--add address modal -->
@@ -429,7 +348,7 @@
                   
                                                   <label>Street address *</label>
                                                   <input type="text" class="form-control" name="address" placeholder="House number and Street name" required>
-                                                  <input type="text" class="form-control" name="address" placeholder="Appartments, suite, unit etc ..." required>
+                                                  
                   
                                                   <div class="row">
                                                       <div class="col-sm-6">
@@ -509,8 +428,6 @@
               
                                               <label>Street address *</label>
                                               <input type="text" class="form-control" name="address" value="{{address.address}}" placeholder="House number and Street name" required>
-                                              <input type="text" class="form-control" name="address" value="" placeholder="Appartments, suite, unit etc ..." required>
-              
                                               <div class="row">
                                                   <div class="col-sm-6">
                                                       <label>Town / City *</label>
@@ -609,6 +526,7 @@
                                                               <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#viewaddress{{forloop.counter}}">
                                                                 View
                                                               </button>
+                                                              <a href={% url 'deleteaddress' adrs.id %}>delete</a>
                                                           <a href="#" type="button" class="site-btn mb-3" data-bs-toggle="modal" data-bs-target="#editModal2{{forloop.counter}}">Edit <i class="icon-edit"></i></a></p>
                                                              
                                                               <!-- Modal -->
@@ -700,6 +618,7 @@
                                                                         
                       
                                                                     </div>
+                                                                   
                                                                     <div class="modal-footer">
                                                                       <a  class="btn btn-primary text-white" data-bs-toggle="modal" data-bs-target="#deletaddress{{forloop.counter}}">
                                                                         delete
@@ -767,7 +686,7 @@
               
                                               <label>Street address *</label>
                                               <input type="text" class="form-control" name="address" value="{{adrs.address}}" placeholder="House number and Street name" required>
-                                              <input type="text" class="form-control" name="address" value="" placeholder="Appartments, suite, unit etc ..." required>
+                                              
               
                                               <div class="row">
                                                   <div class="col-sm-6">

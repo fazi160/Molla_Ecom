@@ -23,8 +23,6 @@ def generate_referral_code():
     code = ''.join(random.choice(characters) for _ in range(8))
     return code
 
-
-
 def add_to_wallet(user, amount):
     try:
         wallet = Wallet.objects.get(user=user)
@@ -35,8 +33,6 @@ def add_to_wallet(user, amount):
         # Update the existing wallet balance
         wallet.wallet += amount
         wallet.save()
-
-        
 
 def user_signup(request):
 
@@ -181,7 +177,7 @@ def user_signup(request):
                     UserOTP.objects.create(user=usr,otp=user_otp)
                     mess=f'Hello \t{usr.username},\nYour OTP to verify your account is {user_otp}\n Thanks You!'
                     send_mail(
-                        "Welcome to Dualip , verify your Email",
+                        "Welcome to Molla Books , verify your Email",
                         mess,
                         settings.EMAIL_HOST_USER,
                         [usr.email],
@@ -223,7 +219,6 @@ def user_signup(request):
 
         return render(request,'accounts/register.html')
 
-
 def validate_username(value):
     if not re.match(r'^[a-zA-Z\s]*$',value):
 
@@ -234,7 +229,6 @@ def validate_username(value):
         return 'Username already exists'
     else:
         return False
-
 
 def validateemail(email):
 
@@ -253,7 +247,6 @@ def validatepassword(password):
         return True
     except ValidationError:
         return False
-
 
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
 def user_login(request):
@@ -279,10 +272,6 @@ def user_login(request):
             return redirect('user_login')
 
     return render(request,'accounts/login.html')
-
-
-
-
 
 def forgot_password(request):
 
