@@ -30,10 +30,19 @@ def shop(request):
     return render(request,'catagory.html',{'categories':cate})
 
 def category_detail(request, cat_id):
+    all_categories = category.objects.all()
+    all_authors = author.objects.all()
 
+    # Pass the filtered products and all categories/authors to the template
     
-    pro = Product.objects.select_related('category').filter(category__id=cat_id)
-    return render(request, 'productcate.html', {'products':pro})
+    
+    products = Product.objects.select_related('category').filter(category__id=cat_id)
+    context = {
+        'products': products,
+        'cate': all_categories,
+        'author': all_authors,
+    }
+    return render(request, 'product.html', context)
 
 
 

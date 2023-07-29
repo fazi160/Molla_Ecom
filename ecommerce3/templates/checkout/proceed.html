@@ -12,7 +12,7 @@
         <br>
         <br>
         <br>
-        <<nav aria-label="breadcrumb" class="breadcrumb-nav mb-2">
+        <nav aria-label="breadcrumb" class="breadcrumb-nav mb-2">
             <div class="container">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
@@ -555,7 +555,7 @@
                            alert(responseb.razorpay_payment_id);
                              data = {
                                
-                               "payment_method" : "Razorpay",
+                               "payment_method" : "razorpay",
                                "payment_id" : responseb.razorpay_payment_id,
                                "address": selectedAddress,
                                csrfmiddlewaretoken: token

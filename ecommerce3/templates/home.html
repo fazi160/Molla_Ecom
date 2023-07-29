@@ -135,7 +135,7 @@
                                 </div><!-- End .heading-left -->
 
                                 <div class="heading-right">
-                                    <a href="category.html" class="title-link">View more<i class="icon-long-arrow-right"></i></a>
+                                    <a href="{% url 'shop' %}" class="title-link">View more<i class="icon-long-arrow-right"></i></a>
                                 </div><!-- End .heading-right -->
                             </div><!-- End .header-flex -->
 
@@ -191,7 +191,7 @@
                     </div><!-- End .heading-left -->
 
                     <div class="heading-right">
-                        <a href="category.html" class="title-link">View more Products <i class="icon-long-arrow-right"></i></a>
+                        <a href="{% url 'product_show' %}" class="title-link">View more Products <i class="icon-long-arrow-right"></i></a>
                     </div><!-- End .heading-right -->
                 </div><!-- End .header-flex -->
 
@@ -396,7 +396,7 @@
           if (response.status === 'Product already in wishlist' || response.status === 'No such product found' || response.status === 'Only few quantity available') {
             swal("Error!", response.status, "error");
             $('.cartdata').load(location.href + " .cartdata");
-          } else if (response.status === 'Product added successfully') {
+          } else if (response.status === 'product Added to in wishlist') {
             swal("Congratulations!", response.status, "success");
             $('.cartdata').load(location.href + " .cartdata");
           } else {

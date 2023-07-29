@@ -70,19 +70,20 @@ def checkout(request):
 @login_required(login_url='user_login')
 def placeorder(request):
     if request.method == 'POST':
-        print("order placedddddddddddddddddddddddddddddddddddd")
-        # Retrieve the current user
         user = request.user
 
         # Retrieve the address ID from the form data
         address_id = request.POST.get('address')
 
-        if address_id is None:
+        if not address_id:
             messages.error(request, 'Address field is mandatory!')
             return redirect('checkout')
 
-        # Retrieve the selected address from the database
-        address = Address.objects.get(id=address_id)
+        try:
+            address = Address.objects.get(id=address_id)
+        except Address.DoesNotExist:
+            messages.error(request, 'Invalid address selected.')
+            return redirect('checkout')
 
         # Create a new Order instance and set its attributes
         neworder = Order(user=user, address=address)
@@ -95,15 +96,14 @@ def placeorder(request):
         cart_items = Cart.objects.filter(user=user)
         cart_total_price = 0  # Initialize the total price to zero
         for item in cart_items:
-            # Apply the offer discount if available
+            product = item.product
             product_price_with_offer = (
-                item.product.product_price
-                if item.product.offer is None
-                else item.product.product_price - item.product.offer.discount_amount
+                product.product_price - product.offer.discount_amount
+                if product.offer
+                else product.product_price
             )
-            # Calculate total price for the item considering quantity
             item_total_price = product_price_with_offer * item.product_qty
-            cart_total_price += item_total_price  # Accumulate the total price of all cart items
+            cart_total_price += item_total_price
 
         # Check if a coupon code was selected and apply the coupon discount
         selected_coupon_code = request.POST.get('coupon_code')
@@ -112,8 +112,11 @@ def placeorder(request):
                 coupon = Coupon.objects.get(coupon_code=selected_coupon_code)
                 if coupon.active:
                     cart_total_price -= cart_total_price * (coupon.discount / 100)
+                    # Set the applied coupon to the order (optional, but can be useful)
+                    neworder.applied_coupon = coupon
             except Coupon.DoesNotExist:
-                pass
+                messages.error(request, 'Invalid coupon code.')
+                return redirect('checkout')
 
         tax_rate = Decimal('0.18')  # Convert tax rate to Decimal
         tax = cart_total_price * tax_rate
@@ -156,8 +159,23 @@ def placeorder(request):
                 pass
 
         payment_mode = request.POST.get('payment_method')
-        if payment_mode == "cod" or payment_mode == 'razorpay' or payment_mode == 'wallet':
+        if payment_mode in ["cod", "razorpay", "wallet"]:
+            if payment_mode == "wallet":
+                try:
+                    wallet = Wallet.objects.get(user=user)
+                except Wallet.DoesNotExist:
+                    wallet = Wallet.objects.create(user=user, wallet=0)
+
+                if wallet.wallet >= cart_total_price:
+                    wallet.wallet -= cart_total_price
+                    wallet.save()
+                else:
+                    messages.error(request, 'Your wallet amount is very low')
+                    return redirect('checkout')
+
+            # Call a function to generate invoice PDF (implement this function separately)
             generate_invoice_pdf(request, neworder.id)
+
             return JsonResponse({'status': "Your order has been placed successfully"})
 
     return redirect('checkout')

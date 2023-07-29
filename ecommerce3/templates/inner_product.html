@@ -188,7 +188,7 @@
           if (response.status === 'Product already in Cart' || response.status === 'No such product found' || response.status === 'Only few quantity available') {
             swal("Error!", response.status, "error");
             $('.cartdata').load(location.href + " .cartdata");
-          } else if (response.status === 'Product added successfully') {
+          } else if (response.status === 'product added successfully') {
             swal("Congratulations!", response.status, "success");
             $('.cartdata').load(location.href + " .cartdata");
           } else {
@@ -221,7 +221,7 @@
           if (response.status === 'Product already in Cart' || response.status === 'No such product found' || response.status === 'Only few quantity available') {
             swal("Error!", response.status, "error");
             $('.cartdata').load(location.href + " .cartdata");
-          } else if (response.status === 'Product added successfully') {
+          } else if (response.status === 'product added successfully') {
             swal("Congratulations!", response.status, "success");
             $('.cartdata').load(location.href + " .cartdata");
           } else {
@@ -253,7 +253,7 @@
           if (response.status === 'Product already in wishlist' || response.status === 'No such product found' || response.status === 'Only few quantity available') {
             swal("Error!", response.status, "error");
             $('.cartdata').load(location.href + " .cartdata");
-          } else if (response.status === 'Product added successfully') {
+          } else if (response.status === 'product Added to in wishlist') {
             swal("Congratulations!", response.status, "success");
             $('.cartdata').load(location.href + " .cartdata");
           } else {

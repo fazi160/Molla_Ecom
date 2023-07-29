@@ -1,54 +1,55 @@
-    {% extends 'base.html' %}
-    {% load static %}
+{% extends 'base.html' %}
+{% load static %}
 
-    {% block content %}
+{% block content %}
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="http://127.0.0.1:8000/static/user/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="http://127.0.0.1:8000/static/user/js/bootstrap.bundle.min.js"></script>
 
-            <main class="main">
-                <div class="page-header text-center" style="background-image: url('/static/user/images/page-header-bg.jpg')">
-                    <div class="container">
-                        <h1 class="page-title"><span>Check Your Favroit</span>Books</h1>
-                    </div><!-- End .container -->
-                </div><!-- End .page-header -->
-                
-                <nav aria-label="breadcrumb" class="breadcrumb-nav mb-2">
-                    <div class="container">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
-                            <li class="breadcrumb-item"><a href="#">Product</a></li>
-                        </ol>
-                    </div><!-- End .container -->
-                </nav><!-- End .breadcrumb-nav -->
 
-                <div class="page-content">
-                    <div class="container">
-                        <div class="toolbox">
-                            <div class="toolbox-left">
-                                <br>
-                                <a href="#" class="sidebar-toggler"><i class="icon-bars"></i>Filters</a>
-                            </div><!-- End .toolbox-left -->
-                            <div class="toolbox-right">
-                                <div class="toolbox-sort">
-                                    <label for="sortby">Sort by:</label>
-                                    <div class="select-custom">
-                                        <select name="sortby" id="sortby" class="form-control" onchange="window.location.href='{% url 'product_show' %}?' + this.value;">
-                                            <option value="">Sort by:</option>
-                                            <option value="sort=atoz">A To Z</option>
-                                            <option value="sort=ztoa">Z To A</option>
-                                            <option value="sort=ltoh">Low To High</option>
-                                            <option value="sort=htol">High To Low</option>
-                                        </select>
-                                        
-                                    </div>
-                                </div><!-- End .toolbox-sort -->
-                            </div><!-- End .toolbox-right -->
+<main class="main">
+    <div class="page-header text-center" style="background-image: url('/static/user/images/page-header-bg.jpg')">
+        <div class="container">
+            <h1 class="page-title"><span>Check Your Favroit</span>Books</h1>
+        </div><!-- End .container -->
+    </div><!-- End .page-header -->
+    
+    <nav aria-label="breadcrumb" class="breadcrumb-nav mb-2">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="breadcrumb-item"><a href="#">Product</a></li>
+            </ol>
+        </div><!-- End .container -->
+    </nav><!-- End .breadcrumb-nav -->
+
+    <div class="page-content">
+        <div class="container">
+            <div class="toolbox">
+                <div class="toolbox-left">
+                    <br>
+                    <a href="#" class="sidebar-toggler"><i class="icon-bars"></i>Filters</a>
+                </div><!-- End .toolbox-left -->
+                <div class="toolbox-right">
+                    <div class="toolbox-sort">
+                        <label for="sortby">Sort by:</label>
+                        <div class="select-custom">
+                            <select name="sortby" id="sortby" class="form-control" onchange="window.location.href='{% url 'product_show' %}?' + this.value;">
+                                <option value="">Sort by:</option>
+                                <option value="sort=atoz">A To Z</option>
+                                <option value="sort=ztoa">Z To A</option>
+                                <option value="sort=ltoh">Low To High</option>
+                                <option value="sort=htol">High To Low</option>
+                            </select>
+                            
                         </div>
-                    <!-- End .toolbox -->
-                    
-                    <div id="productListContainer">
+                    </div><!-- End .toolbox-sort -->
+                </div><!-- End .toolbox-right -->
+            </div>
+        <!-- End .toolbox -->
+        
+        <div id="productListContainer">
                         
 <div class="products">
     <div class="row">
@@ -193,7 +194,7 @@
                 if (response.status === 'Product already in Cart' || response.status === 'No such product found' || response.status === 'Only few quantity available') {
                     swal("Error!", response.status, "error");
                     $('.cartdata').load(location.href + " .cartdata");
-                } else if (response.status === 'Product added successfully') {
+                } else if (response.status === 'product added successfully') {
                     swal("Congratulations!", response.status, "success");
                     $('.cartdata').load(location.href + " .cartdata");
                 } else {
@@ -225,7 +226,7 @@
                     if (response.status === 'Product already in wishlist' || response.status === 'No such product found' || response.status === 'Only few quantity available') {
                     swal("Error!", response.status, "error");
                     $('.cartdata').load(location.href + " .cartdata");
-                    } else if (response.status === 'Product added successfully') {
+                    } else if (response.status === 'product Added to in wishlist') {
                     swal("Congratulations!", response.status, "success");
                     $('.cartdata').load(location.href + " .cartdata");
                     } else {
