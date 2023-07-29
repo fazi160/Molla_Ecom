@@ -25,8 +25,6 @@
 {% endif %}
 
 
-
-<p>helloo</p>
   
   <!--Add Product  Modal -->
   <div class="modal fade" id="addCategory" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -205,34 +203,48 @@
                       <div class="form-outline mb-4">
                         <select class="form-select form-select-sm mt-3" aria-label=".form-select-sm example" name="author">
                           {% for b in author %}
-                          <option value="{{b.author_name}}" >{{b.author_name}}</option>
+                            {% if c.author.id == b.id %}  <!-- Add this condition to check if the current product's author matches the option -->
+                              <option value="{{ b.author_name }}" selected>{{ b.author_name }}</option>
+                            {% else %}
+                              <option value="{{ b.author_name }}">{{ b.author_name }}</option>
+                            {% endif %}
                           {% endfor %}
                         </select>
-                        <label class="form-label" for="form3Example3cg">Product</label>
+                        <label class="form-label" for="form3Example3cg">Author</label>
                       </div>
+
                       <div class="form-outline mb-4">
                         <select class="form-select form-select-sm mt-3" aria-label=".form-select-sm example" name="category">
-                          {% for c in category %}
-                          <option value="{{ c.id }}">{{ c.categories }}</option>
+                          {% for cat in category %}
+                            {% if c.category.id == cat.id %}  <!-- Add this condition to check if the current product's category matches the option -->
+                              <option value="{{ cat.id }}" selected>{{ cat.categories }}</option>
+                            {% else %}
+                              <option value="{{ cat.id }}">{{ cat.categories }}</option>
+                            {% endif %}
                           {% endfor %}
-                      </select>
+                        </select>
                         <label class="form-label" for="form3Example3cg">Category</label>
                       </div>
+
                       <div class="form-outline mb-4">
                         <select class="form-select form-select-sm mt-3" aria-label=".form-select-sm example" name="offer">
                           <option >No offer</option>
-                          {% for c in offer %}
-                          <option value="{{ c.id }}">{{ c.offer_name }}</option>
+                          {% for off in offer %}
+                            {% if c.offer.id == off.id %}
+                              <option value="{{ off.id }}" selected>{{ off.offer_name }}</option>
+                            {% else %}
+                              <option value="{{ off.id }}">{{ off.offer_name }}</option>
+                            {% endif %}
                           {% endfor %}
-                      </select>
-                      <label class="form-label" for="form3Example3cg">Offer</label>
-                        </div>
+                        </select>
+                        <label class="form-label" for="form3Example3cg">Offer</label>
+                      </div>
                     <div class="form-outline mb-4">
                       <input name='product_description' value="{{c.product_description}}"  type="text" id="form3Example3cg" class="form-control form-control-lg" />
                       <label class="form-label" for="form3Example3cg">Description</label>
                     </div>
                     <div class="form-outline mb-4">
-                      <input name='product_description' value="{{c.product_description_detailed}}"  type="text" id="form3Example3cg" class="form-control form-control-lg" />
+                      <input name='product_description_detailed' value="{{c.product_description_detailed}}"  type="text" id="form3Example3cg" class="form-control form-control-lg" />
                       <label class="form-label" for="form3Example3cg">Detailed Description</label>
                     </div>
                     <div class="form-outline mb-4">
@@ -243,9 +255,10 @@
                     <!-- one here -->
 
                     <div class="form-outline mb-4">
-                      <label class="form-label">Is Availble</label>
-                      <input type="checkbox" name='checkbox'>
-                    </div> 
+                      <label class="form-label">Is Available</label>
+                      <input type="checkbox" name="checkbox" {% if c.is_available %}checked{% endif %}>
+                    </div>
+                    
                   </div>
                      <div class="d-flex justify-content-center">
                         <button type="submit"

@@ -136,26 +136,42 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
-                    <form  method="POST" action="{% url 'editoffer' c.id %}"  enctype="multipart/form-data">
+                    <form  method="POST" action="{% url 'edit_coupon' c.id %}"  enctype="multipart/form-data">
                         {% csrf_token %}
 
                         <div class="form-outline mb-4">
-                          <input name='offername' value="{{c.offer_name}}"  type="text" id="form3Example3cg" class="form-control form-control-lg" required/>
+                          <input name='coupon_code' value="{{c.coupon_code}}"  type="text" id="form3Example3cg" class="form-control form-control-lg" required/>
                           <label class="form-label" for="form3Example3cg">Offer name</label>
                         </div>
                     
                       <div class="form-outline mb-4">
-                        <input name='discount' value="{{c.discount_amount}}"  type="number" id="form3Example3cg" class="form-control form-control-lg" required/>
+                        <input name='discount' value="{{c.discount}}"  type="number" id="form3Example3cg" class="form-control form-control-lg" required/>
                         <label class="form-label" for="form3Example3cg">Discount</label>
                       </div>
+
+                      
+                        
                       <div class="form-outline mb-4">
-                          <input type="date" id="start-date" name="start_date" value="{{c.start_date}}" id="form3Example3cg" class="form-control form-control-lg"  required>
-                          <label class="form-label" for="form3Example3cg">Start date</label>
-                        </div>
+                        <input name="min_value" value="{{ c.min_value }}" type="number" id="form3Example3cg" class="form-control form-control-lg" required/>
+                        <label class="form-label" for="form3Example3cg">Minimum Value</label>
+                      </div>
+                      
+                      <div class="form-outline mb-4">
+                        <input type="date" id="valid_from" name="valid_from" value="{{ c.valid_from|date:'Y-m-d' }}" class="form-control form-control-lg" required>
+                        <label class="form-label" for="valid_from">Start date</label>
+                      </div>
+    
+                        <!-- End date -->
                         <div class="form-outline mb-4">
-                          <input type="date" id="end-date" name="end_date" value="{{c.end_date}}" id="form3Example3cg" class="form-control form-control-lg" required>
-                          <label class="form-label" for="form3Example3cg">End date</label>
+                          <input type="date" id="valid_till" name="valid_till" value="{{ c.valid_till|date:'Y-m-d' }}" class="form-control form-control-lg" required>
+                          <label class="form-label" for="valid_till">End date</label>
                         </div>
+
+                        <div class="form-outline mb-4">
+                          <label class="form-label">Is Active</label>
+                          <input type="checkbox" name="checkbox" {% if c.is_offer_expired %}{% else %}checked{% endif %}>
+                        </div>
+
                        <div class="d-flex justify-content-center">
                           <button type="submit"
                             class="btn btn-danger btn-lg gradient-custom-4 w-50 text-light" type="submit" >Save Changes</button>
@@ -181,7 +197,7 @@
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                      delete Product {{c.coupon_code}}
+                      delete Coupon {{c.coupon_code}}
                     </div>
                     <div class="modal-footer">
                       <form action="{% url 'deletecoupon' c.id %}" >

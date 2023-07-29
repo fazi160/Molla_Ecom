@@ -296,33 +296,29 @@ def salesreport(request):
     if not request.user.is_superuser:
         return redirect('adminsignin')
 
-    # Retrieve all orders in descending order of 'created_at'
-    orders = Order.objects.all().order_by('-created_at')
-    order_items = {}
-
-    for order in orders:
-        # Get all OrderItems for the current order
-        items = OrderItem.objects.filter(order=order.id)
-        order_items[order.id] = items
-
+    # Initialize context with empty values
     context = {
-        'orders': orders,
-        'order_items': order_items
+        'orders': [],
+        'order_items': [],
     }
 
     if request.method == 'POST':
         start_date = request.POST.get('start-date')
         end_date = request.POST.get('end-date')
-        
+        print(start_date, end_date, "4544456454454574854")
+
         if start_date == '' or end_date == '':
             messages.error(request, 'Give date first')
             return redirect(salesreport)
-            
+
         if start_date == end_date:
             date_obj = datetime.strptime(start_date, '%Y-%m-%d')
             order_items = OrderItem.objects.filter(order__created_at__date=date_obj.date()).select_related('order')
             if order_items:
-                context.update(sales=order_items, s_date=start_date, e_date=end_date)
+                order_items = order_items.order_by('-order__created_at')
+                context['sales'] = order_items
+                context['s_date'] = start_date
+                context['e_date'] = end_date
                 return render(request, 'admin/salesreport.html', context)
             else:
                 messages.error(request, 'No data found')
@@ -331,13 +327,18 @@ def salesreport(request):
         order_items = OrderItem.objects.filter(order__created_at__date__gte=start_date, order__created_at__date__lte=end_date).select_related('order')
 
         if order_items:
+            order_items = order_items.order_by('-order__created_at')
             # Calculate total sales during the period
             total_sales = order_items.aggregate(Sum('price'))['price__sum']
-            context.update(sales=order_items, s_date=start_date, e_date=end_date, total_sales=total_sales)
+            context['sales'] = order_items
+            context['s_date'] = start_date
+            context['e_date'] = end_date
+            context['total_sales'] = total_sales
         else:
             messages.error(request, 'No data found')
-    
+
     return render(request, 'adminapp/salesreport.html', context)
+
 
 
 def export_csv(request):

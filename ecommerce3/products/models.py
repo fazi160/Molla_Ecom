@@ -22,7 +22,7 @@ class Product(models.Model):
 
     author = models.ForeignKey(author,on_delete=models.CASCADE)
     category = models.ForeignKey(category,on_delete=models.CASCADE)
-    product_description = models.TextField(blank=True)
+    product_description = models.TextField(max_length=30, blank=True)
     product_description_detailed = models.TextField(blank=True)
    
     is_available = models.BooleanField(default=False)

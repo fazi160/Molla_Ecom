@@ -36,6 +36,8 @@ def addcoupon(request):
         if min_value == '':
             messages.error(request,'min_value is empty')
             return redirect('admincoupon')
+
+        
         if Coupon.objects.filter(coupon_code=coupon_code).exists():
             messages.error(request, 'coupon_code already exists')
             return redirect('admincoupon')
@@ -62,7 +64,7 @@ def addcoupon(request):
             messages.error(request, 'Invalid date format')
             return redirect('admincoupon')
 
-def edicoupon(request,edit_id):
+def edit_coupon(request,edit_id):
     if not request.user.is_superuser:
         return redirect('adminsignin')
 

@@ -22,6 +22,9 @@ import re
 from django.urls import reverse
 from django.utils.text import slugify
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.shortcuts import redirect, render
+from django.contrib import messages
 
 # Product
 @login_required(login_url='admin_login')
@@ -65,38 +68,44 @@ def createproduct(request):
                 return messages.error(request, 'Offer matching query does not exist')
 
         if products.objects.filter(product_name=name).exists():
-            return messages.error(request,'product name already exist')
+            return messages.error(request, 'Product name already exists')
 
         try:
-            is_availables = request.POST.get('checkbox', False)
-            if is_availables == 'on':
-                is_availables = True
+            is_available = request.POST.get('checkbox', False)
+            if is_available == 'on':
+                is_available = True
             else:
-                is_availables = False
+                is_available = False
         except:
-            is_availables = False
+            is_available = False
 
         if name == '' or price == '':
-            
-            return messages.error(request,' Name or Price field is empty')
+            return messages.error(request, 'Name or Price field is empty')
 
         if name.strip() == '':
-            return messages.error(request,'Image Not Found')
+            return messages.error(request, 'Image Not Found')
 
         if not image:
-            
-            return messages.error(request,'Image not uploaded')
+            return messages.error(request, 'Image not uploaded')
 
         try:
             category_obj = category.objects.get(id=category_id)
         except ObjectDoesNotExist:
-            return messages.error(request,'Category matching query does not exist')
+            return messages.error(request, 'Category matching query does not exist')
 
         try:
             author_obj = author.objects.get(author_name=authorname)
-            
         except ObjectDoesNotExist:
-            return messages.error(request,'Author matching query does not exist')
+            return messages.error(request, 'Author matching query does not exist')
+
+        # Check if offer is valid and discount_amount is less than product_price
+        if offer_id:
+            if offer_id.is_offer_expired():
+                messages.error(request, 'Selected offer is not valid.')
+                return redirect('product')
+            if offer_id.discount_amount >= float(price):
+                messages.error(request, 'Discount amount must be less than the product price.')
+                return redirect('product')
 
         # Save the product
         product = products(
@@ -105,7 +114,7 @@ def createproduct(request):
             product_image=image,
             product_description=description,
             product_description_detailed=detailed_description,
-            is_available=is_availables,
+            is_available=is_available,
             author=author_obj,
             category=category_obj,
             quantity=quantity,
@@ -119,73 +128,90 @@ def createproduct(request):
     return render(request, 'product/product.html')
 
 
-
 # Edit Product
 @login_required(login_url='admin_login')
-def editproduct(request,editproduct_id):
+def editproduct(request, editproduct_id):
     if not request.user.is_superuser:
         return redirect('admin_login')
+
+    try:
+        product = products.objects.get(slug=editproduct_id)
+    except products.DoesNotExist:
+        messages.error(request, 'Product not found')
+        return redirect('product')
+
     if request.method == 'POST':
         pname = request.POST['product_name']
         pprice = request.POST['product_price']
         cdescription = request.POST['product_description']
+        detailed_description = request.POST.get('product_description_detailed')
         authorname = request.POST.get('author')
         category_id = request.POST.get('category')
         quantity = request.POST.get('quantity')
         
-    # validation
+        # validation
+        offer_id = request.POST.get('original_offer_id')  # Retrieve original offer ID from the hidden field
+
         offer = request.POST.get('offer')
         if offer == 'No offer':
             offer_id = None
         else:
-            offer_id = Offer.objects.get(id=offer)
-        try:
-            pro = products.objects.get(slug=editproduct_id)
-            image = request.FILES.get('product_image')
-            if image:
-                pro.product_image = image
-                pro.save()
-        except products.DoesNotExist:
-            messages.error(request,'Image Not Found')
-            return redirect('product')
-    #  one here
-        try:
-            is_availables = request.POST.get('checkbox', False)
-            if is_availables == 'on':
-                is_availables = True
-            else:
-                is_availables = False
-        except:
-            is_availables = False
+            try:
+                offer_id = Offer.objects.get(id=offer)
+            except Offer.DoesNotExist:
+                messages.error(request, 'Selected offer does not exist')
+                return redirect('product')
 
-        if pname == '' or pprice =='' :
-            messages.error(request, "Name or Price field are empty")
+        if pname == '' or pprice == '':
+            messages.error(request, "Name or Price field is empty")
             return redirect('product')
-        if products.objects.filter(product_name=pname).exists() :
-            check = products.objects.get(slug = editproduct_id)
-            if pname == check.product_name:
-                pass
-            else:
+
+        if products.objects.filter(product_name=pname).exists():
+            check = products.objects.get(slug=editproduct_id)
+            if pname != check.product_name:
                 messages.error(request, 'Product name already exists')
                 return redirect('product')
-        
+
         cates = category.objects.get(id=category_id)
         produc = author.objects.get(author_name=authorname)
-        
-    # Save       
-        cat = products.objects.get(slug=editproduct_id)
-        cat.product_name = pname
-        
-        cat.product_price = pprice
-        cat.product_description = cdescription
-        cat.is_available = is_availables
-        cat.quantity=quantity
-        cat.author = produc
-        cat.category = cates
-        cat.offer = offer_id
-       
-        cat.save()
+
+        # Check if offer is valid and discount_amount is less than product_price
+        if offer_id:
+            try:
+                if offer_id.discount_amount >= float(pprice):
+                    messages.error(request, "Discount amount must be less than the product price.")
+                    return redirect('product')
+            except ValueError:
+                messages.error(request, "Invalid price or discount amount.")
+                return redirect('product')
+
+        # Save the updates
+        product.product_name = pname
+        product.product_price = pprice
+        product.product_description = cdescription
+        product.product_description_detailed = detailed_description
+        product.is_available = request.POST.get('checkbox', False) == 'on'
+        product.quantity = quantity
+        product.author = produc
+        product.category = cates
+        product.offer = offer_id
+        product.save()
+
+        messages.success(request, 'Product updated successfully')
         return redirect('product')
+
+
+    # If it's not a POST request, render the edit product form
+    categories = category.objects.all()
+    authors = author.objects.all()
+    offers = Offer.objects.all()
+    context = {
+        'product': product,
+        'categories': categories,
+        'authors': authors,
+        'offers': offers,
+    }
+    return render(request, 'product/editproduct.html', context)
     
 
 # Search Product

@@ -129,18 +129,25 @@
                       <input name='discount' value="{{c.discount_amount}}"  type="number" id="form3Example3cg" class="form-control form-control-lg" required/>
                       <label class="form-label" for="form3Example3cg">Discount</label>
                     </div>
+
+                    <!-- Start date -->
                     <div class="form-outline mb-4">
-                        <input type="date" id="start-date" name="start_date" value="{{c.start_date}}" id="form3Example3cg" class="form-control form-control-lg"  required>
-                        <label class="form-label" for="form3Example3cg">Start date</label>
-                      </div>
-                      <div class="form-outline mb-4">
-                        <input type="date" id="end-date" name="end_date" value="{{c.end_date}}" id="form3Example3cg" class="form-control form-control-lg" required>
-                        <label class="form-label" for="form3Example3cg">End date</label>
-                      </div>
+                      <input type="date" id="start-date" name="start_date" value="{{ c.start_date|date:'Y-m-d' }}" class="form-control form-control-lg" required>
+                      <label class="form-label" for="start-date">Start date</label>
+                    </div>
+
+                    <!-- End date -->
+                    <div class="form-outline mb-4">
+                      <input type="date" id="end-date" name="end_date" value="{{ c.end_date|date:'Y-m-d' }}" class="form-control form-control-lg" required>
+                      <label class="form-label" for="end-date">End date</label>
+                    </div>
+
                      <div class="d-flex justify-content-center">
                         <button type="submit"
                           class="btn btn-danger btn-lg gradient-custom-4 w-50 text-light" type="submit" >Save Changes</button>
                       </div>
+
+                      
       
                     </form>
                   </div>

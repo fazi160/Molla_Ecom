@@ -26,53 +26,52 @@
         <!-- Recent Sales -->
         <div class="col-12">
           <div class="card recent-sales overflow-auto">
-            <div class="card-body">
-              <div>
-
-                <div class="container">
-                  <form method="post">
-                    {% csrf_token %}
-                    <div class="row justify-content-center">
-                      <div class="col-md-4">
-                        <label for="start-date">Start Date</label>
-                        <input type="date" id="start-date" name="start-date" class="form-control"  value="{{s_date}}" >
+              <div class="card-body">
+                  <div>
+                      <div class="container">
+                          <form method="post">
+                              {% csrf_token %}
+                              <div class="row justify-content-center">
+                                  <div class="col-md-4">
+                                      <label for="start-date">Start Date</label>
+                                      <input type="date" id="start-date" name="start-date" class="form-control" value="{{ s_date }}">
+                                  </div>
+                                  <div class="col-md-4">
+                                      <label for="end-date">End Date</label>
+                                      <input type="date" id="end-date" name="end-date" class="form-control" value="{{ e_date }}">
+                                  </div>
+                                  <div class="col-md-12 d-flex justify-content-center p-3">
+                                      <button class="btn btn-danger btn-block" type="submit" style="font-size: 24px; padding: 15px 12px; width: 225px;">Generate Report</button>
+                                  </div>
+                              </div>
+                          </form>
                       </div>
-                      <div class="col-md-4">
-                        <label for="end-date">End Date</label>
-                        <input type="date" id="end-date" name="end-date" class="form-control" value="{{e_date}}">
-                      </div>
-                      <div class="col-md-12 d-flex justify-content-center p-3">
-                        <button class="btn btn-danger btn-block" type="submit" style="font-size: 24px; padding: 15px 12px; width: 225px;">Generate Report</button>
-                      </div>
-                    </div>
-                  </form>
-                </div>
-
-                {% if sales %}
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th scope="col">User</th>
-                            <th scope="col">Order Date</th>
-                            <th scope="col">Total Amount</th>
-                            <th scope="col">Payment Mode</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for order in orders %}
-                        <tr>
-                            <td>{{ order.user.username }}</td>
-                            <td>{{ order.created_at }}</td>
-                            <td>{{ order.total_price }}</td>
-                            <td>{{ order.payment_mode }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-                    
-                {% else %}
-                    <p>No data found.</p>
-                {% endif %}
+      
+                      {% if sales %}
+                      <table class="table table-striped">
+                          <thead>
+                              <tr>
+                                  <th scope="col">User</th>
+                                  <th scope="col">Order Date</th>
+                                  <th scope="col">Total Amount</th>
+                                  <th scope="col">Payment Mode</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              {% for order_item in sales %}
+                              <tr>
+                                  <td>{{ order_item.order.user.username }}</td>
+                                  <td>{{ order_item.order.created_at }}</td>
+                                  <td>{{ order_item.price }}</td>
+                                  <td>{{ order_item.order.payment_mode }}</td>
+                              </tr>
+                              {% endfor %}
+                          </tbody>
+                      </table>
+                      <p>Total Sales during the period: {{ total_sales }}</p>
+                      {% else %}
+                      <p>No data found.</p>
+                      {% endif %}
                 <br>
                 <div style="text-align: center;">
                     <p style="font-size: 15px;">To get all the Sales Report</p>
