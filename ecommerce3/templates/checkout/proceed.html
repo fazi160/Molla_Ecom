@@ -425,7 +425,7 @@
                               </button>
                            
                             </div><!-- End .summary -->
-
+                            <input type="hidden" name="coupon_code" id="coupon-code-input">
                             <div class="form-group">
                                 <label for="coupon-select">Select Coupon (optional)</label>
                                 <select class="form-control" id="coupon-select">
@@ -434,7 +434,7 @@
                                     <option value="{{ coupon.coupon_code }}">{{ coupon.coupon_code }} ({{ coupon.discount }}% off)</option>
                                     {% endfor %}
                                 </select>
-                            </div><!-- End .summary --> 
+                            </div>                            
                         </aside><!-- End .col-lg-3 -->
                     </div><!-- End .row -->
                 </form>
@@ -464,6 +464,8 @@
             var token = $("[name='csrfmiddlewaretoken']").val();
             var selectedAddress = $("input[name='address']:checked").val();
             var paymentMethod = $("a[data-toggle='collapse'][aria-expanded='true']").data('payment-method');
+            var couponCode = $('#coupon-select').val()
+            
             
   
             if (!selectedAddress) {
@@ -475,6 +477,7 @@
                     "payment_method": paymentMethod,
                     "order_note": order_note,
                     "address": selectedAddress,
+                    'selectedCoupon': couponCode,
                     "csrfmiddlewaretoken": token
                 };
   
@@ -606,65 +609,61 @@
    
 
         $('#coupon-select').change(function () {
-            console.log("function is called");
+            
             var selectedCoupon = $(this).val();
+
+            // Store the selected coupon code in the hidden input field
+            $('#coupon-code-input').val(selectedCoupon);
+            console.log(selectedCoupon, "coupon ajax")
+
+            // Execute the AJAX request to apply the coupon discount
+            applyCouponDiscount();
+        });
+
+        function applyCouponDiscount() {
+            var selectedCoupon = $('#coupon-code-input').val();
             var selectedProduct = $("input[name='product_id']").val(); // Assuming the product_id is provided as a hidden input
-        
             var grandTotal = parseFloat($('#grand-total').text().replace('₹ ', ''));
-        
+
             if (selectedCoupon) {
                 var data = {
                     'csrfmiddlewaretoken': '{{ csrf_token }}',
                     'coupon_code': selectedCoupon,
                     'grand_total': grandTotal,
                 };
-        
+
                 // If a product is selected, add its ID to the data to check for offers related to the product
                 if (selectedProduct) {
                     data.product_id = selectedProduct;
                 }
-        
+
                 $.ajax({
                     type: "POST",
                     url: "/checkout/apply_coupon/",
                     data: data,
                     dataType: 'json',
                     success: function (response) {
-                        console.log("Successssssssssssssssssssssssssss");
-                        console.log(response);
-        
                         if (response.status === 'Discounts applied successfully') {
                             // Update the displayed grand total and coupon details
-                            console.log("eligibleeeeeeeeeeeeeeeeeeeeeeeee");
-                            console.log("Grand Total before update:", response.grand_total);
-                            console.log(typeof response.grand_total);
-        
-                            var newGrandTotal = parseFloat(response.grand_total);
                             var couponDiscount = parseFloat(response.coupon_discount);
-        
-                            // Calculate the new grand total after applying the coupon discount
                             var updatedGrandTotal = grandTotal - (grandTotal * couponDiscount / 100);
-        
-                            console.log(couponDiscount, "discount showing", updatedGrandTotal, grandTotal);
                             var difference = grandTotal - updatedGrandTotal;
-        
+
                             $('#coupon-details').text('Coupon Applied: ' + selectedCoupon + ' (₹ ' + couponDiscount.toFixed(2) + ')');
                             $('#grand-total').text(' ' + updatedGrandTotal.toFixed(2));
-        
+
                             // Update the coupon details in the summary table with the coupon discount value
                             $('.summary-coupon .coupon-details').text('% ' + couponDiscount.toFixed(2) + ' (Difference: ₹ ' + difference.toFixed(2) + ')');
                             $('.summary-coupon .coupon-details').data('coupon-discount', couponDiscount.toFixed(2));
-        
+
                             // If the coupon is successfully applied, update the coupon dropdown to show the applied coupon
                             $("#coupon-select option[value='" + selectedCoupon + "']").prop("selected", true);
                         } else if (response.status === 'Coupon already used') {
-                            console.log("Coupon already used");
                             alert(response.status);
                         } else {
-                            console.log("errorrrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
                             alert('An error occurred while applying the coupon. Please check.');
                         }
-        
+
                         // Check if there is an offer discount
                         if (response.offer_discount) {
                             var offerDiscount = parseFloat(response.offer_discount);
@@ -678,12 +677,10 @@
                     }
                 });
             }
-        });
-        
-        
-        
-        
-                    
+        }
+
+        // Call the applyCouponDiscount function initially to apply any existing coupon on page load
+        applyCouponDiscount();
     });
 </script>
   

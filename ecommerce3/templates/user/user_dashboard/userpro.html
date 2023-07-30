@@ -487,11 +487,11 @@
                                               {{address.phone}}<br>
                                               {{address.email}}<br>
                                               {{address.city}} {{address.state}}<br>
-                                              <a href="#" type="button" class="site-btn mb-3" data-bs-toggle="modal" data-bs-target="#editModal">Edit <i class="icon-edit"></i></a></p>
+                                              <a href="#" type="button" class="site-btn mb-3 btn btn-light" data-bs-toggle="modal" data-bs-target="#editModal">Edit <i class="icon-edit"></i></a></p>
                                           </div><!-- End .card-body -->
                                       </div><!-- End .card-dashboard -->
                                      
-                                      <button type="button" class="site-btn mb-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                      <button type="button" class="site-btn mb-3 btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal">
                                           New Address
                                      
                                       </button>
@@ -526,8 +526,8 @@
                                                               <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#viewaddress{{forloop.counter}}">
                                                                 View
                                                               </button>
-                                                              <a href={% url 'deleteaddress' adrs.id %}>delete</a>
-                                                          <a href="#" type="button" class="site-btn mb-3" data-bs-toggle="modal" data-bs-target="#editModal2{{forloop.counter}}">Edit <i class="icon-edit"></i></a></p>
+                                                              <a class="btn btn-light" href={% url 'deleteaddress' adrs.id %} >delete</a>
+                                                          <a href="#" type="button" class="site-btn mb-3 btn btn-light" data-bs-toggle="modal" data-bs-target="#editModal2{{forloop.counter}}">Edit <i class="icon-edit"></i></a></p>
                                                              
                                                               <!-- Modal -->
                                                               <div class="modal fade" id="viewaddress{{forloop.counter}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -620,9 +620,7 @@
                                                                     </div>
                                                                    
                                                                     <div class="modal-footer">
-                                                                      <a  class="btn btn-primary text-white" data-bs-toggle="modal" data-bs-target="#deletaddress{{forloop.counter}}">
-                                                                        delete
-                                                                      </a>
+                                                                      
                                                           
                                                                         <!--Delete Modal -->
                                                                         <div class="modal fade" id="deletaddress{{forloop.counter}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -784,7 +782,8 @@
                                   </div>
                                   <div class="modal-body" style="margin-left:35px; ">
 
-                              <form action="{% url 'edit_profile' %}">
+                              <form method='POST' action="{% url 'edit_profile' %}">
+                                {% csrf_token %}
                                   <div class="row">
                                       <div class="col-sm-6">
                                           <label>First Name *</label>
@@ -831,8 +830,8 @@
                                       </div>
                                       <div class="modal-body" style="margin-left:35px; ">
   
-                                  <form action="{% url 'change_password' %}">
-                                   
+                                  <form method='POST' action="{% url 'change_password' %}">
+                                   {% csrf_token %}
   
                                      
   

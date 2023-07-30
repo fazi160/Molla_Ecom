@@ -106,23 +106,25 @@ def placeorder(request):
             cart_total_price += item_total_price
 
         # Check if a coupon code was selected and apply the coupon discount
-        selected_coupon_code = request.POST.get('coupon_code')
+        selected_coupon_code = request.POST.get('selectedCoupon')
+        print(selected_coupon_code, "selected coupon")
         if selected_coupon_code:
             try:
                 coupon = Coupon.objects.get(coupon_code=selected_coupon_code)
                 if coupon.active:
                     cart_total_price -= cart_total_price * (coupon.discount / 100)
+                    print(cart_total_price, "7777777777777777777777")
                     # Set the applied coupon to the order (optional, but can be useful)
                     neworder.applied_coupon = coupon
             except Coupon.DoesNotExist:
                 messages.error(request, 'Invalid coupon code.')
                 return redirect('checkout')
 
-        tax_rate = Decimal('0.18')  # Convert tax rate to Decimal
-        tax = cart_total_price * tax_rate
+          # Convert tax rate to Decimal
+        tax = cart_total_price*18/100
         cart_total_price += tax
-
-        neworder.total_price = cart_total_price
+        
+        neworder.total_price = round(cart_total_price, 2)
 
         # Generate a unique tracking number
         trackno = random.randint(1111111, 9999999)
@@ -179,8 +181,6 @@ def placeorder(request):
             return JsonResponse({'status': "Your order has been placed successfully"})
 
     return redirect('checkout')
-
-
 
 def generate_invoice_pdf(request, order_id):
     print("invoice called by place order", order_id)
@@ -263,15 +263,14 @@ def apply_coupon(request):
     if request.method == 'POST':
         coupon_code = request.POST.get('coupon_code')
         grand_total = Decimal(request.POST.get('grand_total'))
-        print("lllllllllllllllllllllllllllllllllll   Coupon Code:", coupon_code)
-        
+        product_id = request.POST.get('product_id')
+
         try:
             active_offer = None
             product_offers = None
 
             # Check for an applicable offer related to the product
-            if 'product_id' in request.POST:
-                product_id = request.POST.get('product_id')
+            if product_id:
                 product_offers = Offer.objects.filter(product_id=product_id, start_date__lte=date.today(), end_date__gte=date.today())
                 if product_offers.exists():
                     active_offer = product_offers.first()
@@ -294,8 +293,8 @@ def apply_coupon(request):
                     # Save the coupon usage for the current user with total_price as 0
                     Usercoupon.objects.create(coupon=existing_coupon, user=request.user, total_price=0)
 
+            # Apply offer discount to the grand total (if available for the selected product)
             if active_offer:
-                # Apply offer discount to the grand total (if available for the selected product)
                 grand_total -= (grand_total * active_offer.discount_amount / 100)
 
             return JsonResponse({
@@ -312,3 +311,4 @@ def apply_coupon(request):
             return JsonResponse({'status': str(e)})
 
     return JsonResponse({'status': 'Invalid request'})
+

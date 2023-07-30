@@ -129,6 +129,7 @@ def editprofile(request):
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
         email = request.POST.get('email')
+        print(username, first_name, last_name, email, "check valid")
 
         if username == '':
             messages.error(request, 'Username is empty')
@@ -144,6 +145,7 @@ def editprofile(request):
             user.last_name = last_name
             user.email = email
             user.save()
+            print("success")
             messages.success(request, 'User profile updated successfully')
         except ObjectDoesNotExist:
             messages.error(request, 'User does not exist')
@@ -155,10 +157,13 @@ def editprofile(request):
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
 @login_required(login_url='signin')
 def changepassword(request):
+    print("POst is not working ")
     if request.method == 'POST':
+        print("password changing request happened")
         old_password = request.POST.get('old_password')
         new_password = request.POST.get('new_password')
         confirm_new_password = request.POST.get('confirm_new_password')
+        print(old_password, new_password, confirm_new_password, "Check the values")
     #  Validation
         if new_password != confirm_new_password:
             messages.error(request,'Password did not match')
@@ -169,13 +174,13 @@ def changepassword(request):
             user.save()
 
             update_session_auth_hash(request, user)
-
+            print("pass updation is ready")
             messages.success(request, 'Password updated successfully')
             return redirect('user_profile')
         else:
             messages.error(request, 'Invalid old password')
             return redirect('user_profile')
-    return redirect('profile')
+    return redirect('user_profile')
 
 # delete Address
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
