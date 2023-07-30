@@ -978,7 +978,7 @@
                     csrfmiddlewaretoken: token
                   },
                   success: function(response) {
-                    console.log(response);
+                    console.log(response, "success");
                     alertify.success(response.status);
             
                     location.reload();

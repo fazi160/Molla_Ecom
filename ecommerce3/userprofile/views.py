@@ -258,11 +258,6 @@ def edit_address(request,edit_id):
         return redirect('user_profile')
 
 
-
-
-
-
-
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required(login_url='signin')
 def referral_check(request):

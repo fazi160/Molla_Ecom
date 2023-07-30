@@ -14,14 +14,10 @@ from .models import Orderreturn
 
 def admin_orders(request):
     orders = Order.objects.all().order_by('-created_at').prefetch_related('orderitem_set', 'address')
-
-
     context = {
         'orders': orders,
     }
-
     return render(request, 'order/ad-orders.html', context)
-
 
 
 def changestatus(request):
@@ -116,7 +112,7 @@ def ordercancel(request):
     
     orderitem.status = 'Cancelled'
     orderitem.save()
-    return redirect('profile')
+    return redirect('user_profile')
 
 def orderreturn(request, return_id):
     if request.method == 'POST':
@@ -132,7 +128,7 @@ def orderreturn(request, return_id):
         try:
             orderitem_id = OrderItem.objects.get(id=return_id)
         except OrderItem.DoesNotExist:
-            return redirect('profile')
+            return redirect('user_profile')
 
         qty = orderitem_id.quantity
         pid = orderitem_id.product.id
@@ -163,7 +159,7 @@ def orderreturn(request, return_id):
 
         returnorder = Orderreturn.objects.create(user=request.user, order=order_id, options=options, reason=reason)
 
-        return redirect('profile')
+        return redirect('user_profile')
 
 
 
