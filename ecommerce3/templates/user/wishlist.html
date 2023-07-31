@@ -15,7 +15,7 @@
 <div class="container">
     <div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
         <a href="{% url 'home' %}" class="stext-109 cl8 hov-cl1 trans-04">
-            Home
+            Home >
             <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
         </a>
 
@@ -35,14 +35,21 @@
 <br>
 <br>
 <br>
-<div class="col-sm-10 col-lg-7 col-xl-5 m-lr-auto m-b-50">
 
-<button  class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer">
-    <a href="{% url 'home' %}">
- Continue Shopping</a>
-</button>
+<div class="col-sm-10 col-lg-7 col-xl-5 m-lr-auto m-b-50" style="margin-left: 500px;">
+
+    <div style="text-align: center;">
+        <button class="btn" type="button" style="background-color: #15a78a; border: none; border-radius: 4px; padding: 10px 20px; color: #fff; font-size: 16px; cursor: pointer;">
+            <a href="{% url 'home' %}" style="color: #fff; text-decoration: none;">Continue Shopping</a>
+        </button>
+    </div>
+    
 
 </div>
+
+
+
+
 <br>
 <br>
 <br>
@@ -132,7 +139,7 @@
                                 </td>
                                 <td class="column-2">{{i.product.product_name}}</td>
                                 <td class="column-3">{{i.product.product_price}}</td>
-                                <td class="column-4"><span class="in-stock">In stock</span></td>
+                                <td class="column-4">{% if i.product.quantity == 0 %} <span>Out of Stock</span> {% else %} <span class="in-stock">In stock</span>{% endif %}</td>
                                 <td class="column-5">
                                     <button class="cart-btn add-to-cart-btn" data-product_id="{{ i.product.id }}">
                                         <i class="icon-cart-plus"></i> Add to Cart
