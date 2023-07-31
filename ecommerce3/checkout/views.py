@@ -107,23 +107,38 @@ def placeorder(request):
 
         # Check if a coupon code was selected and apply the coupon discount
         selected_coupon_code = request.POST.get('selectedCoupon')
-        print(selected_coupon_code, "selected coupon")
         if selected_coupon_code:
             try:
                 coupon = Coupon.objects.get(coupon_code=selected_coupon_code)
                 if coupon.active:
                     cart_total_price -= cart_total_price * (coupon.discount / 100)
-                    print(cart_total_price, "7777777777777777777777")
                     # Set the applied coupon to the order (optional, but can be useful)
                     neworder.applied_coupon = coupon
             except Coupon.DoesNotExist:
                 messages.error(request, 'Invalid coupon code.')
                 return redirect('checkout')
 
-          # Convert tax rate to Decimal
-        tax = cart_total_price*18/100
+        # Convert tax rate to Decimal
+        tax = cart_total_price * Decimal('0.18')
         cart_total_price += tax
-        
+
+        # Check the selected payment method
+        payment_method = request.POST.get('payment_method')
+        if payment_method == "wallet":
+            try:
+                wallet = Wallet.objects.get(user=user)
+            except Wallet.DoesNotExist:
+                wallet = Wallet.objects.create(user=user, wallet=0)
+
+            if wallet.wallet >= cart_total_price:
+                # Sufficient wallet balance, deduct the amount and proceed with the order
+                wallet.wallet -= cart_total_price
+                wallet.save()
+            else:
+                return JsonResponse({'status': "Your wallet amount is very low"})
+                return redirect('checkout')
+
+        # Round the total_price attribute of the neworder instance to 2 decimal places
         neworder.total_price = round(cart_total_price, 2)
 
         # Generate a unique tracking number
@@ -160,27 +175,13 @@ def placeorder(request):
             except Coupon.DoesNotExist:
                 pass
 
-        payment_mode = request.POST.get('payment_method')
-        if payment_mode in ["cod", "razorpay", "wallet"]:
-            if payment_mode == "wallet":
-                try:
-                    wallet = Wallet.objects.get(user=user)
-                except Wallet.DoesNotExist:
-                    wallet = Wallet.objects.create(user=user, wallet=0)
+        # Call a function to generate invoice PDF (implement this function separately)
+        generate_invoice_pdf(request, neworder.id)
 
-                if wallet.wallet >= cart_total_price:
-                    wallet.wallet -= cart_total_price
-                    wallet.save()
-                else:
-                    messages.error(request, 'Your wallet amount is very low')
-                    return redirect('checkout')
-
-            # Call a function to generate invoice PDF (implement this function separately)
-            generate_invoice_pdf(request, neworder.id)
-
-            return JsonResponse({'status': "Your order has been placed successfully"})
+        return JsonResponse({'status': "Your order has been placed successfully"})
 
     return redirect('checkout')
+
 
 def generate_invoice_pdf(request, order_id):
     print("invoice called by place order", order_id)
