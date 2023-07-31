@@ -39,7 +39,7 @@ def change_od_status(request):
     order_id = request.POST.get('order_id')
     order_od_status = request.POST.get('order_od_status')  # Rename the variable
 
-    print(order_id, order_od_status, '1111111111')
+    
 
     try:
         order = Order.objects.get(id=order_id)
@@ -68,8 +68,7 @@ def search_orders(request):
             Q(user__username__icontains=keyword.lower())
         ).order_by('id')
 
-        print("Keyword:", keyword)  # Debug statement
-        print("Number of Orders:", orders.count())  # Debug statement
+        
 
         if orders.exists():
             context = {
@@ -116,7 +115,6 @@ def ordercancel(request):
 
 def orderreturn(request, return_id):
     if request.method == 'POST':
-        print(return_id, 'rrrrrrrrrrrrrrrrrrrrrrrrrrr')
         options = request.POST.get('options')
         reason = request.POST.get('reason')
 
@@ -140,7 +138,6 @@ def orderreturn(request, return_id):
 
         orderitem_id.status = 'Return'
         total_p = orderitem_id.price
-        print(total_p)
 
         # Calculate the total price to add to the wallet
         total_price_to_add = total_p * qty * 1.18

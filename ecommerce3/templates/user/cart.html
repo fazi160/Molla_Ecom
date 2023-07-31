@@ -6,8 +6,76 @@
 {% block title %} Cart {% endblock %}
 {% load mathfilters %}
 {% block content %}
-<script src="{%static 'cart/style.css'%}"></script>
-<script src="{%static 'cart/style.css.map'%}"></script>
+<style>
+    /* Custom button styles */
+    .btn-custom {
+        display: inline-block;
+        padding: 5px 10px;
+        width: -30px;
+        background-color: #f2f2f2;
+        border: 1px solid #ccc;
+        cursor: pointer;
+        border-radius: 4px;
+        text-align: center;
+        line-height: 1;
+    }
+
+    .btn-custom i {
+        font-size: 14px;
+    }
+
+
+    /* Card Styles */
+    .cart-card {
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 50px;
+        background-color: #ffffff;
+    }
+
+    .cart-card-title {
+        font-size: 20px;
+        font-weight: bold;
+        color: #1cc0a0;
+        margin-bottom: 20px;
+    }
+
+    .cart-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+
+    .cart-item-label {
+        color: #707070;
+    }
+
+    .cart-item-value {
+        font-weight: bold;
+    }
+
+    .proceed-btn {
+        background-color: #1cc0a0;
+        color: #fff;
+        border: none;
+        border-radius: 30px;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .proceed-btn:hover {
+        background-color: #0ea082;
+    }
+</style>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap"
     rel="stylesheet">
 <!-- SweetAlert CSS CDN -->
@@ -54,44 +122,51 @@
 <br>
 {% else %}
 
-
-
 <!-- Shoping Cart -->
 <form class="bg0 p-t-75 p-b-85">
     <div class="container">
         <div class="row">
-            <div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">
-                <div class="m-l-25 m-r--38 m-lr-0-xl">
-                    <div class="wrap-table-shopping-cart">
-                        <table class="table-shopping-cart">
-                            <tr class="table_head">
-                                <th class="column-1">Product</th>
-                                <th class="column-2"></th>
-                                <th class="column-3">Price</th>
-                                <th class="column-4" style="text-align: center;">Quantity</th>
-                                <th class="column-5">Total</th>
+            <div class="col-lg-7">
+                <div class="table-responsive">
+                    <table style="width: 100%; text-align: center; border-collapse: collapse;" class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Product Name</th>
+                                <th>Price</th>
+                                <th style="max-width: 80px !important;">Quantity</th>
+                                <th>Total</th>
+                                <th>Remove</th>
                             </tr>
+                        </thead>
+                        <tbody>
                             {% for item in cart %}
                             <tr class="table_row" id="product-div{{item.product.id}}">
-                                <td class="column-1">
-                                    <div class="how-itemcart1">
-                                        <img src="{{item.product.product_image.url}}" alt="IMG">
+                                <td>
+                                    <div class="product-image" style="display: flex; justify-content: center; align-items: center;">
+                                        <img src="{{item.product.product_image.url}}" alt="IMG" style="max-width: 100px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
                                     </div>
                                 </td>
-                                <td class="column-2">{{item.product.product_name}}</td>
-                                <td class="column-3"> {% if item.product.offer %}<del class="text-danger">₹  {{item.product.product_price}}</del> {{item.product.get_offer}}{% else %}₹ {{item.product.product_price}} {% endif %} </td>
-                                <td class="column-4">
-                                    <div class="input-group quantity mx-auto" style="max-width: 700px;">
-                                        <div class="input-group-btn">
-                                            <button data-price="{{item.product.price}}" data-productid="{{item.product.id}}" class="btn btn-sm border border-secondary btn-minus changeQuantity" style="padding: 10px; width: 30px;">
+                                <td>{{item.product.product_name}}</td>
+                                <td>
+                                    <div class="product-price" style="font-weight: bold;">
+                                        {% if item.product.offer %}
+                                            <del class="text-danger" style="color: #e74c3c; margin-right: 5px;">₹{{item.product.product_price}}</del> {{item.product.get_offer}}
+                                        {% else %}
+                                            ₹{{item.product.product_price}}
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                <td style="max-width: 99px !important;">
+                                    <div class="input-group quantity" style="display: flex; align-items: center; justify-content: center;">
+                                        <div class="input-group-prepend">
+                                            <button data-price="{{item.product.price}}" data-productid="{{item.product.id}}" class="btn btn-sm btn-minus changeQuantity" style="background-color: #f2f2f2 !important; border: 1px solid #ccc !important; cursor: pointer !important; padding: 15px !important; width: 30px !important; border-radius: 4px !important;">
                                                 <i class="fa fa-minus"></i>
                                             </button>
                                         </div>
-                                
                                         <input readonly id="pro_qty{{item.product.id}}" type="text" class="form-control form-control-sm text-center" value="{{item.product_qty}}">
-                                
-                                        <div class="input-group-btn sifan">
-                                            <button data-price="{{item.product.price}}" data-productid="{{item.product.id}}" class="btn btn-sm border border-secondary btn-plus changeQuantity" style="padding: 10px; width: 30px;">
+                                        <div class="input-group-append">
+                                            <button data-price="{{item.product.price}}" data-productid="{{item.product.id}}" class="btn btn-sm btn-plus changeQuantity" style="background-color: #f2f2f2 !important; border: 1px solid #ccc !important; cursor: pointer !important; padding: 15px !important; width: 30px !important; border-radius: 4px !important;">
                                                 <i class="fa fa-plus"></i>
                                             </button>
                                         </div>
@@ -100,80 +175,69 @@
                                 
                                 
                                 
-                                  
-                                <td class="column-5 cart__price total" id="single_product_total{{item.product.id}}">
+                                
+                                
+                                <td class="cart__price total" id="single_product_total{{item.product.id}}">
                                     {% if item.product.offer %}
                                         ₹{{ item.product.get_offer|mul:item.product_qty }}
                                     {% else %}
                                         ₹{{ item.product.product_price|mul:item.product_qty }}
                                     {% endif %}
                                 </td>
-                                  <td class="cart__close">
-                                      <a class="text-danger" href="{% url 'deletecartitem' item.product.id %}" >Remove</a> 
-                                  </td>
-                              </tr>                                                                           
-                              {% endfor %}
-                        </table>
-                    </div>
+                                <td class="cart__close">
+                                    <a class="text-danger" href="{% url 'deletecartitem' item.product.id %}" style="color: #e74c3c; text-decoration: none;">Remove</a> 
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            <div class="col-sm-10 col-lg-7 col-xl-5 m-lr-auto m-b-50">
-                <div class="bor10 p-lr-40 p-t-30 p-b-40 m-l-63 m-r-40 m-lr-0-xl p-lr-15-sm">
-                    <h4 class="mtext-109 cl2 p-b-30">
+            
+            
+            <div class="col-lg-5">
+                <div class="cart-card">
+                    <div class="cart-card-title">
                         Cart Totals
-                    </h4>
-
-                    <div class="flex-w flex-t bor12 p-b-13">
-                        <div class="size-208">
-                            <span class="stext-110 cl2">
-                                Total Price:
-                            </span>
+                    </div>
+            
+                    <div class="cart-item">
+                        <div class="cart-item-label">
+                            Total Price:
                         </div>
-
-                        <div class="size-209">
-                            <span class="mtext-110 cl2" id="sub_total">
-                                ₹  {{total_price | floatformat:2}}
-                            </span>
+                        <div class="cart-item-value" id="sub_total">
+                            ₹ {{ total_price | floatformat:2 }}
                         </div>
                     </div>
-                    <div class="flex-w flex-t bor12 p-b-13">
-                        <div class="size-208">
-                            <span class="stext-110 cl2">
-                                Tax:
-                            </span>
+                    <div class="cart-item">
+                        <div class="cart-item-label">
+                            Tax:
                         </div>
-
-                        <div class="size-209">
-                            <span class="mtext-110 cl2" id="tax_field">
-                                ₹  {{tax | floatformat:2}}
-                            </span>
+                        <div class="cart-item-value" id="tax_field">
+                            ₹ {{ tax | floatformat:2 }}
                         </div>
                     </div>
-                    <div class="flex-w flex-t bor12 p-b-13">
-                        <div class="size-208">
-                            <span class="stext-110 cl2">
-                                Grand Total:
-                            </span>
+                    <div class="cart-item">
+                        <div class="cart-item-label">
+                            Grand Total:
                         </div>
-
-                        <div class="size-209">
-                            <span class="mtext-110 cl2" id="grand_total">
-                                ₹  {{grand_total | floatformat:2}}
-                            </span>
+                        <div class="cart-item-value" id="grand_total">
+                            ₹ {{ grand_total | floatformat:2 }}
                         </div>
                     </div>
-
-                    
-
-                  <a href="{% url 'checkout' %}" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer">
-                        Proceed to Checkout
-                    </a>
+            
+                    <button type="button" class="proceed-btn" style="background-color: #1cc0a0; color: #fff;" onclick="proceedToCheckout()">
+                        <span class="btn-text">Proceed to Checkout</span>
+                        <i class="fa fa-arrow-right ml-2"></i>
+                    </button>
                 </div>
             </div>
+            
         </div>
     </div>
 </form>
 {% endif %}
+
 
 <!-- jQuery CDN -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -181,15 +245,14 @@
 <!-- SweetAlert CDN -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
 
-
-
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
-
-
-
-
-      <script src="{% static ' js/main.js' %}"></script>
+<script src="{% static 'user/js/main.js' %}"></script>
+<script>
+    function proceedToCheckout() {
+        window.location.href = "{% url 'checkout' %}";
+    }
+</script>
 	
       <script>
 

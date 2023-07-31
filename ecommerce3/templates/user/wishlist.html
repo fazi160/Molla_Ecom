@@ -6,6 +6,7 @@
 {% block content %}
 
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 
 <br><br>
@@ -51,27 +52,78 @@
 
 
 <!-- Shoping Cart -->
+<style>
+    /* Table Styles */
+    .table-shopping-cart {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: center;
+    }
+
+    .table_head th {
+        background-color: #f9f9f9;
+        border-bottom: 2px solid #e0e0e0;
+        padding: 10px;
+    }
+
+    .table_row td {
+        border-bottom: 1px solid #f2f2f2;
+        padding: 15px;
+    }
+
+    .how-itemcart1 img {
+        max-width: 80px;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .in-stock {
+        color: #2ecc71;
+        font-weight: bold;
+    }
+
+    .cart-btn {
+        background-color: #1cc0a0;
+        color: #ffffff;
+        border: none;
+        border-radius: 5px;
+        padding: 8px 20px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+        text-decoration: none;
+    }
+
+    .cart-btn:hover {
+        background-color: #17a087;
+    }
+
+    .remove-link {
+        color: #e74c3c;
+    }
+
+    
+</style>
+<br><br>
+
 <form class="bg0 p-t-75 p-b-85">
     <div class="container">
-        <div class="row">
+        <div class="row justify-content-center">
+        
             <div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">
                 <div class="m-l-60 m-r--90 m-lr-0-xl">
                     <div class="wrap-table-shopping-cart">
-                        <table style="width: 100%; border-collapse: collapse; text-align: center;" class="table-shopping-cart">
+                        <table class="table-shopping-cart">
                             <tr class="table_head">
                                 <th class="column-1">Product</th>
                                 <th class="column-2"></th>
                                 <th class="column-3">Price</th>
-							
-
-                                <th class="column-5">stock status</th>
-                                
-								<th class="column-6"></th>
-								<th class="column-7"></th>
+                                <th class="column-4">Stock Status</th>
+                                <th class="column-5">Add to Cart</th>
+                                <th class="column-6">Remove</th>
                             </tr>
 
                             {% for i in wishlist %}
-
                             <tr class="table_row">
                                 <td class="column-1">
                                     <div class="how-itemcart1">
@@ -80,48 +132,50 @@
                                 </td>
                                 <td class="column-2">{{i.product.product_name}}</td>
                                 <td class="column-3">{{i.product.product_price}}</td>
-                                <td class="column-5"><span class="in-stock">In stock</span></td>
-								<td class="column-6">
-									<button  class="add-to-cart-btn btn btn-block btn-outline-primary-2" data-product_id="{{ pro_detail.id }}"><i class="icon-cart-plus"></i><a href="#">Add to Cart</a></button>
-									
-								</td>
-								<td class="column-7"><a class="text-danger" href="{% url 'delete_wishlist' i.product.id %}"> remove</a></td>
+                                <td class="column-4"><span class="in-stock">In stock</span></td>
+                                <td class="column-5">
+                                    <button class="cart-btn add-to-cart-btn" data-product_id="{{ i.product.id }}">
+                                        <i class="icon-cart-plus"></i> Add to Cart
+                                    </button>
+                                </td>
+                                <td class="column-6">
+                                    <a class="remove-link" href="{% url 'delete_wishlist' i.product.id %}">Remove</a>
+                                </td>
                             </tr>
                             {% endfor %}
-                           
                         </table>
                     </div>
 
                     <div class="flex-w flex-sb-m bor15 p-t-18 p-b-15 p-lr-40 p-lr-15-sm">
+                        <!-- Additional content if needed ... -->
                     </div>
                 </div>
             </div>
-
-          
         </div>
     </div>
 </form>
 
 {% endif %}
 
-{% endblock %}
 
 
 
 
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script>
     $('.add-to-cart-btn').click(function(e) {
       e.preventDefault();
+      console.log('2222222222222222222222222222222222222222222222222222222222222222222222')
      
       var product_id = $(this).data('product_id');
       var quantity = 1; // Or get quantity from a form input field
-      console.log(product_id,'111111')
+      console.log('dhjufjkd',product_id,'111111111111111111111111111111111111111111111111111111111111')
       
       $.ajax({
         method: "POST",
         url: "{% url 'add_cart' %}",
         data: {
-          'product_qty': quantity,
+          'product_qty': 1,
           'prod_id': product_id,
           csrfmiddlewaretoken: '{{ csrf_token }}'
         },
@@ -131,7 +185,7 @@
           if (response.status === 'Product already in Cart' || response.status === 'No such product found' || response.status === 'Only few quantity available') {
             swal("Error!", response.status, "error");
             $('.cartdata').load(location.href + " .cartdata");
-          } else if (response.status === 'Product added successfully') {
+          } else if (response.status === 'product added successfully') {
             swal("Congratulations!", response.status, "success");
             $('.cartdata').load(location.href + " .cartdata");
           } else {
@@ -142,5 +196,4 @@
       });
     });
   </script>
-
-           
+  {% endblock %}         

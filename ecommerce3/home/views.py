@@ -52,17 +52,17 @@ def category_detail(request, cat_id):
 
 def filter_products(request):
     if request.method == 'POST':
-        print('Received POST data:', request.POST)
+        
         selected_categories = request.POST.getlist('categories[]')
         selected_authors = request.POST.getlist('authors[]')
-        print('Selected Categories:', selected_categories)  # Check the selected categories in the console
-        print('Selected Authors:', selected_authors)  # Check the selected authors in the console
+        
+        
 
         # Filter products based on selected categories and authors
         filtered_products = Product.objects.all()
 
         if selected_categories:
-            print("catagorys check")
+            
             filtered_products = filtered_products.filter(category__categories__in=selected_categories)
 
         if selected_authors:

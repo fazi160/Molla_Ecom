@@ -184,7 +184,7 @@ def placeorder(request):
 
 
 def generate_invoice_pdf(request, order_id):
-    print("invoice called by place order", order_id)
+    
     try:
         order = Order.objects.get(id=order_id) 
         order_items = OrderItem.objects.filter(order=order)
@@ -308,7 +308,7 @@ def apply_coupon(request):
         except Coupon.DoesNotExist:
             return JsonResponse({'status': 'Coupon does not exist'})
         except Exception as e:
-            print("Errrrrrrrrrrrrrror:", e)
+            
             return JsonResponse({'status': str(e)})
 
     return JsonResponse({'status': 'Invalid request'})

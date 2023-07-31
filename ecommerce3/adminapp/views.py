@@ -305,7 +305,7 @@ def salesreport(request):
     if request.method == 'POST':
         start_date = request.POST.get('start-date')
         end_date = request.POST.get('end-date')
-        print(start_date, end_date, "4544456454454574854")
+        
 
         if start_date == '' or end_date == '':
             messages.error(request, 'Give date first')

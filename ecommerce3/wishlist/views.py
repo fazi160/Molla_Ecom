@@ -45,7 +45,6 @@ def add_wishlist(request):
 # Remove wishlist
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
 def delete_wishlist(request,product_id):
-    print(product_id,'11111111')
     
     product_id = product_id
     wishlist_items = Wishlist.objects.filter(user=request.user, product=product_id)

@@ -31,7 +31,6 @@ def cart(request):
 
     tax = total_price * 0.18
     grand_total = total_price + tax
-    print(total_price, tax, grand_total, "allllllllllllllllllllllllllllllllllllllllllllllllllllllllllll", single_product_total)
     context = {
         'cart': cart,
         'total_price': total_price,
@@ -51,7 +50,7 @@ def add_cart(request):
         if request.user.is_authenticated:
            
             prod_id = request.POST.get('prod_id')
-            print(prod_id,'11111')
+            
             try:
                 product_check = Product.objects.get(id=prod_id)
                 
@@ -118,9 +117,7 @@ def update_cart(request):
 # Deletecart
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
 
-def deletecartitem(request,product_id):
-    print(product_id,'11111111')
-    
+def deletecartitem(request,product_id):    
     product_id = product_id
     cart_items = Cart.objects.filter(user=request.user, product=product_id)
     if cart_items.exists():

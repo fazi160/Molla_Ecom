@@ -129,7 +129,7 @@ def editprofile(request):
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
         email = request.POST.get('email')
-        print(username, first_name, last_name, email, "check valid")
+        
 
         if username == '':
             messages.error(request, 'Username is empty')
@@ -145,7 +145,7 @@ def editprofile(request):
             user.last_name = last_name
             user.email = email
             user.save()
-            print("success")
+            
             messages.success(request, 'User profile updated successfully')
         except ObjectDoesNotExist:
             messages.error(request, 'User does not exist')
@@ -157,13 +157,13 @@ def editprofile(request):
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
 @login_required(login_url='signin')
 def changepassword(request):
-    print("POst is not working ")
+    
     if request.method == 'POST':
-        print("password changing request happened")
+        
         old_password = request.POST.get('old_password')
         new_password = request.POST.get('new_password')
         confirm_new_password = request.POST.get('confirm_new_password')
-        print(old_password, new_password, confirm_new_password, "Check the values")
+        
     #  Validation
         if new_password != confirm_new_password:
             messages.error(request,'Password did not match')
@@ -174,7 +174,7 @@ def changepassword(request):
             user.save()
 
             update_session_auth_hash(request, user)
-            print("pass updation is ready")
+            
             messages.success(request, 'Password updated successfully')
             return redirect('user_profile')
         else:
@@ -271,9 +271,9 @@ def referral_check(request):
         return redirect('user_profile')
 
     if request.method == 'POST':
-        print("111111111111111111111111111111111111111111111")
+        
         user_input_code = request.POST.get('refid')
-        print(user_input_code, "1111111111111111111111111111111111111111111111")
+        
 
         try:
             # Try to get the ReferralCode object based on the provided code
@@ -285,7 +285,7 @@ def referral_check(request):
             # Check if the referral code is not related to the current user
             if referral_code.user != user:
                 # Referral code is valid and not related to the current user
-                print("It worked well")
+                
 
                 # Add money to the wallet of the user related to the referral code (50 units)
                 add_money_to_wallet(referral_code.user, 50)
