@@ -4,16 +4,33 @@ from .models import category
 from django.contrib import messages 
 from django.views.decorators.cache import cache_control
 from django.contrib.auth.decorators import login_required
-
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.paginator import Paginator
 # Create your views here.
 
-# category
+
 @login_required(login_url='admin_login')
 def categories(request):
     if not request.user.is_superuser:
         return redirect('admin_login')
+    
     category_data = category.objects.all().order_by('id')
-    return render(request, 'category/category.html',{'category' : category_data})
+
+    # Number of categories per page
+    categories_per_page = 10
+    paginator = Paginator(category_data, categories_per_page)
+
+    page = request.GET.get('page')
+    try:
+        categories = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        categories = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        categories = paginator.page(paginator.num_pages)
+
+    return render(request, 'category/category.html', {'category': categories})
 
 # Crete category
 @login_required(login_url='admin_login')

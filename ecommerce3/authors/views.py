@@ -4,13 +4,30 @@ from categories.models import category
 from .models import author
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # .......................author....................................
+
+
 @login_required(login_url='admin_login')
 def authors(request):
     if not request.user.is_superuser:
         return redirect('admin_login')
+    
     author_data = author.objects.all().order_by('id')
-    return render(request, 'author/author.html',{'authors' : author_data})
+
+    author_per_page = 10
+    paginator = Paginator(author_data, author_per_page)
+
+    page = request.GET.get('page')
+    try:
+        authors = paginator.page(page)
+    except PageNotAnInteger:
+        authors = paginator.page(1)
+    except EmptyPage:
+        authors = paginator.page(paginator.num_pages)
+
+    return render(request, 'author/author.html', {'authors': authors})
 
 # Create author
 @login_required(login_url='admin_login')

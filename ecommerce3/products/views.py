@@ -16,7 +16,6 @@ from io import BytesIO
 from tkinter import Image
 from .models import Product as products, Offer
 from django.http import JsonResponse
-# Create your views here.
 from django.core.files.uploadedfile import SimpleUploadedFile
 import re
 from django.urls import reverse
@@ -25,22 +24,25 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.shortcuts import redirect, render
 from django.contrib import messages
+from django.core.paginator import Paginator
 
 # Product
 @login_required(login_url='admin_login')
 def product(request):
     if not request.user.is_superuser:
         return redirect('admin_login')
-    prodec = products.objects.all().order_by('id')
-    dict_list={
-        'prod' : prodec,
-        'category' : category.objects.all(),
+    products_list = products.objects.all().order_by('id')
+    paginator = Paginator(products_list, 10)  # Show 10 products per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = {
+        'page_obj': page_obj,
+        'category': category.objects.all(),
         'author': author.objects.all(),
-        'offer' : Offer.objects.all(),
-       
+        'offer': Offer.objects.all(),
     }
-    return render(request ,'product/product.html',dict_list)
-    
+    return render(request, 'product/product.html', context)
+
 
 
 @login_required(login_url='admin_login')
@@ -214,23 +216,31 @@ def editproduct(request, editproduct_id):
     return render(request, 'product/editproduct.html', context)
     
 
-# Search Product
+
+
 @login_required(login_url='admin_login')
 def search_product(request):
     if not request.user.is_superuser:
         return redirect('admin_login')
     if 'keyword' in request.GET:
         keyword = request.GET['keyword']
+        print(keyword, "15151515151511511")
         if keyword:
-            Prod = products.objects.filter(product_name__icontains=keyword).order_by('id')
-            if Prod.exists():
+            prod_list = products.objects.filter(product_name__icontains=keyword).order_by('id')
+            paginator = Paginator(prod_list, 10)  # Show 10 products per page for search results
+            page_number = request.GET.get('page')
+            page_obj = paginator.get_page(page_number)
+            if prod_list.exists():
                 context = {
-                    'prod': Prod,
+                    'page_obj': page_obj,  # Use 'page_obj' for pagination in the template
+                    'category': category.objects.all(),
+                    'author': author.objects.all(),
+                    'offer': Offer.objects.all(),
                 }
-                return render(request, 'product/product.html',context)
+                return render(request, 'product/product.html', context)
             else:
                 message = "Product not found."
-                return render(request,'product/product.html', {'message': message})
+                return render(request, 'product/product.html', {'message': message})
         else:
             message = "Please enter a valid search keyword"
             return render(request, 'product/product.html', {'message': message})

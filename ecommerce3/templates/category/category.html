@@ -177,7 +177,34 @@
       {% endfor %}
       </tbody>
       </table>
-   
+   <!-- Pagination links -->
+<div class="pagination justify-content-center mt-4">
+  <ul class="pagination">
+
+      {% if category.has_previous %}
+          <li class="page-item">
+              <a class="page-link" href="?page=1">&laquo; first</a>
+          </li>
+          <li class="page-item">
+              <a class="page-link" href="?page={{ category.previous_page_number }}">previous</a>
+          </li>
+      {% endif %}
+
+      <li class="page-item disabled">
+          <span class="page-link">Page {{ category.number }} of {{ category.paginator.num_pages }}.</span>
+      </li>
+
+      {% if category.has_next %}
+          <li class="page-item">
+              <a class="page-link" href="?page={{ category.next_page_number }}">next</a>
+          </li>
+          <li class="page-item">
+              <a class="page-link" href="?page={{ category.paginator.num_pages }}">last &raquo;</a>
+          </li>
+      {% endif %}
+
+  </ul>
+</div>
     
     </div>
   </div>
